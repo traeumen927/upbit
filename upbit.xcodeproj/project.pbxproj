@@ -9,7 +9,6 @@
 /* Begin PBXBuildFile section */
 		F129EFFB2D6310F100F3A74C /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F129EFF32D6310F100F3A74C /* AppDelegate.swift */; };
 		F129EFFC2D6310F100F3A74C /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F129EFF82D6310F100F3A74C /* SceneDelegate.swift */; };
-		F129EFFD2D6310F100F3A74C /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F129EFF92D6310F100F3A74C /* ViewController.swift */; };
 		F129EFFE2D6310F100F3A74C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F129EFF42D6310F100F3A74C /* Assets.xcassets */; };
 		F129F0002D6310F100F3A74C /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F129EFF72D6310F100F3A74C /* LaunchScreen.storyboard */; };
 		F129F0032D6311EB00F3A74C /* Alamofire in Frameworks */ = {isa = PBXBuildFile; productRef = F129F0022D6311EB00F3A74C /* Alamofire */; };
@@ -22,6 +21,18 @@
 		F129F0172D63128900F3A74C /* Starscream in Frameworks */ = {isa = PBXBuildFile; productRef = F129F0162D63128900F3A74C /* Starscream */; };
 		F129F01A2D63129400F3A74C /* Toast in Frameworks */ = {isa = PBXBuildFile; productRef = F129F0192D63129400F3A74C /* Toast */; };
 		F129F01D2D6312AA00F3A74C /* SwiftJWT in Frameworks */ = {isa = PBXBuildFile; productRef = F129F01C2D6312AA00F3A74C /* SwiftJWT */; };
+		F129F02A2D63153600F3A74C /* Coordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = F129F0292D63153600F3A74C /* Coordinator.swift */; };
+		F129F02C2D63175600F3A74C /* MarketViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F129F02B2D63175600F3A74C /* MarketViewModel.swift */; };
+		F129F02E2D63176400F3A74C /* AccountViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F129F02D2D63176400F3A74C /* AccountViewModel.swift */; };
+		F129F0302D63176C00F3A74C /* SettingViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F129F02F2D63176C00F3A74C /* SettingViewModel.swift */; };
+		F129F0322D6317B300F3A74C /* MarketViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F129F0312D6317B300F3A74C /* MarketViewController.swift */; };
+		F129F0342D63186E00F3A74C /* AccountViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F129F0332D63186E00F3A74C /* AccountViewController.swift */; };
+		F129F0362D63188100F3A74C /* SettingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F129F0352D63188100F3A74C /* SettingViewController.swift */; };
+		F129F0382D631C0100F3A74C /* MainTabBarCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = F129F0372D631C0100F3A74C /* MainTabBarCoordinator.swift */; };
+		F129F03A2D631CDC00F3A74C /* UIViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F129F0392D631CDC00F3A74C /* UIViewController.swift */; };
+		F129F03C2D631CFE00F3A74C /* KeyboardAdjustable.swift in Sources */ = {isa = PBXBuildFile; fileRef = F129F03B2D631CFE00F3A74C /* KeyboardAdjustable.swift */; };
+		F129F03E2D631D1A00F3A74C /* UILabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F129F03D2D631D1A00F3A74C /* UILabel.swift */; };
+		F129F0402D6320C000F3A74C /* ApiKey.plist in Resources */ = {isa = PBXBuildFile; fileRef = F129F03F2D6320C000F3A74C /* ApiKey.plist */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -31,7 +42,18 @@
 		F129EFF52D6310F100F3A74C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		F129EFF62D6310F100F3A74C /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		F129EFF82D6310F100F3A74C /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
-		F129EFF92D6310F100F3A74C /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		F129F0292D63153600F3A74C /* Coordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Coordinator.swift; sourceTree = "<group>"; };
+		F129F02B2D63175600F3A74C /* MarketViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarketViewModel.swift; sourceTree = "<group>"; };
+		F129F02D2D63176400F3A74C /* AccountViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountViewModel.swift; sourceTree = "<group>"; };
+		F129F02F2D63176C00F3A74C /* SettingViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingViewModel.swift; sourceTree = "<group>"; };
+		F129F0312D6317B300F3A74C /* MarketViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarketViewController.swift; sourceTree = "<group>"; };
+		F129F0332D63186E00F3A74C /* AccountViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountViewController.swift; sourceTree = "<group>"; };
+		F129F0352D63188100F3A74C /* SettingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingViewController.swift; sourceTree = "<group>"; };
+		F129F0372D631C0100F3A74C /* MainTabBarCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTabBarCoordinator.swift; sourceTree = "<group>"; };
+		F129F0392D631CDC00F3A74C /* UIViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIViewController.swift; sourceTree = "<group>"; };
+		F129F03B2D631CFE00F3A74C /* KeyboardAdjustable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyboardAdjustable.swift; sourceTree = "<group>"; };
+		F129F03D2D631D1A00F3A74C /* UILabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UILabel.swift; sourceTree = "<group>"; };
+		F129F03F2D6320C000F3A74C /* ApiKey.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = ApiKey.plist; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -74,14 +96,113 @@
 		F129EFFA2D6310F100F3A74C /* upbit */ = {
 			isa = PBXGroup;
 			children = (
+				F129F0272D63149200F3A74C /* Resource */,
+				F129F01E2D63143C00F3A74C /* Enum */,
+				F129F01F2D63144500F3A74C /* Protocol */,
+				F129F0202D63144B00F3A74C /* Extension */,
+				F129F0212D63145400F3A74C /* Service */,
+				F129F0262D63147500F3A74C /* CustomView */,
+				F129F0282D63152300F3A74C /* Coordinator */,
+				F129F0242D63146900F3A74C /* Model */,
+				F129F0232D63146100F3A74C /* ViewModel */,
+				F129F0222D63145A00F3A74C /* ViewController */,
+				F129F0252D63147000F3A74C /* Cell */,
 				F129EFF32D6310F100F3A74C /* AppDelegate.swift */,
-				F129EFF42D6310F100F3A74C /* Assets.xcassets */,
-				F129EFF52D6310F100F3A74C /* Info.plist */,
-				F129EFF72D6310F100F3A74C /* LaunchScreen.storyboard */,
 				F129EFF82D6310F100F3A74C /* SceneDelegate.swift */,
-				F129EFF92D6310F100F3A74C /* ViewController.swift */,
+				F129EFF52D6310F100F3A74C /* Info.plist */,
+				F129F03F2D6320C000F3A74C /* ApiKey.plist */,
 			);
 			path = upbit;
+			sourceTree = "<group>";
+		};
+		F129F01E2D63143C00F3A74C /* Enum */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Enum;
+			sourceTree = "<group>";
+		};
+		F129F01F2D63144500F3A74C /* Protocol */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Protocol;
+			sourceTree = "<group>";
+		};
+		F129F0202D63144B00F3A74C /* Extension */ = {
+			isa = PBXGroup;
+			children = (
+				F129F0392D631CDC00F3A74C /* UIViewController.swift */,
+				F129F03B2D631CFE00F3A74C /* KeyboardAdjustable.swift */,
+				F129F03D2D631D1A00F3A74C /* UILabel.swift */,
+			);
+			path = Extension;
+			sourceTree = "<group>";
+		};
+		F129F0212D63145400F3A74C /* Service */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Service;
+			sourceTree = "<group>";
+		};
+		F129F0222D63145A00F3A74C /* ViewController */ = {
+			isa = PBXGroup;
+			children = (
+				F129F0312D6317B300F3A74C /* MarketViewController.swift */,
+				F129F0332D63186E00F3A74C /* AccountViewController.swift */,
+				F129F0352D63188100F3A74C /* SettingViewController.swift */,
+			);
+			path = ViewController;
+			sourceTree = "<group>";
+		};
+		F129F0232D63146100F3A74C /* ViewModel */ = {
+			isa = PBXGroup;
+			children = (
+				F129F02B2D63175600F3A74C /* MarketViewModel.swift */,
+				F129F02D2D63176400F3A74C /* AccountViewModel.swift */,
+				F129F02F2D63176C00F3A74C /* SettingViewModel.swift */,
+			);
+			path = ViewModel;
+			sourceTree = "<group>";
+		};
+		F129F0242D63146900F3A74C /* Model */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		F129F0252D63147000F3A74C /* Cell */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Cell;
+			sourceTree = "<group>";
+		};
+		F129F0262D63147500F3A74C /* CustomView */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = CustomView;
+			sourceTree = "<group>";
+		};
+		F129F0272D63149200F3A74C /* Resource */ = {
+			isa = PBXGroup;
+			children = (
+				F129EFF42D6310F100F3A74C /* Assets.xcassets */,
+				F129EFF72D6310F100F3A74C /* LaunchScreen.storyboard */,
+			);
+			path = Resource;
+			sourceTree = "<group>";
+		};
+		F129F0282D63152300F3A74C /* Coordinator */ = {
+			isa = PBXGroup;
+			children = (
+				F129F0292D63153600F3A74C /* Coordinator.swift */,
+				F129F0372D631C0100F3A74C /* MainTabBarCoordinator.swift */,
+			);
+			path = Coordinator;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -166,6 +287,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F129F0402D6320C000F3A74C /* ApiKey.plist in Resources */,
 				F129EFFE2D6310F100F3A74C /* Assets.xcassets in Resources */,
 				F129F0002D6310F100F3A74C /* LaunchScreen.storyboard in Resources */,
 			);
@@ -178,9 +300,19 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F129F0322D6317B300F3A74C /* MarketViewController.swift in Sources */,
+				F129F03E2D631D1A00F3A74C /* UILabel.swift in Sources */,
+				F129F02A2D63153600F3A74C /* Coordinator.swift in Sources */,
+				F129F0302D63176C00F3A74C /* SettingViewModel.swift in Sources */,
+				F129F03A2D631CDC00F3A74C /* UIViewController.swift in Sources */,
+				F129F02C2D63175600F3A74C /* MarketViewModel.swift in Sources */,
 				F129EFFB2D6310F100F3A74C /* AppDelegate.swift in Sources */,
+				F129F0382D631C0100F3A74C /* MainTabBarCoordinator.swift in Sources */,
+				F129F0362D63188100F3A74C /* SettingViewController.swift in Sources */,
 				F129EFFC2D6310F100F3A74C /* SceneDelegate.swift in Sources */,
-				F129EFFD2D6310F100F3A74C /* ViewController.swift in Sources */,
+				F129F02E2D63176400F3A74C /* AccountViewModel.swift in Sources */,
+				F129F0342D63186E00F3A74C /* AccountViewController.swift in Sources */,
+				F129F03C2D631CFE00F3A74C /* KeyboardAdjustable.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
