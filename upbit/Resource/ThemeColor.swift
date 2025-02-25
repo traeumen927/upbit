@@ -30,8 +30,11 @@ struct ThemeColor {
     ///라벨3 (239, 239, 239)
     static let lable3: UIColor = #colorLiteral(red: 0.937254902, green: 0.937254902, blue: 0.937254902, alpha: 1)
     
-    ///배경 (255, 255, 255)
-    static let background: UIColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
+    ///배경1 (255, 255, 255)
+    static let background1: UIColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
+    
+    ///배경2 (222, 226, 230)
+    static let background2: UIColor = #colorLiteral(red: 0.8705882353, green: 0.8862745098, blue: 0.9019607843, alpha: 1)
     
     ///즐겨찾기 (233, 196, 106)
     static let favorite: UIColor = #colorLiteral(red: 0.9137254902, green: 0.768627451, blue: 0.4156862745, alpha: 1)
