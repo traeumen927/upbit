@@ -1,5 +1,5 @@
 //
-//  Market.swift
+//  MarketInfo.swift
 //  upbit
 //
 //  Created by 홍정연 on 2/25/25.
@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct Market: Decodable, Hashable {
+struct MarketInfo: Decodable, Hashable {
     
     ///업비트에서 제공중인 시장 정보
     let market: String

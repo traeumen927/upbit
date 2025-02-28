@@ -12,7 +12,7 @@ enum MarketSection {
 }
 
 // MARK: MarketViewController의 TableViewDataSource
-final class MarketTableDataSource: UITableViewDiffableDataSource<MarketSection, Market> {
+final class MarketTableDataSource: UITableViewDiffableDataSource<MarketSection, MarketTicker> {
     init(tableView: UITableView) {
         super.init(tableView: tableView) { tableView, indexPath, market -> UITableViewCell? in
             guard let cell = tableView.dequeueReusableCell(withIdentifier: MarketCell.cellId, for: indexPath) as? MarketCell else {
@@ -24,10 +24,10 @@ final class MarketTableDataSource: UITableViewDiffableDataSource<MarketSection, 
     }
     
     // MARK: 스냅샷 업데이트
-    func update(with markets: [Market]) {
-        var snapshot = NSDiffableDataSourceSnapshot<MarketSection, Market>()
+    func update(with marketTicker: [MarketTicker]) {
+        var snapshot = NSDiffableDataSourceSnapshot<MarketSection, MarketTicker>()
         snapshot.appendSections([.main])
-        snapshot.appendItems(markets, toSection: .main)
+        snapshot.appendItems(marketTicker, toSection: .main)
         self.apply(snapshot, animatingDifferences: false)
     }
 }

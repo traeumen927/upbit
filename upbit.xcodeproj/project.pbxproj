@@ -8,8 +8,12 @@
 
 /* Begin PBXBuildFile section */
 		F1160EE12D6D8C1E006A19EC /* UpbitApiService.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1160EE02D6D8C1E006A19EC /* UpbitApiService.swift */; };
-		F1160EE32D6D9313006A19EC /* Market.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1160EE22D6D9313006A19EC /* Market.swift */; };
+		F1160EE32D6D9313006A19EC /* MarketInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1160EE22D6D9313006A19EC /* MarketInfo.swift */; };
 		F1160EE82D6D9BEF006A19EC /* MarketTableDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1160EE72D6D9BEF006A19EC /* MarketTableDataSource.swift */; };
+		F1160EEA2D6DA65D006A19EC /* AbType.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1160EE92D6DA65D006A19EC /* AbType.swift */; };
+		F1160EEC2D6DA66C006A19EC /* ApiTicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1160EEB2D6DA66C006A19EC /* ApiTicker.swift */; };
+		F1160EEE2D6DA6F0006A19EC /* CurrencyType.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1160EED2D6DA6F0006A19EC /* CurrencyType.swift */; };
+		F1160EF02D6DAB72006A19EC /* MarketTicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1160EEF2D6DAB72006A19EC /* MarketTicker.swift */; };
 		F129EFFB2D6310F100F3A74C /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F129EFF32D6310F100F3A74C /* AppDelegate.swift */; };
 		F129EFFC2D6310F100F3A74C /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F129EFF82D6310F100F3A74C /* SceneDelegate.swift */; };
 		F129EFFE2D6310F100F3A74C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F129EFF42D6310F100F3A74C /* Assets.xcassets */; };
@@ -47,8 +51,12 @@
 
 /* Begin PBXFileReference section */
 		F1160EE02D6D8C1E006A19EC /* UpbitApiService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpbitApiService.swift; sourceTree = "<group>"; };
-		F1160EE22D6D9313006A19EC /* Market.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Market.swift; sourceTree = "<group>"; };
+		F1160EE22D6D9313006A19EC /* MarketInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarketInfo.swift; sourceTree = "<group>"; };
 		F1160EE72D6D9BEF006A19EC /* MarketTableDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarketTableDataSource.swift; sourceTree = "<group>"; };
+		F1160EE92D6DA65D006A19EC /* AbType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AbType.swift; sourceTree = "<group>"; };
+		F1160EEB2D6DA66C006A19EC /* ApiTicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApiTicker.swift; sourceTree = "<group>"; };
+		F1160EED2D6DA6F0006A19EC /* CurrencyType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrencyType.swift; sourceTree = "<group>"; };
+		F1160EEF2D6DAB72006A19EC /* MarketTicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarketTicker.swift; sourceTree = "<group>"; };
 		F129EFDB2D630FEA00F3A74C /* upbit.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = upbit.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		F129EFF32D6310F100F3A74C /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		F129EFF42D6310F100F3A74C /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -148,6 +156,8 @@
 			isa = PBXGroup;
 			children = (
 				F129F0472D635FD100F3A74C /* ChangeType.swift */,
+				F1160EE92D6DA65D006A19EC /* AbType.swift */,
+				F1160EED2D6DA6F0006A19EC /* CurrencyType.swift */,
 			);
 			path = Enum;
 			sourceTree = "<group>";
@@ -202,7 +212,9 @@
 		F129F0242D63146900F3A74C /* Model */ = {
 			isa = PBXGroup;
 			children = (
-				F1160EE22D6D9313006A19EC /* Market.swift */,
+				F1160EEF2D6DAB72006A19EC /* MarketTicker.swift */,
+				F1160EE22D6D9313006A19EC /* MarketInfo.swift */,
+				F1160EEB2D6DA66C006A19EC /* ApiTicker.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -342,14 +354,18 @@
 				F129F0482D635FD100F3A74C /* ChangeType.swift in Sources */,
 				F129F0422D6359F600F3A74C /* UIColor.swift in Sources */,
 				F129F04A2D6361C800F3A74C /* MarketCell.swift in Sources */,
+				F1160EEA2D6DA65D006A19EC /* AbType.swift in Sources */,
 				F129F03E2D631D1A00F3A74C /* UILabel.swift in Sources */,
+				F1160EF02D6DAB72006A19EC /* MarketTicker.swift in Sources */,
+				F1160EEE2D6DA6F0006A19EC /* CurrencyType.swift in Sources */,
+				F1160EEC2D6DA66C006A19EC /* ApiTicker.swift in Sources */,
 				F129F02A2D63153600F3A74C /* Coordinator.swift in Sources */,
 				F129F04C2D63628300F3A74C /* PercentView.swift in Sources */,
 				F129F0302D63176C00F3A74C /* SettingViewModel.swift in Sources */,
 				F129F0462D635FA000F3A74C /* SingleCandleView.swift in Sources */,
 				F129F03A2D631CDC00F3A74C /* UIViewController.swift in Sources */,
 				F129F02C2D63175600F3A74C /* MarketViewModel.swift in Sources */,
-				F1160EE32D6D9313006A19EC /* Market.swift in Sources */,
+				F1160EE32D6D9313006A19EC /* MarketInfo.swift in Sources */,
 				F129EFFB2D6310F100F3A74C /* AppDelegate.swift in Sources */,
 				F129F0382D631C0100F3A74C /* MainTabBarCoordinator.swift in Sources */,
 				F129F0362D63188100F3A74C /* SettingViewController.swift in Sources */,

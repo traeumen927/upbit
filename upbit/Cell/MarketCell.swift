@@ -24,6 +24,9 @@ class MarketCell: UITableViewCell {
         label.font = UIFont.systemFont(ofSize: 14, weight: .bold)
         label.textColor = ThemeColor.labl1
         label.numberOfLines = 0
+        label.adjustsFontSizeToFitWidth = true
+        label.minimumScaleFactor = 0.5
+        label.numberOfLines = 1
         return label
     }()
     
@@ -50,6 +53,8 @@ class MarketCell: UITableViewCell {
         label.font = UIFont.systemFont(ofSize: 14, weight: .bold)
         label.textColor = .gray
         label.textAlignment = .right
+        label.minimumScaleFactor = 0.5
+        label.numberOfLines = 1
         return label
     }()
     
@@ -91,8 +96,7 @@ class MarketCell: UITableViewCell {
     // MARK: 레이아웃 설정
     private func layout() {
         
-        self.contentView.addSubview(stackView)
-        self.contentView.addSubview(separateView)
+        [stackView, separateView].forEach(self.contentView.addSubview(_:))
         
         // MARK: 코인 이름 영역뷰
         let nameView = UIView()
@@ -125,15 +129,16 @@ class MarketCell: UITableViewCell {
         stackView.snp.makeConstraints { make in
             make.top.leading.trailing.equalToSuperview()
             make.bottom.equalTo(separateView.snp.top)
+            make.height.equalTo(70)
         }
         
         // MARK: 스택뷰 내 영역 할당
         nameView.snp.makeConstraints { make in
-            make.width.equalTo(stackView.snp.width).multipliedBy(0.35)
+            make.width.equalTo(stackView.snp.width).multipliedBy(0.4)
         }
         
         priceView.snp.makeConstraints { make in
-            make.width.equalTo(stackView.snp.width).multipliedBy(0.4)
+            make.width.equalTo(stackView.snp.width).multipliedBy(0.35)
         }
         
         changeView.snp.makeConstraints { make in
@@ -179,27 +184,32 @@ class MarketCell: UITableViewCell {
     
     
     // MARK: data binding in cell
-    func configure(with market: Market) {
+    func configure(with marketTicker: MarketTicker) {
         
-        marketKorLabel.text = market.koreanName
+        // MARK: 코인명(한글)
+        marketKorLabel.text = marketTicker.marketInfo.koreanName
         
-//        // MARK: 실시간으로 변동된 티커 데이터가 있을 때
-//        if let socketTicker = marketTicker.socketTicker {
-//            priceLabel.text = "₩\(socketTicker.trade_price.formattedStringWithCommaAndDecimal(places: 6))"
-//            priceLabel.textColor = socketTicker.change.color
-//            changeRateView.setPercentage(socketTicker.signed_change_rate * 100)
-//            changePriceLabel.text = "\(socketTicker.signed_change_price.formattedStringWithCommaAndDecimal(places: 6))"
-//            changePriceLabel.textColor = socketTicker.change.color
-//            singleCandleView.update(change: socketTicker.change, market: socketTicker.code, rate: socketTicker.change_rate, highPrice: socketTicker.high_price, lowPrice: socketTicker.low_price, closingPrice: socketTicker.prev_closing_price)
-//        }
-//        else { // MARK: 실시간 Ticker 없다면, 마지막 요청 Api Ticker 정보 사용
-//            let apiTicker = marketTicker.apiTicker
-//            priceLabel.text = "₩\(apiTicker.trade_price.formattedStringWithCommaAndDecimal(places: 6))"
-//            priceLabel.textColor = apiTicker.change.color
-//            changeRateView.setPercentage(apiTicker.signed_change_rate * 100)
-//            changePriceLabel.text = "\(apiTicker.signed_change_price.formattedStringWithCommaAndDecimal(places: 6))"
-//            changePriceLabel.textColor = apiTicker.change.color
-//            singleCandleView.update(change: apiTicker.change, market: apiTicker.market, rate: apiTicker.change_rate, highPrice: apiTicker.high_price, lowPrice: apiTicker.low_price, closingPrice: apiTicker.prev_closing_price)
-//        }
+        // MARK: 현재가
+        priceLabel.text = "₩\(marketTicker.ticker.trade_price.formattedStringWithCommaAndDecimal(places: 6))"
+        
+        // MARK: 현재가 색상
+        priceLabel.textColor = marketTicker.ticker.change.color
+        
+        // MARK: 등락률
+        changeRateView.setPercentage(marketTicker.ticker.signed_change_rate * 100)
+        
+        // MARK: 증감액
+        changePriceLabel.text = "\(marketTicker.ticker.signed_change_price.formattedStringWithCommaAndDecimal(places: 6))"
+        
+        // MARK: 증감액 색상
+        changePriceLabel.textColor = marketTicker.ticker.change.color
+        
+        // MARK: 캔들뷰 configure
+        singleCandleView.update(change: marketTicker.ticker.change,
+                                market: marketTicker.ticker.market,
+                                rate: marketTicker.ticker.change_rate,
+                                highPrice: marketTicker.ticker.high_price,
+                                lowPrice: marketTicker.ticker.low_price,
+                                closingPrice: marketTicker.ticker.prev_closing_price)
     }
 }

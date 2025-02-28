@@ -75,13 +75,25 @@ extension UpbitApiService {
     enum EndPoint {
         
         // MARK: 시세 종목 조회: 업비트에서 거래 가능한 종목 목록
-        case marketAll(is_details:Bool = false)
+        case marketAll(is_details:Bool?)
+        
+        // MARK: 종목별 종목 현재가 정보(ex. KRW-BTC, KRW-ETH, USDT-BTC)
+        case ticker(markets: String)
+        
+        // MARK: 마켓별 종목 현재가 정보(ex. KRW, BTC, USDT)
+        case tickerAll(quote_currencies: String)
         
         // MARK: 요청 경로
         var path: String {
             switch self {
             case .marketAll:
                 return "/market/all"
+                
+            case .ticker:
+                return "ticker"
+                
+            case .tickerAll:
+                return "ticker/all"
             }
         }
         
@@ -90,13 +102,19 @@ extension UpbitApiService {
             switch self {
             case .marketAll(let isDetails):
                 return ["is_details" : isDetails]
+                
+            case .ticker(let markets):
+                return ["markets" : markets]
+                
+            case .tickerAll(let quote_currencies):
+                return ["quote_currencies": quote_currencies]
             }
         }
         
         // MARK: 헤더
         var headers: HTTPHeaders? {
             switch self {
-            case .marketAll:
+            case .marketAll, .ticker, .tickerAll:
                 return nil
             }
         }
