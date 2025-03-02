@@ -91,10 +91,15 @@ class MarketCell: UITableViewCell {
         
         self.marketKorLabel.text = nil
         self.priceLabel.text = nil
+        self.changePriceLabel.text = nil
+        self.singleCandleView.update(change: .even, rate: 0, highPrice: 0, lowPrice: 0, closingPrice: 0)
+        self.changeRateView.setPercentage(0)
     }
     
     // MARK: 레이아웃 설정
     private func layout() {
+        
+        self.selectionStyle = .none
         
         [stackView, separateView].forEach(self.contentView.addSubview(_:))
         
@@ -206,7 +211,6 @@ class MarketCell: UITableViewCell {
         
         // MARK: 캔들뷰 configure
         singleCandleView.update(change: marketTicker.ticker.change,
-                                market: marketTicker.ticker.market,
                                 rate: marketTicker.ticker.change_rate,
                                 highPrice: marketTicker.ticker.high_price,
                                 lowPrice: marketTicker.ticker.low_price,

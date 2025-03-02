@@ -112,7 +112,7 @@ class SingleCandleView: UIView {
     }
     
     // MARK: 변화된 값으로 뷰의 등락폭 및 색상을 결정
-    func update(change: ChangeType, market: String, rate:Double, highPrice: Double, lowPrice: Double, closingPrice: Double) {
+    func update(change: ChangeType, rate:Double, highPrice: Double, lowPrice: Double, closingPrice: Double) {
         self.setColor(with: change)
         self.updateConstraints(for: change, with: rate)
         self.updateRows(with: highPrice, lowPrice: lowPrice, closingPrice: closingPrice)

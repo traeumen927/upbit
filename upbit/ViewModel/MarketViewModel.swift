@@ -8,9 +8,21 @@
 import Foundation
 import RxSwift
 import RxCocoa
+import Starscream
 
 class MarketViewModel {
     
+    // MARK: disposeBag
+    private let disposeBag = DisposeBag()
+    
+    // MARK: 업비트 웹 소켓 서비스
+    private let webSocketService = UpbitWebSocketService()
+    
+    // MARK: 내부 관리 MarketTickers
+    private var marketTickers: [MarketTicker] = []
+    
+    
+    // MARK: - Place for Output
     // MARK: 업비트에서 거래 가능한 종목리스트 주제
     let marketTickerSubject: PublishSubject<[MarketTicker]> = PublishSubject<[MarketTicker]>()
     
@@ -18,22 +30,30 @@ class MarketViewModel {
     let messageSubject: PublishSubject<String> = PublishSubject<String>()
     
     init() {
+        self.bind()
+    }
+    
+    private func bind() {
         // MARK: 거래가능한 종목 조회 + 해당 종목의 현재가 조회
-        self.fetchMarketTicker(currencies: [.krw])
+        self.fetchMarketTicker(currency: .krw)
+        
+        // MARK: 웹소켓 서비스의 웹소켓 이벤트 구독
+        self.webSocketService.socketEventSubject
+            .subscribe(onNext: { [weak self] eventWrapper in
+                guard let self = self else { return }
+                self.didReceiveEvent(event: eventWrapper.event)
+            }).disposed(by: disposeBag)
     }
     
     // MARK: 업비트에서 거래 가능한 종목 조회 후, 종목별 현재가 조회
-    private func fetchMarketTicker(currencies: [CurrencyType]) {
+    private func fetchMarketTicker(currency: CurrencyType) {
         // MARK: 1. 거래 가능한 종목 가져오기
         UpbitApiService.request(endpoint: .marketAll(is_details: true)) { [weak self] (result: Result<[MarketInfo], Error>) in
             guard let self = self else { return }
             switch result {
             case .success(let markets):
-                // MARK: 요청 화폐 ex) "KRW, BTC, USDT"
-                let currenciesString = currencies.map { $0.rawValue }.joined(separator: ", ")
-                
                 // MARK: 2. 화폐별 현재가 가져오기
-                UpbitApiService.request(endpoint: .tickerAll(quote_currencies: currenciesString)) { [weak self] (result: Result<[ApiTicker], Error>) in
+                UpbitApiService.request(endpoint: .tickerAll(quote_currencies: currency.rawValue)) { [weak self] (result: Result<[ApiTicker], Error>) in
                     guard let self = self else { return }
                     switch result {
                     case .success(let tickers):
@@ -48,7 +68,13 @@ class MarketViewModel {
                             }
                             return nil
                         }
+                        // MARK: 내부에 저장하고, UI에 방출
+                        self.marketTickers = marketTickers
                         self.marketTickerSubject.onNext(marketTickers)
+                        
+                        // MARK: 웹소켓 구독 요청, 현재 매칭된 마켓 코드 리스트 전달
+                        let marketCodes = tickers.map(\.market)
+                        self.webSocketService.subscribeTo(types: [.ticker], symbol: marketCodes)
                         
                     case .failure(let error):
                         print(error.localizedDescription)
@@ -60,5 +86,90 @@ class MarketViewModel {
                 self.messageSubject.onNext(error.localizedDescription)
             }
         }
+    }
+    
+    // MARK: WebSocketDelegate에서 발생하는 WebSocket Event 처리
+    private func didReceiveEvent(event: WebSocketEvent) {
+        
+        let className = String(describing: self)
+    
+        switch event {
+            
+            // MARK: 소켓이 연결됨
+        case .connected(let headers):
+            print("\(className): websocket is connected: \(headers)")
+            self.fetchMarketTicker(currency: .krw)
+            
+            // MARK: 소켓이 연결 해제됨
+        case .disconnected(let reason, let code):
+            print("\(className): websocket is disconnected: \(reason) with code: \(code)")
+            
+            // MARK: 텍스트 메세지를 받음
+        case .text(let string):
+            print("\(className): Received text: \(string)")
+            
+            // MARK: 이진(binary) 데이터를 받음
+        case .binary(let data):
+            self.handleSocketData(data: data)
+            break
+            
+            // MARK: 핑 메세지를 받음
+        case .ping(_):
+            print("\(className): ping")
+            break
+            
+            // MARK: 퐁 메세지를 받음
+        case .pong(_):
+            print("\(className): pong")
+            break
+            
+            // MARK: 연결의 안정성이 변경됨
+        case .viabilityChanged(_):
+            print("\(className): viabilityChanged")
+            break
+            
+            // MARK: 재연결이 제안됨
+        case .reconnectSuggested(_):
+            print("\(className): reconnectSuggested")
+            break
+            
+            // MARK: 소켓이 취소됨
+        case .cancelled:
+            print("\(className): cancelled")
+            break
+            
+            // MARK: 에러가 발생함
+        case .error(let error):
+            print("\(className): error: \(error!.localizedDescription)")
+            break
+            
+            // MARK: 피어가 연결을 종료함
+        case .peerClosed:
+            print("\(className): peerClosed")
+            break
+        }
+    }
+    
+    // MARK: 웹소켓으로부터 받은 바이너리 데이터 핸들링
+    private func handleSocketData(data: Data) {
+        if let ticker: SocketTicker = SocketTicker.parseData(data),
+           let index = marketTickers.firstIndex(where: { $0.marketInfo.market == ticker.code }) {
+            
+            // MARK: 업데이트된 Ticker 삽입
+            self.marketTickers[index].ticker = ticker
+            
+            // MARK: 업데이트된 MarketTicker 방출
+            self.marketTickerSubject.onNext(self.marketTickers)
+        }
+    }
+    
+    // MARK: 웹 소켓 연결
+    func connectWebSocket() {
+        self.webSocketService.connect()
+    }
+    
+    // MARK: 웹 소켓 연결 해제
+    func disconnectWebSocket() {
+        self.webSocketService.disconnect()
     }
 }

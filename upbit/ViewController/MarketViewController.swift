@@ -56,9 +56,10 @@ class MarketViewController: UIViewController {
         // MARK: DataSource 연결
         self.dataSource = MarketTableDataSource(tableView: self.marketTableView)
         
-        // MARK: 거래 가능한 목록 구독
+        // MARK: 거래 가능한 목록 구독, 0.25초 마다 이벤트 방출
         self.viewModel.marketTickerSubject
             .observe(on: MainScheduler.instance)
+            .throttle(.milliseconds(250), latest: true, scheduler: MainScheduler.instance)
             .subscribe(onNext: { [weak self] marketTickers in
                 guard let self = self else { return }
                 // MARK: snapshot 업데이트
@@ -72,5 +73,15 @@ class MarketViewController: UIViewController {
                 guard let self = self else { return }
                 self.view.makeToast(message, duration: 2.0, position: .bottom)
             }).disposed(by: disposeBag)
+    }
+    
+    // MARK: 웹소켓 연결
+    override func viewWillAppear(_ animated: Bool) {
+        self.viewModel.connectWebSocket()
+    }
+    
+    // MARK: 웹소켓 연결 해제
+    override func viewWillDisappear(_ animated: Bool) {
+        self.viewModel.disconnectWebSocket()
     }
 }

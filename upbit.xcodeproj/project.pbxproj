@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		F10629E12D71DD8B00EC48B6 /* UpbitWebSocketService.swift in Sources */ = {isa = PBXBuildFile; fileRef = F10629E02D71DD8B00EC48B6 /* UpbitWebSocketService.swift */; };
+		F10629E32D71DEC600EC48B6 /* SocketRequestType.swift in Sources */ = {isa = PBXBuildFile; fileRef = F10629E22D71DEC600EC48B6 /* SocketRequestType.swift */; };
+		F10629E52D71E09E00EC48B6 /* SocketTicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = F10629E42D71E09E00EC48B6 /* SocketTicker.swift */; };
 		F1160EE12D6D8C1E006A19EC /* UpbitApiService.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1160EE02D6D8C1E006A19EC /* UpbitApiService.swift */; };
 		F1160EE32D6D9313006A19EC /* MarketInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1160EE22D6D9313006A19EC /* MarketInfo.swift */; };
 		F1160EE82D6D9BEF006A19EC /* MarketTableDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1160EE72D6D9BEF006A19EC /* MarketTableDataSource.swift */; };
@@ -47,9 +50,13 @@
 		F129F04A2D6361C800F3A74C /* MarketCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F129F0492D6361C800F3A74C /* MarketCell.swift */; };
 		F129F04C2D63628300F3A74C /* PercentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F129F04B2D63628300F3A74C /* PercentView.swift */; };
 		F129F04E2D6362D000F3A74C /* UIDouble.swift in Sources */ = {isa = PBXBuildFile; fileRef = F129F04D2D6362D000F3A74C /* UIDouble.swift */; };
+		F133C8CE2D74246500A2F308 /* Decodable.swift in Sources */ = {isa = PBXBuildFile; fileRef = F133C8CD2D74246500A2F308 /* Decodable.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		F10629E02D71DD8B00EC48B6 /* UpbitWebSocketService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpbitWebSocketService.swift; sourceTree = "<group>"; };
+		F10629E22D71DEC600EC48B6 /* SocketRequestType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SocketRequestType.swift; sourceTree = "<group>"; };
+		F10629E42D71E09E00EC48B6 /* SocketTicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SocketTicker.swift; sourceTree = "<group>"; };
 		F1160EE02D6D8C1E006A19EC /* UpbitApiService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpbitApiService.swift; sourceTree = "<group>"; };
 		F1160EE22D6D9313006A19EC /* MarketInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarketInfo.swift; sourceTree = "<group>"; };
 		F1160EE72D6D9BEF006A19EC /* MarketTableDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarketTableDataSource.swift; sourceTree = "<group>"; };
@@ -82,6 +89,7 @@
 		F129F0492D6361C800F3A74C /* MarketCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarketCell.swift; sourceTree = "<group>"; };
 		F129F04B2D63628300F3A74C /* PercentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PercentView.swift; sourceTree = "<group>"; };
 		F129F04D2D6362D000F3A74C /* UIDouble.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIDouble.swift; sourceTree = "<group>"; };
+		F133C8CD2D74246500A2F308 /* Decodable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Decodable.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -158,6 +166,7 @@
 				F129F0472D635FD100F3A74C /* ChangeType.swift */,
 				F1160EE92D6DA65D006A19EC /* AbType.swift */,
 				F1160EED2D6DA6F0006A19EC /* CurrencyType.swift */,
+				F10629E22D71DEC600EC48B6 /* SocketRequestType.swift */,
 			);
 			path = Enum;
 			sourceTree = "<group>";
@@ -173,6 +182,7 @@
 			isa = PBXGroup;
 			children = (
 				F129F03B2D631CFE00F3A74C /* KeyboardAdjustable.swift */,
+				F133C8CD2D74246500A2F308 /* Decodable.swift */,
 				F129F0392D631CDC00F3A74C /* UIViewController.swift */,
 				F129F03D2D631D1A00F3A74C /* UILabel.swift */,
 				F129F0412D6359F600F3A74C /* UIColor.swift */,
@@ -185,6 +195,7 @@
 			isa = PBXGroup;
 			children = (
 				F1160EE02D6D8C1E006A19EC /* UpbitApiService.swift */,
+				F10629E02D71DD8B00EC48B6 /* UpbitWebSocketService.swift */,
 			);
 			path = Service;
 			sourceTree = "<group>";
@@ -215,6 +226,7 @@
 				F1160EEF2D6DAB72006A19EC /* MarketTicker.swift */,
 				F1160EE22D6D9313006A19EC /* MarketInfo.swift */,
 				F1160EEB2D6DA66C006A19EC /* ApiTicker.swift */,
+				F10629E42D71E09E00EC48B6 /* SocketTicker.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -358,8 +370,10 @@
 				F129F03E2D631D1A00F3A74C /* UILabel.swift in Sources */,
 				F1160EF02D6DAB72006A19EC /* MarketTicker.swift in Sources */,
 				F1160EEE2D6DA6F0006A19EC /* CurrencyType.swift in Sources */,
+				F10629E32D71DEC600EC48B6 /* SocketRequestType.swift in Sources */,
 				F1160EEC2D6DA66C006A19EC /* ApiTicker.swift in Sources */,
 				F129F02A2D63153600F3A74C /* Coordinator.swift in Sources */,
+				F10629E12D71DD8B00EC48B6 /* UpbitWebSocketService.swift in Sources */,
 				F129F04C2D63628300F3A74C /* PercentView.swift in Sources */,
 				F129F0302D63176C00F3A74C /* SettingViewModel.swift in Sources */,
 				F129F0462D635FA000F3A74C /* SingleCandleView.swift in Sources */,
@@ -368,6 +382,8 @@
 				F1160EE32D6D9313006A19EC /* MarketInfo.swift in Sources */,
 				F129EFFB2D6310F100F3A74C /* AppDelegate.swift in Sources */,
 				F129F0382D631C0100F3A74C /* MainTabBarCoordinator.swift in Sources */,
+				F10629E52D71E09E00EC48B6 /* SocketTicker.swift in Sources */,
+				F133C8CE2D74246500A2F308 /* Decodable.swift in Sources */,
 				F129F0362D63188100F3A74C /* SettingViewController.swift in Sources */,
 				F129F04E2D6362D000F3A74C /* UIDouble.swift in Sources */,
 				F129EFFC2D6310F100F3A74C /* SceneDelegate.swift in Sources */,
