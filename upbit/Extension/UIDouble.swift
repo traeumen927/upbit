@@ -9,9 +9,9 @@ import Foundation
 
 extension Double {
     // MARK: Double의 소수점 자릿수 제한
-    func roundedString(places: Int) -> String {
+    func roundedString(places: Int, removeZero: Bool = true) -> String {
         let formatter = NumberFormatter()
-        formatter.minimumFractionDigits = 0
+        formatter.minimumFractionDigits = removeZero ? 0 : places
         formatter.maximumFractionDigits = places
         
         return formatter.string(from: NSNumber(value: self)) ?? "\(self)"

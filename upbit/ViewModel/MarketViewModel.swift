@@ -21,6 +21,14 @@ class MarketViewModel {
     // MARK: 내부 관리 MarketTickers
     private var marketTickers: [MarketTicker] = []
     
+    // MARK: 코인 정렬 순서 옵션, 초기값은 24시간 누적 거래량
+    var sortOption: SortOption = .volume24Descending {
+        didSet {
+            // MARK: 옵션 변경 시 정렬 로직 실행
+            self.sortMarketTickers(by: sortOption)
+        }
+    }
+    
     
     // MARK: - Place for Output
     // MARK: 업비트에서 거래 가능한 종목리스트 주제
@@ -34,11 +42,9 @@ class MarketViewModel {
     }
     
     private func bind() {
-        // MARK: 거래가능한 종목 조회 + 해당 종목의 현재가 조회
-        self.fetchMarketTicker(currency: .krw)
-        
         // MARK: 웹소켓 서비스의 웹소켓 이벤트 구독
         self.webSocketService.socketEventSubject
+            .asObservable()
             .subscribe(onNext: { [weak self] eventWrapper in
                 guard let self = self else { return }
                 self.didReceiveEvent(event: eventWrapper.event)
@@ -68,9 +74,9 @@ class MarketViewModel {
                             }
                             return nil
                         }
-                        // MARK: 내부에 저장하고, UI에 방출
+                        // MARK: 내부에 저장하고, 정렬 및 UI에 방출
                         self.marketTickers = marketTickers
-                        self.marketTickerSubject.onNext(marketTickers)
+                        self.sortMarketTickers(by: self.sortOption)
                         
                         // MARK: 웹소켓 구독 요청, 현재 매칭된 마켓 코드 리스트 전달
                         let marketCodes = tickers.map(\.market)
@@ -88,6 +94,25 @@ class MarketViewModel {
         }
     }
     
+    // MARK: 코인 순서 정렬
+    private func sortMarketTickers(by option: SortOption) {
+        switch option {
+            case .volume24Descending:
+                marketTickers.sort { $0.ticker.acc_trade_price_24h > $1.ticker.acc_trade_price_24h }
+            case .volume24Ascending:
+                marketTickers.sort { $0.ticker.acc_trade_price_24h < $1.ticker.acc_trade_price_24h }
+            case .priceDescending:
+                marketTickers.sort { $0.ticker.trade_price > $1.ticker.trade_price }
+            case .priceAscending:
+                marketTickers.sort { $0.ticker.trade_price < $1.ticker.trade_price }
+            case .nameAscending:
+                marketTickers.sort { $0.marketInfo.koreanName < $1.marketInfo.koreanName }
+            case .nameDescending:
+                marketTickers.sort { $0.marketInfo.koreanName > $1.marketInfo.koreanName }
+            }
+            marketTickerSubject.onNext(marketTickers)
+    }
+    
     // MARK: WebSocketDelegate에서 발생하는 WebSocket Event 처리
     private func didReceiveEvent(event: WebSocketEvent) {
         
@@ -98,6 +123,7 @@ class MarketViewModel {
             // MARK: 소켓이 연결됨
         case .connected(let headers):
             print("\(className): websocket is connected: \(headers)")
+            // MARK: 거래가능한 종목 조회 + 해당 종목의 현재가 조회
             self.fetchMarketTicker(currency: .krw)
             
             // MARK: 소켓이 연결 해제됨
@@ -158,7 +184,7 @@ class MarketViewModel {
             // MARK: 업데이트된 Ticker 삽입
             self.marketTickers[index].ticker = ticker
             
-            // MARK: 업데이트된 MarketTicker 방출
+            // MARK: 업데이트된 MarketTicker 방출(socketTicker로 ticker 값만 변경될 때에는 로드시 최초의 정렬값 사용함)
             self.marketTickerSubject.onNext(self.marketTickers)
         }
     }

@@ -51,6 +51,7 @@
 		F129F04C2D63628300F3A74C /* PercentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F129F04B2D63628300F3A74C /* PercentView.swift */; };
 		F129F04E2D6362D000F3A74C /* UIDouble.swift in Sources */ = {isa = PBXBuildFile; fileRef = F129F04D2D6362D000F3A74C /* UIDouble.swift */; };
 		F133C8CE2D74246500A2F308 /* Decodable.swift in Sources */ = {isa = PBXBuildFile; fileRef = F133C8CD2D74246500A2F308 /* Decodable.swift */; };
+		F1F591B52D7492260046D507 /* SortOption.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1F591B42D7492260046D507 /* SortOption.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -90,6 +91,7 @@
 		F129F04B2D63628300F3A74C /* PercentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PercentView.swift; sourceTree = "<group>"; };
 		F129F04D2D6362D000F3A74C /* UIDouble.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIDouble.swift; sourceTree = "<group>"; };
 		F133C8CD2D74246500A2F308 /* Decodable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Decodable.swift; sourceTree = "<group>"; };
+		F1F591B42D7492260046D507 /* SortOption.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SortOption.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -167,6 +169,7 @@
 				F1160EE92D6DA65D006A19EC /* AbType.swift */,
 				F1160EED2D6DA6F0006A19EC /* CurrencyType.swift */,
 				F10629E22D71DEC600EC48B6 /* SocketRequestType.swift */,
+				F1F591B42D7492260046D507 /* SortOption.swift */,
 			);
 			path = Enum;
 			sourceTree = "<group>";
@@ -374,6 +377,7 @@
 				F1160EEC2D6DA66C006A19EC /* ApiTicker.swift in Sources */,
 				F129F02A2D63153600F3A74C /* Coordinator.swift in Sources */,
 				F10629E12D71DD8B00EC48B6 /* UpbitWebSocketService.swift in Sources */,
+				F1F591B52D7492260046D507 /* SortOption.swift in Sources */,
 				F129F04C2D63628300F3A74C /* PercentView.swift in Sources */,
 				F129F0302D63176C00F3A74C /* SettingViewModel.swift in Sources */,
 				F129F0462D635FA000F3A74C /* SingleCandleView.swift in Sources */,

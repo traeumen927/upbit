@@ -20,6 +20,7 @@ class MarketViewController: UIViewController {
     // MARK: Diffable Data Source
     private var dataSource: MarketTableDataSource!
     
+    
     // MARK: 테이블뷰
     lazy var marketTableView: UITableView = {
         let view = UITableView()
@@ -46,6 +47,8 @@ class MarketViewController: UIViewController {
     }
     
     private func layout() {
+        self.configureSortMenu()
+        
         self.view.addSubview(self.marketTableView)
         self.marketTableView.snp.makeConstraints { make in
             make.top.leading.bottom.trailing.equalToSuperview()
@@ -73,6 +76,26 @@ class MarketViewController: UIViewController {
                 guard let self = self else { return }
                 self.view.makeToast(message, duration: 2.0, position: .bottom)
             }).disposed(by: disposeBag)
+    }
+    
+    // MARK: 코인 정렬메뉴 설정
+    private func configureSortMenu() {
+        // MARK: sort 옵션별 액션 할당
+        let actions = SortOption.allCases.map { option -> UIAction in
+            let state: UIMenuElement.State = (option == self.viewModel.sortOption) ? .on : .off
+            return UIAction(title: option.rawValue, state: state) { [weak self] _ in
+                guard let self = self else { return }
+                
+                // MARK: viewModel에 변경된 정렬 option 전달
+                self.viewModel.sortOption = option
+                
+                // MARK: 메뉴의 상태를 갱신
+                self.configureSortMenu()
+            }
+        }
+        
+        let menu = UIMenu(title: "정렬 옵션", children: actions)
+        navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "arrow.up.arrow.down"), menu: menu)
     }
     
     // MARK: 웹소켓 연결

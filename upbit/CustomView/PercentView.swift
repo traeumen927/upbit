@@ -39,7 +39,7 @@ class PercentView: UIView {
     }
     
     func setPercentage(_ percentage: Double) {
-        percentLabel.text = "\(percentage.roundedString(places: 2))%"
+        percentLabel.text = "\(percentage.roundedString(places: 2, removeZero: false))%"
         
         if percentage > 0 {
             // MARK: 빨간색 배경

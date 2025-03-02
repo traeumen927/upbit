@@ -134,7 +134,7 @@ class MarketCell: UITableViewCell {
         stackView.snp.makeConstraints { make in
             make.top.leading.trailing.equalToSuperview()
             make.bottom.equalTo(separateView.snp.top)
-            make.height.equalTo(70)
+            make.height.equalTo(70).priority(UILayoutPriority(999))
         }
         
         // MARK: 스택뷰 내 영역 할당
@@ -216,4 +216,6 @@ class MarketCell: UITableViewCell {
                                 lowPrice: marketTicker.ticker.low_price,
                                 closingPrice: marketTicker.ticker.prev_closing_price)
     }
+    
+    // FIXME: Ticker 변동 시 cell price highlight 효과주기
 }
