@@ -7,6 +7,16 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		F10629E12D71DD8B00EC48B6 /* UpbitWebSocketService.swift in Sources */ = {isa = PBXBuildFile; fileRef = F10629E02D71DD8B00EC48B6 /* UpbitWebSocketService.swift */; };
+		F10629E32D71DEC600EC48B6 /* SocketRequestType.swift in Sources */ = {isa = PBXBuildFile; fileRef = F10629E22D71DEC600EC48B6 /* SocketRequestType.swift */; };
+		F10629E52D71E09E00EC48B6 /* SocketTicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = F10629E42D71E09E00EC48B6 /* SocketTicker.swift */; };
+		F1160EE12D6D8C1E006A19EC /* UpbitApiService.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1160EE02D6D8C1E006A19EC /* UpbitApiService.swift */; };
+		F1160EE32D6D9313006A19EC /* MarketInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1160EE22D6D9313006A19EC /* MarketInfo.swift */; };
+		F1160EE82D6D9BEF006A19EC /* MarketTableDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1160EE72D6D9BEF006A19EC /* MarketTableDataSource.swift */; };
+		F1160EEA2D6DA65D006A19EC /* AbType.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1160EE92D6DA65D006A19EC /* AbType.swift */; };
+		F1160EEC2D6DA66C006A19EC /* ApiTicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1160EEB2D6DA66C006A19EC /* ApiTicker.swift */; };
+		F1160EEE2D6DA6F0006A19EC /* CurrencyType.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1160EED2D6DA6F0006A19EC /* CurrencyType.swift */; };
+		F1160EF02D6DAB72006A19EC /* MarketTicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1160EEF2D6DAB72006A19EC /* MarketTicker.swift */; };
 		F129EFFB2D6310F100F3A74C /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F129EFF32D6310F100F3A74C /* AppDelegate.swift */; };
 		F129EFFC2D6310F100F3A74C /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F129EFF82D6310F100F3A74C /* SceneDelegate.swift */; };
 		F129EFFE2D6310F100F3A74C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F129EFF42D6310F100F3A74C /* Assets.xcassets */; };
@@ -33,9 +43,28 @@
 		F129F03C2D631CFE00F3A74C /* KeyboardAdjustable.swift in Sources */ = {isa = PBXBuildFile; fileRef = F129F03B2D631CFE00F3A74C /* KeyboardAdjustable.swift */; };
 		F129F03E2D631D1A00F3A74C /* UILabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F129F03D2D631D1A00F3A74C /* UILabel.swift */; };
 		F129F0402D6320C000F3A74C /* ApiKey.plist in Resources */ = {isa = PBXBuildFile; fileRef = F129F03F2D6320C000F3A74C /* ApiKey.plist */; };
+		F129F0422D6359F600F3A74C /* UIColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = F129F0412D6359F600F3A74C /* UIColor.swift */; };
+		F129F0442D635A0700F3A74C /* ThemeColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = F129F0432D635A0700F3A74C /* ThemeColor.swift */; };
+		F129F0462D635FA000F3A74C /* SingleCandleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F129F0452D635FA000F3A74C /* SingleCandleView.swift */; };
+		F129F0482D635FD100F3A74C /* ChangeType.swift in Sources */ = {isa = PBXBuildFile; fileRef = F129F0472D635FD100F3A74C /* ChangeType.swift */; };
+		F129F04A2D6361C800F3A74C /* MarketCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F129F0492D6361C800F3A74C /* MarketCell.swift */; };
+		F129F04C2D63628300F3A74C /* PercentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F129F04B2D63628300F3A74C /* PercentView.swift */; };
+		F129F04E2D6362D000F3A74C /* UIDouble.swift in Sources */ = {isa = PBXBuildFile; fileRef = F129F04D2D6362D000F3A74C /* UIDouble.swift */; };
+		F133C8CE2D74246500A2F308 /* Decodable.swift in Sources */ = {isa = PBXBuildFile; fileRef = F133C8CD2D74246500A2F308 /* Decodable.swift */; };
+		F1F591B52D7492260046D507 /* SortOption.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1F591B42D7492260046D507 /* SortOption.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		F10629E02D71DD8B00EC48B6 /* UpbitWebSocketService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpbitWebSocketService.swift; sourceTree = "<group>"; };
+		F10629E22D71DEC600EC48B6 /* SocketRequestType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SocketRequestType.swift; sourceTree = "<group>"; };
+		F10629E42D71E09E00EC48B6 /* SocketTicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SocketTicker.swift; sourceTree = "<group>"; };
+		F1160EE02D6D8C1E006A19EC /* UpbitApiService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpbitApiService.swift; sourceTree = "<group>"; };
+		F1160EE22D6D9313006A19EC /* MarketInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarketInfo.swift; sourceTree = "<group>"; };
+		F1160EE72D6D9BEF006A19EC /* MarketTableDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarketTableDataSource.swift; sourceTree = "<group>"; };
+		F1160EE92D6DA65D006A19EC /* AbType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AbType.swift; sourceTree = "<group>"; };
+		F1160EEB2D6DA66C006A19EC /* ApiTicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApiTicker.swift; sourceTree = "<group>"; };
+		F1160EED2D6DA6F0006A19EC /* CurrencyType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrencyType.swift; sourceTree = "<group>"; };
+		F1160EEF2D6DAB72006A19EC /* MarketTicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarketTicker.swift; sourceTree = "<group>"; };
 		F129EFDB2D630FEA00F3A74C /* upbit.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = upbit.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		F129EFF32D6310F100F3A74C /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		F129EFF42D6310F100F3A74C /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -54,6 +83,15 @@
 		F129F03B2D631CFE00F3A74C /* KeyboardAdjustable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyboardAdjustable.swift; sourceTree = "<group>"; };
 		F129F03D2D631D1A00F3A74C /* UILabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UILabel.swift; sourceTree = "<group>"; };
 		F129F03F2D6320C000F3A74C /* ApiKey.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = ApiKey.plist; sourceTree = "<group>"; };
+		F129F0412D6359F600F3A74C /* UIColor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIColor.swift; sourceTree = "<group>"; };
+		F129F0432D635A0700F3A74C /* ThemeColor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeColor.swift; sourceTree = "<group>"; };
+		F129F0452D635FA000F3A74C /* SingleCandleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SingleCandleView.swift; sourceTree = "<group>"; };
+		F129F0472D635FD100F3A74C /* ChangeType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChangeType.swift; sourceTree = "<group>"; };
+		F129F0492D6361C800F3A74C /* MarketCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarketCell.swift; sourceTree = "<group>"; };
+		F129F04B2D63628300F3A74C /* PercentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PercentView.swift; sourceTree = "<group>"; };
+		F129F04D2D6362D000F3A74C /* UIDouble.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIDouble.swift; sourceTree = "<group>"; };
+		F133C8CD2D74246500A2F308 /* Decodable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Decodable.swift; sourceTree = "<group>"; };
+		F1F591B42D7492260046D507 /* SortOption.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SortOption.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -77,6 +115,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		F1160EE52D6D9BAE006A19EC /* DataSource */ = {
+			isa = PBXGroup;
+			children = (
+				F1160EE72D6D9BEF006A19EC /* MarketTableDataSource.swift */,
+			);
+			path = DataSource;
+			sourceTree = "<group>";
+		};
 		F129EFD22D630FEA00F3A74C = {
 			isa = PBXGroup;
 			children = (
@@ -103,6 +149,7 @@
 				F129F0212D63145400F3A74C /* Service */,
 				F129F0262D63147500F3A74C /* CustomView */,
 				F129F0282D63152300F3A74C /* Coordinator */,
+				F1160EE52D6D9BAE006A19EC /* DataSource */,
 				F129F0242D63146900F3A74C /* Model */,
 				F129F0232D63146100F3A74C /* ViewModel */,
 				F129F0222D63145A00F3A74C /* ViewController */,
@@ -118,6 +165,11 @@
 		F129F01E2D63143C00F3A74C /* Enum */ = {
 			isa = PBXGroup;
 			children = (
+				F129F0472D635FD100F3A74C /* ChangeType.swift */,
+				F1160EE92D6DA65D006A19EC /* AbType.swift */,
+				F1160EED2D6DA6F0006A19EC /* CurrencyType.swift */,
+				F10629E22D71DEC600EC48B6 /* SocketRequestType.swift */,
+				F1F591B42D7492260046D507 /* SortOption.swift */,
 			);
 			path = Enum;
 			sourceTree = "<group>";
@@ -132,9 +184,12 @@
 		F129F0202D63144B00F3A74C /* Extension */ = {
 			isa = PBXGroup;
 			children = (
-				F129F0392D631CDC00F3A74C /* UIViewController.swift */,
 				F129F03B2D631CFE00F3A74C /* KeyboardAdjustable.swift */,
+				F133C8CD2D74246500A2F308 /* Decodable.swift */,
+				F129F0392D631CDC00F3A74C /* UIViewController.swift */,
 				F129F03D2D631D1A00F3A74C /* UILabel.swift */,
+				F129F0412D6359F600F3A74C /* UIColor.swift */,
+				F129F04D2D6362D000F3A74C /* UIDouble.swift */,
 			);
 			path = Extension;
 			sourceTree = "<group>";
@@ -142,6 +197,8 @@
 		F129F0212D63145400F3A74C /* Service */ = {
 			isa = PBXGroup;
 			children = (
+				F1160EE02D6D8C1E006A19EC /* UpbitApiService.swift */,
+				F10629E02D71DD8B00EC48B6 /* UpbitWebSocketService.swift */,
 			);
 			path = Service;
 			sourceTree = "<group>";
@@ -169,6 +226,10 @@
 		F129F0242D63146900F3A74C /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				F1160EEF2D6DAB72006A19EC /* MarketTicker.swift */,
+				F1160EE22D6D9313006A19EC /* MarketInfo.swift */,
+				F1160EEB2D6DA66C006A19EC /* ApiTicker.swift */,
+				F10629E42D71E09E00EC48B6 /* SocketTicker.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -176,6 +237,7 @@
 		F129F0252D63147000F3A74C /* Cell */ = {
 			isa = PBXGroup;
 			children = (
+				F129F0492D6361C800F3A74C /* MarketCell.swift */,
 			);
 			path = Cell;
 			sourceTree = "<group>";
@@ -183,6 +245,8 @@
 		F129F0262D63147500F3A74C /* CustomView */ = {
 			isa = PBXGroup;
 			children = (
+				F129F0452D635FA000F3A74C /* SingleCandleView.swift */,
+				F129F04B2D63628300F3A74C /* PercentView.swift */,
 			);
 			path = CustomView;
 			sourceTree = "<group>";
@@ -192,6 +256,7 @@
 			children = (
 				F129EFF42D6310F100F3A74C /* Assets.xcassets */,
 				F129EFF72D6310F100F3A74C /* LaunchScreen.storyboard */,
+				F129F0432D635A0700F3A74C /* ThemeColor.swift */,
 			);
 			path = Resource;
 			sourceTree = "<group>";
@@ -301,18 +366,37 @@
 			buildActionMask = 2147483647;
 			files = (
 				F129F0322D6317B300F3A74C /* MarketViewController.swift in Sources */,
+				F129F0482D635FD100F3A74C /* ChangeType.swift in Sources */,
+				F129F0422D6359F600F3A74C /* UIColor.swift in Sources */,
+				F129F04A2D6361C800F3A74C /* MarketCell.swift in Sources */,
+				F1160EEA2D6DA65D006A19EC /* AbType.swift in Sources */,
 				F129F03E2D631D1A00F3A74C /* UILabel.swift in Sources */,
+				F1160EF02D6DAB72006A19EC /* MarketTicker.swift in Sources */,
+				F1160EEE2D6DA6F0006A19EC /* CurrencyType.swift in Sources */,
+				F10629E32D71DEC600EC48B6 /* SocketRequestType.swift in Sources */,
+				F1160EEC2D6DA66C006A19EC /* ApiTicker.swift in Sources */,
 				F129F02A2D63153600F3A74C /* Coordinator.swift in Sources */,
+				F10629E12D71DD8B00EC48B6 /* UpbitWebSocketService.swift in Sources */,
+				F1F591B52D7492260046D507 /* SortOption.swift in Sources */,
+				F129F04C2D63628300F3A74C /* PercentView.swift in Sources */,
 				F129F0302D63176C00F3A74C /* SettingViewModel.swift in Sources */,
+				F129F0462D635FA000F3A74C /* SingleCandleView.swift in Sources */,
 				F129F03A2D631CDC00F3A74C /* UIViewController.swift in Sources */,
 				F129F02C2D63175600F3A74C /* MarketViewModel.swift in Sources */,
+				F1160EE32D6D9313006A19EC /* MarketInfo.swift in Sources */,
 				F129EFFB2D6310F100F3A74C /* AppDelegate.swift in Sources */,
 				F129F0382D631C0100F3A74C /* MainTabBarCoordinator.swift in Sources */,
+				F10629E52D71E09E00EC48B6 /* SocketTicker.swift in Sources */,
+				F133C8CE2D74246500A2F308 /* Decodable.swift in Sources */,
 				F129F0362D63188100F3A74C /* SettingViewController.swift in Sources */,
+				F129F04E2D6362D000F3A74C /* UIDouble.swift in Sources */,
 				F129EFFC2D6310F100F3A74C /* SceneDelegate.swift in Sources */,
+				F1160EE82D6D9BEF006A19EC /* MarketTableDataSource.swift in Sources */,
 				F129F02E2D63176400F3A74C /* AccountViewModel.swift in Sources */,
 				F129F0342D63186E00F3A74C /* AccountViewController.swift in Sources */,
 				F129F03C2D631CFE00F3A74C /* KeyboardAdjustable.swift in Sources */,
+				F129F0442D635A0700F3A74C /* ThemeColor.swift in Sources */,
+				F1160EE12D6D8C1E006A19EC /* UpbitApiService.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

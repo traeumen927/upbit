@@ -6,10 +6,30 @@
 //
 
 import UIKit
+import RxSwift
+import RxCocoa
+import Toast
 
 class MarketViewController: UIViewController {
     // MARK: ViewModel
     private let viewModel: MarketViewModel
+    
+    // MARK: disposeBag
+    private let disposeBag = DisposeBag()
+    
+    // MARK: Diffable Data Source
+    private var dataSource: MarketTableDataSource!
+    
+    
+    // MARK: 테이블뷰
+    lazy var marketTableView: UITableView = {
+        let view = UITableView()
+        view.register(MarketCell.self, forCellReuseIdentifier: MarketCell.cellId)
+        view.backgroundColor = .clear
+        view.showsVerticalScrollIndicator = true
+        view.separatorStyle = .none
+        return view
+    }()
     
     init(viewModel: MarketViewModel) {
         self.viewModel = viewModel
@@ -19,13 +39,72 @@ class MarketViewController: UIViewController {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         self.layout()
+        self.bind()
     }
     
     private func layout() {
+        self.configureSortMenu()
         
+        self.view.addSubview(self.marketTableView)
+        self.marketTableView.snp.makeConstraints { make in
+            make.top.leading.bottom.trailing.equalToSuperview()
+        }
+    }
+    
+    private func bind() {
+        // MARK: DataSource 연결
+        self.dataSource = MarketTableDataSource(tableView: self.marketTableView)
+        
+        // MARK: 거래 가능한 목록 구독, 0.25초 마다 이벤트 방출
+        self.viewModel.marketTickerSubject
+            .observe(on: MainScheduler.instance)
+            .throttle(.milliseconds(250), latest: true, scheduler: MainScheduler.instance)
+            .subscribe(onNext: { [weak self] marketTickers in
+                guard let self = self else { return }
+                // MARK: snapshot 업데이트
+                self.dataSource.update(with: marketTickers)
+            }).disposed(by: disposeBag)
+        
+        // MARK: 메세지 구독
+        self.viewModel.messageSubject
+            .observe(on: MainScheduler.instance)
+            .subscribe(onNext: { [weak self] message in
+                guard let self = self else { return }
+                self.view.makeToast(message, duration: 2.0, position: .bottom)
+            }).disposed(by: disposeBag)
+    }
+    
+    // MARK: 코인 정렬메뉴 설정
+    private func configureSortMenu() {
+        // MARK: sort 옵션별 액션 할당
+        let actions = SortOption.allCases.map { option -> UIAction in
+            let state: UIMenuElement.State = (option == self.viewModel.sortOption) ? .on : .off
+            return UIAction(title: option.rawValue, state: state) { [weak self] _ in
+                guard let self = self else { return }
+                
+                // MARK: viewModel에 변경된 정렬 option 전달
+                self.viewModel.sortOption = option
+                
+                // MARK: 메뉴의 상태를 갱신
+                self.configureSortMenu()
+            }
+        }
+        
+        let menu = UIMenu(title: "정렬 옵션", children: actions)
+        navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "arrow.up.arrow.down"), menu: menu)
+    }
+    
+    // MARK: 웹소켓 연결
+    override func viewWillAppear(_ animated: Bool) {
+        self.viewModel.connectWebSocket()
+    }
+    
+    // MARK: 웹소켓 연결 해제
+    override func viewWillDisappear(_ animated: Bool) {
+        self.viewModel.disconnectWebSocket()
     }
 }
