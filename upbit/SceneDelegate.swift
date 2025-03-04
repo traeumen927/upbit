@@ -18,6 +18,12 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         guard let windowScene = (scene as? UIWindowScene) else { return }
         let window = UIWindow(windowScene: windowScene)
         
+        // MARK: UINavigationBar Appearance 설정
+        let appearance = UINavigationBarAppearance()
+        appearance.configureWithDefaultBackground()
+        UINavigationBar.appearance().standardAppearance = appearance
+        UINavigationBar.appearance().scrollEdgeAppearance = appearance
+        
         // MARK: MVVM-C 패턴 적용: 메인 탭바 코디네이터를 생성하고 시작
         mainTabBarCoordinator = MainTabBarCoordinator()
         let tabBarController = mainTabBarCoordinator?.start()

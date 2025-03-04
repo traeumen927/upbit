@@ -21,6 +21,10 @@ class MarketViewModel {
     // MARK: 내부 관리 MarketTickers
     private var marketTickers: [MarketTicker] = []
     
+    // MARK: 특정 조건에 따라 사용될 현재 MarketTickers
+    private var filteredTickers: [MarketTicker] = []
+    
+    // MARK: - Place for Input
     // MARK: 코인 정렬 순서 옵션, 초기값은 24시간 누적 거래량
     var sortOption: SortOption = .volume24Descending {
         didSet {
@@ -28,6 +32,10 @@ class MarketViewModel {
             self.sortMarketTickers(by: sortOption)
         }
     }
+    
+    // MARK: 코인 검색어
+    let searchQuerySubject: PublishSubject<String> = PublishSubject<String>()
+    
     
     
     // MARK: - Place for Output
@@ -48,6 +56,14 @@ class MarketViewModel {
             .subscribe(onNext: { [weak self] eventWrapper in
                 guard let self = self else { return }
                 self.didReceiveEvent(event: eventWrapper.event)
+            }).disposed(by: disposeBag)
+        
+        // MARK: 코인 검색어 구독
+        self.searchQuerySubject
+            .asObservable()
+            .subscribe(onNext: { [weak self] query in
+                guard let self = self else { return }
+                self.queryMarketTickers(by: query)
             }).disposed(by: disposeBag)
     }
     
@@ -76,6 +92,7 @@ class MarketViewModel {
                         }
                         // MARK: 내부에 저장하고, 정렬 및 UI에 방출
                         self.marketTickers = marketTickers
+                        self.filteredTickers = marketTickers
                         self.sortMarketTickers(by: self.sortOption)
                         
                         // MARK: 웹소켓 구독 요청, 현재 매칭된 마켓 코드 리스트 전달
@@ -97,27 +114,47 @@ class MarketViewModel {
     // MARK: 코인 순서 정렬
     private func sortMarketTickers(by option: SortOption) {
         switch option {
-            case .volume24Descending:
-                marketTickers.sort { $0.ticker.acc_trade_price_24h > $1.ticker.acc_trade_price_24h }
-            case .volume24Ascending:
-                marketTickers.sort { $0.ticker.acc_trade_price_24h < $1.ticker.acc_trade_price_24h }
-            case .priceDescending:
-                marketTickers.sort { $0.ticker.trade_price > $1.ticker.trade_price }
-            case .priceAscending:
-                marketTickers.sort { $0.ticker.trade_price < $1.ticker.trade_price }
-            case .nameAscending:
-                marketTickers.sort { $0.marketInfo.koreanName < $1.marketInfo.koreanName }
-            case .nameDescending:
-                marketTickers.sort { $0.marketInfo.koreanName > $1.marketInfo.koreanName }
+        case .volume24Descending:
+            filteredTickers.sort { $0.ticker.acc_trade_price_24h > $1.ticker.acc_trade_price_24h }
+        case .volume24Ascending:
+            filteredTickers.sort { $0.ticker.acc_trade_price_24h < $1.ticker.acc_trade_price_24h }
+        case .priceDescending:
+            filteredTickers.sort { $0.ticker.trade_price > $1.ticker.trade_price }
+        case .priceAscending:
+            filteredTickers.sort { $0.ticker.trade_price < $1.ticker.trade_price }
+        case .nameAscending:
+            filteredTickers.sort { $0.marketInfo.koreanName < $1.marketInfo.koreanName }
+        case .nameDescending:
+            filteredTickers.sort { $0.marketInfo.koreanName > $1.marketInfo.koreanName }
+        }
+        self.marketTickerSubject.onNext(self.filteredTickers)
+    }
+    
+    // MARK: 코인 검색 필터링
+    private func queryMarketTickers(by query: String) {
+        let trimmedQuery = query.trimmingCharacters(in: .whitespaces)
+            
+        if trimmedQuery.isEmpty {
+            // MARK: 검색어가 없으면 현재 정렬을 기준으로 전체 데이터 방출
+            self.filteredTickers = self.marketTickers
+            self.sortMarketTickers(by: self.sortOption)
+        } else {
+            // MARK: 검색어가 포함된 방목이 있다면 필터링된 데이터 방출
+            let lowerQuery = trimmedQuery.lowercased()
+            self.filteredTickers = marketTickers.filter {
+                $0.marketInfo.koreanName.lowercased().contains(lowerQuery) ||
+                $0.marketInfo.englishName.lowercased().contains(lowerQuery)
             }
-            marketTickerSubject.onNext(marketTickers)
+            self.marketTickerSubject.onNext(self.filteredTickers)
+            // TODO: 한글 초성 검색 or 검색과정중 필터링 진행(ex 비트코인 -> 빝, 비틐, 비트콩, 비트코이 ...)
+        }
     }
     
     // MARK: WebSocketDelegate에서 발생하는 WebSocket Event 처리
     private func didReceiveEvent(event: WebSocketEvent) {
         
         let className = String(describing: self)
-    
+        
         switch event {
             
             // MARK: 소켓이 연결됨
@@ -179,13 +216,13 @@ class MarketViewModel {
     // MARK: 웹소켓으로부터 받은 바이너리 데이터 핸들링
     private func handleSocketData(data: Data) {
         if let ticker: SocketTicker = SocketTicker.parseData(data),
-           let index = marketTickers.firstIndex(where: { $0.marketInfo.market == ticker.code }) {
+           let index = self.filteredTickers.firstIndex(where: { $0.marketInfo.market == ticker.code }) {
             
             // MARK: 업데이트된 Ticker 삽입
-            self.marketTickers[index].ticker = ticker
+            self.filteredTickers[index].ticker = ticker
             
             // MARK: 업데이트된 MarketTicker 방출(socketTicker로 ticker 값만 변경될 때에는 로드시 최초의 정렬값 사용함)
-            self.marketTickerSubject.onNext(self.marketTickers)
+            self.marketTickerSubject.onNext(self.filteredTickers)
         }
     }
     
