@@ -8,6 +8,7 @@
 import UIKit
 import RxSwift
 import RxCocoa
+import SnapKit
 import Toast
 
 class MarketViewController: UIViewController {
@@ -20,9 +21,22 @@ class MarketViewController: UIViewController {
     // MARK: Diffable Data Source
     private var dataSource: MarketTableDataSource!
     
+    // MARK: 검색창 영역뷰의 하단 제약 저장 (키보드 대응)
+    private var searchViewBottomConstraint: Constraint?
+    
+    // MARK: 검색창
+    private lazy var searchBar: UISearchBar = {
+      let view = UISearchBar()
+        view.placeholder = "코인명을 검색해주세요."
+        view.showsCancelButton = true
+        view.searchTextField.textColor = ThemeColor.labl1
+        view.searchTextField.backgroundColor = ThemeColor.background1
+        view.returnKeyType = .search
+        return view
+    }()
     
     // MARK: 테이블뷰
-    lazy var marketTableView: UITableView = {
+    private lazy var marketTableView: UITableView = {
         let view = UITableView()
         view.register(MarketCell.self, forCellReuseIdentifier: MarketCell.cellId)
         view.backgroundColor = .clear
@@ -40,24 +54,58 @@ class MarketViewController: UIViewController {
         fatalError("init(coder:) has not been implemented")
     }
     
+    deinit {
+        // MARK: KeyboardAdjustable 프로토콜의 키보드 옵져버 제거
+        self.removeKeyboardObservers()
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         self.layout()
         self.bind()
     }
     
+    // MARK: 레이아웃 설정
     private func layout() {
+        // MARK: 우측 상단 BarbuttonItem 정렬 기능 설정
         self.configureSortMenu()
         
+        // MARK: 검색창 레이아웃
+        self.navigationItem.titleView = self.searchBar
+        
+        // MARK: 테이블뷰 레이아웃
         self.view.addSubview(self.marketTableView)
         self.marketTableView.snp.makeConstraints { make in
-            make.top.leading.bottom.trailing.equalToSuperview()
+            make.top.leading.trailing.equalToSuperview()
+            self.searchViewBottomConstraint = make.bottom.equalToSuperview().constraint
         }
     }
     
+    // MARK: 바인딩 설정
     private func bind() {
+        // MARK: KeyboardAdjustable 프로토콜의 옵저버 추가
+        self.addKeyboardObservers()
+        
         // MARK: DataSource 연결
         self.dataSource = MarketTableDataSource(tableView: self.marketTableView)
+        
+        // MARK: UISearchBar의 검색어 변경 이벤트 감지
+        self.searchBar.rx.text.orEmpty
+            .distinctUntilChanged()
+            .asObservable()
+            .subscribe(onNext: {[weak self] query in
+                guard let self = self else { return }
+                self.viewModel.searchQuerySubject.onNext(query)
+            }).disposed(by: disposeBag)
+        
+        
+        // MARK: UISearchBar의 취소 버튼 이벤트 감지
+        self.searchBar.rx.cancelButtonClicked
+            .observe(on: MainScheduler.instance)
+            .subscribe(onNext: { [weak self] in
+                guard let self = self else { return }
+                self.navigationController?.view.endEditing(true)
+            }).disposed(by: disposeBag)
         
         // MARK: 거래 가능한 목록 구독, 0.25초 마다 이벤트 방출
         self.viewModel.marketTickerSubject
@@ -106,5 +154,13 @@ class MarketViewController: UIViewController {
     // MARK: 웹소켓 연결 해제
     override func viewWillDisappear(_ animated: Bool) {
         self.viewModel.disconnectWebSocket()
+    }
+}
+
+// MARK: - Place for extension with KeyboardAdjustable
+extension MarketViewController: KeyboardAdjustable {
+    var adjustableBottomConstraint: Constraint? {
+        get { return self.searchViewBottomConstraint }
+        set { self.searchViewBottomConstraint = newValue }
     }
 }
