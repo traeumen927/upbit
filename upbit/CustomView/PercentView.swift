@@ -12,7 +12,7 @@ class PercentView: UIView {
     private let percentLabel: UILabel = {
         let label = UILabel()
         label.font = UIFont.systemFont(ofSize: 16, weight: .regular)
-        label.textColor = ThemeColor.lable3
+        label.textColor = ThemeColor.label3
         label.textAlignment = .right
         return label
     }()

@@ -53,7 +53,20 @@ class AccountViewModel {
         accountManager.accountsObservable
             .subscribe(onNext: { [weak self] accounts in
                 guard let self = self else { return }
-                print(accounts)
+                
+                // MARK: 보유원화를 제외한 자산의 마켓 코드 배열(currency가 KRW면 원화)
+                let codes = accounts.filter({$0.currency != "KRW"}).map { "\($0.unit_currency)-\($0.currency)"}
+                
+                /*
+                 codes의 예시
+                 ["KRW-BTC", "KRW-DOGE", "KRW-STORJ", "KRW-EOSDAC", "KRW-GAS", "KRW-HORUS", "KRW-ADD", "KRW-MEETONE", "KRW-CHL", "KRW-BLACK", "KRW-STPT", "KRW-SHIB"]
+                 */
+                
+                // MARK: 원화를 제외한 자산(코인)이 있다면 현재가 조회
+                if !codes.isEmpty {
+                    // MARK: 현재가(Ticker) 조회
+                    self.webSocketService.subscribeTo(types: [.ticker], symbol: codes)
+                }
             }).disposed(by: disposeBag)
     }
     
@@ -126,7 +139,7 @@ class AccountViewModel {
     // MARK: 웹소켓으로부터 받은 바이너리 데이터 핸들링
     private func handleSocketData(data: Data) {
         if let ticker: SocketTicker = SocketTicker.parseData(data) {
-            
+            print(ticker)
         }
     }
     

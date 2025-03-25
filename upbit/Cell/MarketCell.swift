@@ -22,7 +22,7 @@ class MarketCell: UITableViewCell {
     private let marketKorLabel: UILabel = {
         let label = UILabel()
         label.font = UIFont.systemFont(ofSize: 14, weight: .bold)
-        label.textColor = ThemeColor.labl1
+        label.textColor = ThemeColor.label1
         label.numberOfLines = 0
         label.adjustsFontSizeToFitWidth = true
         label.minimumScaleFactor = 0.5
