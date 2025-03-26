@@ -15,7 +15,7 @@ enum ChangeType: String, Codable {
     var color: UIColor {
         switch self {
         case .even:
-            return ThemeColor.evenBackground
+            return ThemeColor.evenPrimary
         case .rise:
             return ThemeColor.risePrimary
         case .fall:

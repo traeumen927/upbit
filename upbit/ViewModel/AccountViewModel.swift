@@ -23,6 +23,9 @@ class AccountViewModel {
     // MARK: 내가 보유한 자산 리스트
     let accountSubject: BehaviorSubject<[Account]> = BehaviorSubject(value: [])
     
+    // MARK: 내가 보유한 코인 ticker
+    let tickerSubject: PublishSubject<SocketTicker> = PublishSubject<SocketTicker>()
+    
     // MARK: 메세지 주제
     let messageSubject: PublishSubject<String> = PublishSubject<String>()
     
@@ -53,6 +56,9 @@ class AccountViewModel {
         accountManager.accountsObservable
             .subscribe(onNext: { [weak self] accounts in
                 guard let self = self else { return }
+                
+                // MARK: 보유자산 방출
+                self.accountSubject.onNext(accounts)
                 
                 // MARK: 보유원화를 제외한 자산의 마켓 코드 배열(currency가 KRW면 원화)
                 let codes = accounts.filter({$0.currency != "KRW"}).map { "\($0.unit_currency)-\($0.currency)"}
@@ -139,7 +145,7 @@ class AccountViewModel {
     // MARK: 웹소켓으로부터 받은 바이너리 데이터 핸들링
     private func handleSocketData(data: Data) {
         if let ticker: SocketTicker = SocketTicker.parseData(data) {
-            print(ticker)
+            self.tickerSubject.onNext(ticker)
         }
     }
     
