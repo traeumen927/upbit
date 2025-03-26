@@ -17,6 +17,9 @@
 		F1160EEC2D6DA66C006A19EC /* ApiTicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1160EEB2D6DA66C006A19EC /* ApiTicker.swift */; };
 		F1160EEE2D6DA6F0006A19EC /* CurrencyType.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1160EED2D6DA6F0006A19EC /* CurrencyType.swift */; };
 		F1160EF02D6DAB72006A19EC /* MarketTicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1160EEF2D6DAB72006A19EC /* MarketTicker.swift */; };
+		F11D099B2D7B1E0800A8B2E0 /* Payload.swift in Sources */ = {isa = PBXBuildFile; fileRef = F11D099A2D7B1E0800A8B2E0 /* Payload.swift */; };
+		F11D099D2D7B1F3F00A8B2E0 /* Account.swift in Sources */ = {isa = PBXBuildFile; fileRef = F11D099C2D7B1F3F00A8B2E0 /* Account.swift */; };
+		F11D09A02D7B208600A8B2E0 /* AccountManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F11D099F2D7B208600A8B2E0 /* AccountManager.swift */; };
 		F129EFFB2D6310F100F3A74C /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F129EFF32D6310F100F3A74C /* AppDelegate.swift */; };
 		F129EFFC2D6310F100F3A74C /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F129EFF82D6310F100F3A74C /* SceneDelegate.swift */; };
 		F129EFFE2D6310F100F3A74C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F129EFF42D6310F100F3A74C /* Assets.xcassets */; };
@@ -66,6 +69,9 @@
 		F1160EEB2D6DA66C006A19EC /* ApiTicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApiTicker.swift; sourceTree = "<group>"; };
 		F1160EED2D6DA6F0006A19EC /* CurrencyType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrencyType.swift; sourceTree = "<group>"; };
 		F1160EEF2D6DAB72006A19EC /* MarketTicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarketTicker.swift; sourceTree = "<group>"; };
+		F11D099A2D7B1E0800A8B2E0 /* Payload.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Payload.swift; sourceTree = "<group>"; };
+		F11D099C2D7B1F3F00A8B2E0 /* Account.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Account.swift; sourceTree = "<group>"; };
+		F11D099F2D7B208600A8B2E0 /* AccountManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountManager.swift; sourceTree = "<group>"; };
 		F129EFDB2D630FEA00F3A74C /* upbit.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = upbit.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		F129EFF32D6310F100F3A74C /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		F129EFF42D6310F100F3A74C /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -125,6 +131,14 @@
 			path = DataSource;
 			sourceTree = "<group>";
 		};
+		F11D099E2D7B207300A8B2E0 /* Singleton */ = {
+			isa = PBXGroup;
+			children = (
+				F11D099F2D7B208600A8B2E0 /* AccountManager.swift */,
+			);
+			path = Singleton;
+			sourceTree = "<group>";
+		};
 		F129EFD22D630FEA00F3A74C = {
 			isa = PBXGroup;
 			children = (
@@ -146,6 +160,7 @@
 			children = (
 				F129F0272D63149200F3A74C /* Resource */,
 				F129F01E2D63143C00F3A74C /* Enum */,
+				F11D099E2D7B207300A8B2E0 /* Singleton */,
 				F129F01F2D63144500F3A74C /* Protocol */,
 				F129F0202D63144B00F3A74C /* Extension */,
 				F129F0212D63145400F3A74C /* Service */,
@@ -233,6 +248,8 @@
 				F1160EE22D6D9313006A19EC /* MarketInfo.swift */,
 				F1160EEB2D6DA66C006A19EC /* ApiTicker.swift */,
 				F10629E42D71E09E00EC48B6 /* SocketTicker.swift */,
+				F11D099A2D7B1E0800A8B2E0 /* Payload.swift */,
+				F11D099C2D7B1F3F00A8B2E0 /* Account.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -388,14 +405,17 @@
 				F129F03A2D631CDC00F3A74C /* UIViewController.swift in Sources */,
 				F129F02C2D63175600F3A74C /* MarketViewModel.swift in Sources */,
 				F1160EE32D6D9313006A19EC /* MarketInfo.swift in Sources */,
+				F11D099D2D7B1F3F00A8B2E0 /* Account.swift in Sources */,
 				F129EFFB2D6310F100F3A74C /* AppDelegate.swift in Sources */,
 				F129F0382D631C0100F3A74C /* MainTabBarCoordinator.swift in Sources */,
+				F11D09A02D7B208600A8B2E0 /* AccountManager.swift in Sources */,
 				F10629E52D71E09E00EC48B6 /* SocketTicker.swift in Sources */,
 				F133C8CE2D74246500A2F308 /* Decodable.swift in Sources */,
 				F129F0362D63188100F3A74C /* SettingViewController.swift in Sources */,
 				F129F04E2D6362D000F3A74C /* UIDouble.swift in Sources */,
 				F129EFFC2D6310F100F3A74C /* SceneDelegate.swift in Sources */,
 				F1160EE82D6D9BEF006A19EC /* MarketTableDataSource.swift in Sources */,
+				F11D099B2D7B1E0800A8B2E0 /* Payload.swift in Sources */,
 				F129F02E2D63176400F3A74C /* AccountViewModel.swift in Sources */,
 				F129F0342D63186E00F3A74C /* AccountViewController.swift in Sources */,
 				F129F03C2D631CFE00F3A74C /* KeyboardAdjustable.swift in Sources */,

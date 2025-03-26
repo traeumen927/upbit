@@ -29,7 +29,7 @@ class MarketViewController: UIViewController {
       let view = UISearchBar()
         view.placeholder = "코인명을 검색해주세요."
         view.showsCancelButton = true
-        view.searchTextField.textColor = ThemeColor.labl1
+        view.searchTextField.textColor = ThemeColor.label1
         view.searchTextField.backgroundColor = ThemeColor.background1
         view.returnKeyType = .search
         return view

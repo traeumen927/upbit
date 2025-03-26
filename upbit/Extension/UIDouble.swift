@@ -49,3 +49,16 @@ extension Double {
         return percentage
     }
 }
+
+// MARK: Double의 값에 따라 상승, 보합, 하락 반환
+extension Double {
+    var changeType: ChangeType {
+        if self < 0 {
+            return .fall
+        } else if self > 0 {
+            return .rise
+        } else {
+            return .even
+        }
+    }
+}

@@ -22,13 +22,13 @@ struct ThemeColor {
     static let tintDisable: UIColor = #colorLiteral(red: 0.1921568627, green: 0.1960784314, blue: 0.2235294118, alpha: 1)
     
     ///라벨1 (45, 45, 45)
-    static let labl1: UIColor = #colorLiteral(red: 0.1764705882, green: 0.1764705882, blue: 0.1764705882, alpha: 1)
+    static let label1: UIColor = #colorLiteral(red: 0.1764705882, green: 0.1764705882, blue: 0.1764705882, alpha: 1)
     
     ///라벨2 (147, 147, 147)
-    static let lable2: UIColor = #colorLiteral(red: 0.5764705882, green: 0.5764705882, blue: 0.5764705882, alpha: 1)
+    static let label2: UIColor = #colorLiteral(red: 0.5764705882, green: 0.5764705882, blue: 0.5764705882, alpha: 1)
     
     ///라벨3 (239, 239, 239)
-    static let lable3: UIColor = #colorLiteral(red: 0.937254902, green: 0.937254902, blue: 0.937254902, alpha: 1)
+    static let label3: UIColor = #colorLiteral(red: 0.937254902, green: 0.937254902, blue: 0.937254902, alpha: 1)
     
     ///배경1 (255, 255, 255)
     static let background1: UIColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)

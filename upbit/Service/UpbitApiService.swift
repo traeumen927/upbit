@@ -5,9 +5,9 @@
 //  Created by 홍정연 on 2/25/25.
 //
 
+import Foundation
 import Alamofire
 import SwiftJWT
-import Foundation
 
 // MARK: Upbit에서 제공하는 코인관련 API Service(https://docs.upbit.com/reference/)
 struct UpbitApiService {
@@ -53,11 +53,11 @@ struct UpbitApiService {
             .validate(statusCode: 200..<300)
             .responseDecodable(of: T.self) { response in
                 
-//                if let data = response.data, let dataString = String(data: data, encoding: .utf8) {
-//                    print("Response Data: \(dataString)")
-//                } else {
-//                    print("No response data.")
-//                }
+                //                if let data = response.data, let dataString = String(data: data, encoding: .utf8) {
+                //                    print("Response Data: \(dataString)")
+                //                } else {
+                //                    print("No response data.")
+                //                }
                 
                 switch response.result {
                 case .success(let data):
@@ -83,23 +83,30 @@ extension UpbitApiService {
         // MARK: 마켓별 종목 현재가 정보(ex. KRW, BTC, USDT)
         case tickerAll(quote_currencies: String)
         
+        // MARK: 전체 계좌 조회
+        case accounts
+        
         // MARK: 요청 경로
         var path: String {
             switch self {
             case .marketAll:
-                return "/market/all"
+                return "market/all"
                 
             case .ticker:
                 return "ticker"
                 
             case .tickerAll:
                 return "ticker/all"
+                
+            case .accounts:
+                return "accounts"
             }
         }
         
         // MARK: 파라미터
         var parameters: Parameters? {
             switch self {
+                
             case .marketAll(let isDetails):
                 return ["is_details" : isDetails]
                 
@@ -108,14 +115,38 @@ extension UpbitApiService {
                 
             case .tickerAll(let quote_currencies):
                 return ["quote_currencies": quote_currencies]
+                
+            case .accounts:
+                return nil
             }
         }
         
         // MARK: 헤더
         var headers: HTTPHeaders? {
             switch self {
+                // MARK: 인증이 필요 없는 요청
             case .marketAll, .ticker, .tickerAll:
                 return nil
+                
+                // MARK: 인증이 필요한 요청
+            case .accounts:
+                let jwt = self.generateJWT()
+                return ["Authorization": "Bearer \(jwt)"]
+            }
+        }
+        
+        // MARK: 인증이 필요한 요청에 사용되는 Json Web Token 생성
+        private func generateJWT() -> String {
+            // MARK: JWT 페이로드 생성
+            let payload = Payload(access_key: accessKey, nonce: UUID().uuidString)
+            
+            // MARK: JWT 생성
+            do {
+                var jwt = JWT(claims: payload)
+                let jwtString = try jwt.sign(using: .hs256(key: .init(Data(secretKey.utf8))))
+                return jwtString
+            } catch {
+                fatalError("Failed to generate JWT: \(error.localizedDescription)")
             }
         }
     }
