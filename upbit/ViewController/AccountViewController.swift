@@ -75,6 +75,22 @@ class AccountViewController: UIViewController {
         // MARK: 보유한 자산 주제 구독
         self.viewModel.accountSubject
             .asObservable()
+            .distinctUntilChanged { (prevAccounts, nextAccounts) -> Bool in
+                // MARK: 1. Accounts의 배열의 갯수가 바뀌면 변경된 것으로 판단
+                guard prevAccounts.count == nextAccounts.count else { return false }
+                
+                // MARK: 2. Accounts의 구성요소들의 종류, 수량, 매수평균가 등이 바뀌면 변경된 것으로 판단
+                for (prev, next) in zip(prevAccounts, nextAccounts) {
+                    if prev.currency != next.currency ||
+                        prev.balance != next.balance ||
+                        prev.avg_buy_price != next.avg_buy_price {
+                        return false
+                    }
+                }
+                
+                // MARK: 3. 모두 같다면 변경되지 않은 것으로 판단
+                return true
+            }
             .observe(on: MainScheduler.instance)
             .subscribe(onNext: { [weak self] accounts in
                 guard let self = self else { return }

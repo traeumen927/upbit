@@ -14,7 +14,7 @@ import Starscream
 class AccountViewModel {
     
     // MARK: disposeBag
-    private let disposeBag = DisposeBag()
+    private var disposeBag = DisposeBag()
     
     // MARK: 업비트 웹 소켓 서비스
     private let webSocketService = UpbitWebSocketService()
@@ -41,24 +41,15 @@ class AccountViewModel {
                 guard let self = self else { return }
                 self.didReceiveEvent(event: eventWrapper.event)
             }).disposed(by: disposeBag)
-    }
-    
-    // MARK: 전체 계좌 조회
-    private func fetchAccount() {
         
-        // MARK: 계좌 싱글톤 객체
-        let accountManager = AccountManager.shared
-        
-        // MARK: 계좌 싱글톤 계좌목록 최신화
-        accountManager.reload()
-        
-        // MARK: 계좌 싱글톤의 계좌목록 구독
-        accountManager.accountsObservable
+        // MARK: 보유 자산 구독
+        AccountManager.shared.accountsObservable
             .subscribe(onNext: { [weak self] accounts in
                 guard let self = self else { return }
                 
                 // MARK: 보유자산 방출
                 self.accountSubject.onNext(accounts)
+                print("방출")
                 
                 // MARK: 보유원화를 제외한 자산의 마켓 코드 배열(currency가 KRW면 원화)
                 let codes = accounts.filter({$0.currency != "KRW"}).map { "\($0.unit_currency)-\($0.currency)"}
@@ -72,8 +63,18 @@ class AccountViewModel {
                 if !codes.isEmpty {
                     // MARK: 현재가(Ticker) 조회
                     self.webSocketService.subscribeTo(types: [.ticker], symbol: codes)
+                    print("ws")
                 }
             }).disposed(by: disposeBag)
+    }
+    
+    // MARK: 전체 계좌 조회
+    private func fetchAccount() {
+        // MARK: 계좌 싱글톤 객체
+        let accountManager = AccountManager.shared
+        
+        // MARK: 계좌 싱글톤 계좌목록 최신화
+        accountManager.reload()
     }
     
     // MARK: tickerRelay 업데이트
