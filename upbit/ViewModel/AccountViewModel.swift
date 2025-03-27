@@ -14,7 +14,7 @@ import Starscream
 class AccountViewModel {
     
     // MARK: disposeBag
-    private let disposeBag = DisposeBag()
+    private var disposeBag = DisposeBag()
     
     // MARK: 업비트 웹 소켓 서비스
     private let webSocketService = UpbitWebSocketService()
@@ -24,7 +24,7 @@ class AccountViewModel {
     let accountSubject: BehaviorSubject<[Account]> = BehaviorSubject(value: [])
     
     // MARK: 내가 보유한 코인 ticker
-    let tickerSubject: PublishSubject<SocketTicker> = PublishSubject<SocketTicker>()
+    let tickerRelay: BehaviorRelay<[SocketTicker]> = BehaviorRelay(value: [])
     
     // MARK: 메세지 주제
     let messageSubject: PublishSubject<String> = PublishSubject<String>()
@@ -41,19 +41,9 @@ class AccountViewModel {
                 guard let self = self else { return }
                 self.didReceiveEvent(event: eventWrapper.event)
             }).disposed(by: disposeBag)
-    }
-    
-    // MARK: 전체 계좌 조회
-    private func fetchAccount() {
         
-        // MARK: 계좌 싱글톤 객체
-        let accountManager = AccountManager.shared
-        
-        // MARK: 계좌 싱글톤 계좌목록 최신화
-        accountManager.reload()
-        
-        // MARK: 계좌 싱글톤의 계좌목록 구독
-        accountManager.accountsObservable
+        // MARK: 보유 자산 구독
+        AccountManager.shared.accountsObservable
             .subscribe(onNext: { [weak self] accounts in
                 guard let self = self else { return }
                 
@@ -74,6 +64,29 @@ class AccountViewModel {
                     self.webSocketService.subscribeTo(types: [.ticker], symbol: codes)
                 }
             }).disposed(by: disposeBag)
+    }
+    
+    // MARK: 전체 계좌 조회
+    private func fetchAccount() {
+        // MARK: 계좌 싱글톤 객체
+        let accountManager = AccountManager.shared
+        
+        // MARK: 계좌 싱글톤 계좌목록 최신화
+        accountManager.reload()
+    }
+    
+    // MARK: tickerRelay 업데이트
+    private func updateTicker(with ticker: SocketTicker) {
+        var tickers = self.tickerRelay.value
+        
+        if let index = tickers.firstIndex(where: { $0.code == ticker.code }) {
+            tickers[index] = ticker
+        } else {
+            tickers.append(ticker)
+        }
+        
+        // MARK: 업데이트된 ticker Relay 방출
+        self.tickerRelay.accept(tickers)
     }
     
     
@@ -145,7 +158,7 @@ class AccountViewModel {
     // MARK: 웹소켓으로부터 받은 바이너리 데이터 핸들링
     private func handleSocketData(data: Data) {
         if let ticker: SocketTicker = SocketTicker.parseData(data) {
-            self.tickerSubject.onNext(ticker)
+            self.updateTicker(with: ticker)
         }
     }
     
