@@ -54,6 +54,7 @@
 		F129F04C2D63628300F3A74C /* PercentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F129F04B2D63628300F3A74C /* PercentView.swift */; };
 		F129F04E2D6362D000F3A74C /* UIDouble.swift in Sources */ = {isa = PBXBuildFile; fileRef = F129F04D2D6362D000F3A74C /* UIDouble.swift */; };
 		F133C8CE2D74246500A2F308 /* Decodable.swift in Sources */ = {isa = PBXBuildFile; fileRef = F133C8CD2D74246500A2F308 /* Decodable.swift */; };
+		F1C651362D9591DF0075F637 /* PercentFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1C651352D9591DF0075F637 /* PercentFormatter.swift */; };
 		F1F1362C2D76D8660044832C /* UIView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1F1362B2D76D8660044832C /* UIView.swift */; };
 		F1F591B52D7492260046D507 /* SortOption.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1F591B42D7492260046D507 /* SortOption.swift */; };
 /* End PBXBuildFile section */
@@ -98,6 +99,7 @@
 		F129F04B2D63628300F3A74C /* PercentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PercentView.swift; sourceTree = "<group>"; };
 		F129F04D2D6362D000F3A74C /* UIDouble.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIDouble.swift; sourceTree = "<group>"; };
 		F133C8CD2D74246500A2F308 /* Decodable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Decodable.swift; sourceTree = "<group>"; };
+		F1C651352D9591DF0075F637 /* PercentFormatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PercentFormatter.swift; sourceTree = "<group>"; };
 		F1F1362B2D76D8660044832C /* UIView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIView.swift; sourceTree = "<group>"; };
 		F1F591B42D7492260046D507 /* SortOption.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SortOption.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -208,6 +210,7 @@
 				F129F03D2D631D1A00F3A74C /* UILabel.swift */,
 				F129F0412D6359F600F3A74C /* UIColor.swift */,
 				F129F04D2D6362D000F3A74C /* UIDouble.swift */,
+				F1C651352D9591DF0075F637 /* PercentFormatter.swift */,
 			);
 			path = Extension;
 			sourceTree = "<group>";
@@ -408,6 +411,7 @@
 				F11D099D2D7B1F3F00A8B2E0 /* Account.swift in Sources */,
 				F129EFFB2D6310F100F3A74C /* AppDelegate.swift in Sources */,
 				F129F0382D631C0100F3A74C /* MainTabBarCoordinator.swift in Sources */,
+				F1C651362D9591DF0075F637 /* PercentFormatter.swift in Sources */,
 				F11D09A02D7B208600A8B2E0 /* AccountManager.swift in Sources */,
 				F10629E52D71E09E00EC48B6 /* SocketTicker.swift in Sources */,
 				F133C8CE2D74246500A2F308 /* Decodable.swift in Sources */,

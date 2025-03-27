@@ -49,7 +49,6 @@ class AccountViewModel {
                 
                 // MARK: 보유자산 방출
                 self.accountSubject.onNext(accounts)
-                print("방출")
                 
                 // MARK: 보유원화를 제외한 자산의 마켓 코드 배열(currency가 KRW면 원화)
                 let codes = accounts.filter({$0.currency != "KRW"}).map { "\($0.unit_currency)-\($0.currency)"}
@@ -63,7 +62,6 @@ class AccountViewModel {
                 if !codes.isEmpty {
                     // MARK: 현재가(Ticker) 조회
                     self.webSocketService.subscribeTo(types: [.ticker], symbol: codes)
-                    print("ws")
                 }
             }).disposed(by: disposeBag)
     }
