@@ -24,7 +24,7 @@ class AccountViewModel {
     let accountSubject: BehaviorSubject<[Account]> = BehaviorSubject(value: [])
     
     // MARK: 내가 보유한 코인 ticker
-    let tickerSubject: PublishSubject<SocketTicker> = PublishSubject<SocketTicker>()
+    let tickerRelay: BehaviorRelay<[SocketTicker]> = BehaviorRelay(value: [])
     
     // MARK: 메세지 주제
     let messageSubject: PublishSubject<String> = PublishSubject<String>()
@@ -74,6 +74,20 @@ class AccountViewModel {
                     self.webSocketService.subscribeTo(types: [.ticker], symbol: codes)
                 }
             }).disposed(by: disposeBag)
+    }
+    
+    // MARK: tickerRelay 업데이트
+    private func updateTicker(with ticker: SocketTicker) {
+        var tickers = self.tickerRelay.value
+        
+        if let index = tickers.firstIndex(where: { $0.code == ticker.code }) {
+            tickers[index] = ticker
+        } else {
+            tickers.append(ticker)
+        }
+        
+        // MARK: 업데이트된 ticker Relay 방출
+        self.tickerRelay.accept(tickers)
     }
     
     
@@ -145,7 +159,7 @@ class AccountViewModel {
     // MARK: 웹소켓으로부터 받은 바이너리 데이터 핸들링
     private func handleSocketData(data: Data) {
         if let ticker: SocketTicker = SocketTicker.parseData(data) {
-            self.tickerSubject.onNext(ticker)
+            self.updateTicker(with: ticker)
         }
     }
     

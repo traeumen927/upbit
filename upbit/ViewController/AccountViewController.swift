@@ -82,14 +82,15 @@ class AccountViewController: UIViewController {
                 self.accountView.configure(accounts: accounts)
             }).disposed(by: disposeBag)
         
-        // MARK: 보유한 코인의 ticker 구독
-        self.viewModel.tickerSubject
+        // MARK: 보유한 코인의 ticker 구독, 0.25초 마다 이벤트 방출
+        self.viewModel.tickerRelay
             .asObservable()
+            .throttle(.milliseconds(250), latest: true, scheduler: MainScheduler.instance)
             .observe(on: MainScheduler.instance)
-            .subscribe(onNext: { [weak self] ticker in
+            .subscribe(onNext: { [weak self] tickers in
                 guard let self = self else { return }
                 // MARK: 보유자산뷰 update
-                self.accountView.update(ticker: ticker)
+                self.accountView.update(tickers: tickers)
             }).disposed(by: disposeBag)
     }
     
@@ -213,16 +214,19 @@ fileprivate class AccountView: UIView {
             sum + ((account.balance + account.locked) * account.avg_buy_price)
         }
         
+        self.totalLabel.text = "\(coinVolumeAmount.formattedStringWithCommaAndDecimal(places: 0))원"
+        
         self.krwLabel.text = "보유원화 \(krwVolume.formattedStringWithCommaAndDecimal(places: 0))원"
         
         self.investLabel.text = "투자금액 \(coinVolumeAmount.formattedStringWithCommaAndDecimal(places: 0))원"
-        
-        print(accounts)
     }
     
     // MARK: 데이터 업데이트
-    func update(ticker: SocketTicker) {
-        tickerDictionary[ticker.code] = ticker
+    func update(tickers: [SocketTicker]) {
+        
+        tickers.forEach { ticker in
+            tickerDictionary[ticker.code] = ticker
+        }
         
         // MARK: 보유원화
         let krwVolume = self.accounts.first(where: { $0.currency == "KRW" })?.balance ?? 0
@@ -258,7 +262,5 @@ fileprivate class AccountView: UIView {
         
         // MARK: 보유원화 배치
         self.krwLabel.text = "보유원화 \(krwVolume.formattedStringWithCommaAndDecimal(places: 0))원"
-        
-        
     }
 }
