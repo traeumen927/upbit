@@ -357,8 +357,42 @@ fileprivate class AccountChartView: UIView {
         }
     }
     
-    func update() {
+    // MARK: 데이터 업데이트
+    func update(tickers: [SocketTicker]) {
         
+        // MARK: tickerDictionary 업데이트
+        tickers.forEach { ticker in
+            tickerDictionary[ticker.code] = ticker
+        }
+        
+        // MARK: 각 계좌의 최신 가치 계산 후 PieChartDataEntry 생성
+        let entries = accounts.compactMap { account -> PieChartDataEntry? in
+            var value: Double = 0.0
+            
+            if account.currency == "KRW" {
+                // MARK:  원화 계좌: 단순 잔액 사용
+                value = account.balance
+            } else {
+                // MARK:  코인 계좌: "KRW-BTC"와 같이 구성된 마켓코드 사용
+                let marketCode = "\(account.unit_currency)-\(account.currency)"
+                // MARK:  최신 ticker가 있으면 해당 가격으로 계산, 없으면 avg_buy_price 사용
+                if let ticker = tickerDictionary[marketCode] {
+                    value = (account.balance + account.locked) * ticker.trade_price
+                } else {
+                    value = (account.balance + account.locked) * account.avg_buy_price
+                }
+            }
+            
+            // MARK:  0 이하인 경우 제외
+            guard value > 0 else { return nil }
+            return PieChartDataEntry(value: value, label: account.currency)
+        }
+        .sorted { $0.value > $1.value }
+        
+        // MARK:  데이터가 있으면 차트에 반영
+        if !entries.isEmpty {
+            setData(entries: entries)
+        }
     }
     
     func setData(entries: [PieChartDataEntry]) {
