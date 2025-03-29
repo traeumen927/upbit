@@ -82,44 +82,37 @@ class AccountViewController: UIViewController {
     // MARK: 바인딩 설정
     private func bind() {
         
-        // MARK: 보유한 자산 주제 구독
-        self.viewModel.accountSubject
+        // MARK: 보유원화 구독
+        self.viewModel.accountKRWSubject
             .asObservable()
-            .distinctUntilChanged { (prevAccounts, nextAccounts) -> Bool in
-                // MARK: 1. Accounts의 배열의 갯수가 바뀌면 변경된 것으로 판단
-                guard prevAccounts.count == nextAccounts.count else { return false }
-                
-                // MARK: 2. Accounts의 구성요소들의 종류, 수량, 매수평균가 등이 바뀌면 변경된 것으로 판단
-                for (prev, next) in zip(prevAccounts, nextAccounts) {
-                    if prev.currency != next.currency ||
-                        prev.balance != next.balance ||
-                        prev.avg_buy_price != next.avg_buy_price {
-                        return false
-                    }
-                }
-                
-                // MARK: 3. 모두 같다면 변경되지 않은 것으로 판단
-                return true
-            }
+            .distinctUntilChanged()
             .observe(on: MainScheduler.instance)
-            .subscribe(onNext: { [weak self] accounts in
+            .subscribe(onNext: { [weak self] krwAccount in
                 guard let self = self else { return }
-                // MARK: 보유자산뷰 Configure
-                self.accountAmountView.configure(accounts: accounts)
-                
-                // MARK: 파이차트뷰 Configure
-                self.accountChartView.configure(accounts: accounts)
+                // MARK: 보유자산 뷰 원화 갱신
+                self.accountAmountView.setKRW(account: krwAccount)
             }).disposed(by: disposeBag)
         
-        // MARK: 보유한 코인의 ticker 구독, 0.25초 마다 이벤트 방출
-        self.viewModel.tickerRelay
+        // MARK: 보유한 자산 + 현재가 주제 구독
+        self.viewModel.accountTickerRelay
             .asObservable()
             .throttle(.milliseconds(250), latest: true, scheduler: MainScheduler.instance)
-            .observe(on: MainScheduler.instance)
-            .subscribe(onNext: { [weak self] tickers in
+            .subscribe(onNext: { [weak self] accountTicker in
                 guard let self = self else { return }
-                // MARK: 보유자산뷰 update
-                self.accountAmountView.update(tickers: tickers)
+                
+                // MARK: 보유자산 뷰 갱신
+                self.accountAmountView.update(with: accountTicker)
+                
+                // MARK: 보유자산 파이차트 갱신
+                self.accountChartView.update(with: accountTicker)
+            }).disposed(by: disposeBag)
+        
+        // MARK: 메세지 구독
+        self.viewModel.messageSubject
+            .observe(on: MainScheduler.instance)
+            .subscribe(onNext: { [weak self] message in
+                guard let self = self else { return }
+                self.view.makeToast(message, duration: 2.0, position: .bottom)
             }).disposed(by: disposeBag)
     }
     
@@ -138,11 +131,8 @@ class AccountViewController: UIViewController {
 // MARK: 총 보유 자산이 보여질 UIVIew
 fileprivate class AccountAmountView: UIView {
     
-    // MARK: 최초 1회 configure로 저장하는 account 배열 객체
-    private var accounts: [Account] = [Account]()
-    
-    // MARK: 각 코인별 최신 ticker 정보를 저장하기 위한 딕셔너리
-    private var tickerDictionary: [String : SocketTicker] = [String : SocketTicker]()
+    // MARK: 원화자산 프로퍼티
+    private var krwAccount: Account?
     
     // MARK: 타이틀 라벨
     private lazy var titleLabel: UILabel = {
@@ -234,77 +224,45 @@ fileprivate class AccountAmountView: UIView {
         }
     }
     
-    // MARK: 데이터 configure
-    func configure(accounts: [Account]) {
-        self.accounts = accounts
+    // MARK: 원화자산 업데이트
+    func setKRW(account: Account) {
+        self.krwAccount = account
         
-        // MARK: 보유원화
-        let krwVolume = self.accounts.first(where: { $0.currency == "KRW" })?.balance ?? 0
-        
-        // MARK: 원화를 제외한 코인들의 총 투자금액 계산 -> sum((주문가능수량 + 주문대기수량) * 평균구매가)
-        let coinVolumeAmount = self.accounts.filter { $0.currency != "KRW"}.reduce(0) { sum, account in
-            sum + ((account.balance + account.locked) * account.avg_buy_price)
-        }
-        
-        self.totalLabel.text = "\(coinVolumeAmount.formattedStringWithCommaAndDecimal(places: 0))원"
-        
-        self.krwLabel.text = "보유원화 \(krwVolume.formattedStringWithCommaAndDecimal(places: 0))원"
-        
-        self.investLabel.text = "투자금액 \(coinVolumeAmount.formattedStringWithCommaAndDecimal(places: 0))원"
+        self.update()
     }
     
     // MARK: 데이터 업데이트
-    func update(tickers: [SocketTicker]) {
+    func update(with accountTickers: [AccountTicker]? = nil) {
         
-        tickers.forEach { ticker in
-            tickerDictionary[ticker.code] = ticker
+        guard let krwAccount = self.krwAccount else { return }
+        
+        // MARK: 코인 투자금액: 매수 평균가 기준
+        let coinInvestedAmount = (accountTickers ?? []).reduce(0.0) { sum, accountTicker in
+            sum + ((accountTicker.account.balance + accountTicker.account.locked) * accountTicker.account.avg_buy_price)
         }
         
-        // MARK: 보유원화
-        let krwVolume = self.accounts.first(where: { $0.currency == "KRW" })?.balance ?? 0
-        
-        // MARK: 원화를 제외한 코인들의 총 투자금액 계산 -> sum((주문가능수량 + 주문대기수량) * 평균구매가)
-        let coinVolumeAmount = self.accounts.filter { $0.currency != "KRW"}.reduce(0) { sum, account in
-            sum + ((account.balance + account.locked) * account.avg_buy_price)
+        // MARK: 코인 현재 가치: ticker를 통한 현재가
+        let coinCurrentValue = (accountTickers ?? []).reduce(0.0) { sum, accountTicker in
+            let currentPrice = accountTicker.ticker.trade_price
+            return sum + ((accountTicker.account.balance + accountTicker.account.locked) * currentPrice)
         }
         
-        // MARK: 원화를 제외한 코인들의 현재가치, 실시간 가격이 있으면 사용하고, 없으면 매수 평균가 사용함
-        let coinVolumeValue = self.accounts.filter { $0.currency != "KRW"}.reduce(0) { sum, account in
-            let price = tickerDictionary["\(account.unit_currency)-\(account.currency)"]?.trade_price ?? account.avg_buy_price
-            return sum + (account.balance + account.locked) * price
-        }
+        // MARK: 총 자산 = 보유원화 + 코인 현재가
+        let totalValue = krwAccount.balance + coinCurrentValue
+        let changeValue = coinCurrentValue - coinInvestedAmount
+        let changePercentage = coinInvestedAmount > 0 ? (changeValue / coinInvestedAmount) * 100 : 0.0
         
-        // MARK: 총 자산 = 보유원화 + 코인 현재가의 합
-        let totalValue = krwVolume + coinVolumeValue
-        
-        // MARK: 수익률
-        let changePercentage: Double = coinVolumeAmount > 0 ? ((coinVolumeValue - coinVolumeAmount) / coinVolumeAmount) * 100 : 0
-        
-        // MARK: 수익증감액
-        let changeValue: Double = coinVolumeValue - coinVolumeAmount
-        
-        // MARK: 총 자산 배치
+        // MARK: 라벨 업데이트
         self.totalLabel.text = "\(totalValue.formattedStringWithCommaAndDecimal(places: 0))원"
-        
-        // MARK: 수익률 배치
+        self.investLabel.text = "투자금액 \(coinInvestedAmount.formattedStringWithCommaAndDecimal(places: 0))원"
         self.changeLabel.text = "\(changePercentage.formattedStringWithCommaAndDecimal(places: 2, removeZero: false))% (\(changeValue.formattedStringWithCommaAndDecimal(places: 0))원)"
-        
-        // MARK: 수익률 색상 설정
         self.changeLabel.textColor = changeValue.changeType.color
-        
-        // MARK: 보유원화 배치
-        self.krwLabel.text = "보유원화 \(krwVolume.formattedStringWithCommaAndDecimal(places: 0))원"
+        self.krwLabel.text = "보유원화 \(krwAccount.balance.formattedStringWithCommaAndDecimal(places: 0))원"
     }
 }
 
 // MARK: 총 보유 자산을 PieChart로 구성할 뷰
 fileprivate class AccountChartView: UIView {
-    
-    // MARK: 최초 1회 configure로 저장하는 account 배열 객체
-    private var accounts: [Account] = [Account]()
-    
-    // MARK: 각 코인별 최신 ticker 정보를 저장하기 위한 딕셔너리
-    private var tickerDictionary: [String : SocketTicker] = [String : SocketTicker]()
     
     // MARK: 파이차트
     private var pieChart: PieChartView = {
@@ -338,58 +296,20 @@ fileprivate class AccountChartView: UIView {
         }
     }
     
-    // MARK: 최초 1회 보유 자산을 매수가 기준으로 파이차트 엔트리 구성
-    func configure(accounts: [Account]) {
-        self.accounts = accounts
-        
-        let entries = accounts.compactMap { account -> PieChartDataEntry? in
-            // MARK: 원화인경우 value -> (주문 가능 수량 + 주문중 묶인 수량) * 매수평균가
-            // MARK: 코인인경우 value -> (주문 가능 수량 + 주문중 묶인 수량) * 매수평균가
-            let value: Double = account.currency == "KRW" ? account.balance : (account.balance + account.locked) * account.avg_buy_price
-            
-            guard value > 0 else { return nil }
-            return PieChartDataEntry(value: value, label: account.currency)
-        }
-        .sorted { $0.value > $1.value }
-        
-        if !entries.isEmpty {
-            self.setData(entries: entries)
-        }
-    }
-    
     // MARK: 데이터 업데이트
-    func update(tickers: [SocketTicker]) {
+    func update(with accountTickers: [AccountTicker]) {
         
-        // MARK: tickerDictionary 업데이트
-        tickers.forEach { ticker in
-            tickerDictionary[ticker.code] = ticker
-        }
-        
-        // MARK: 각 계좌의 최신 가치 계산 후 PieChartDataEntry 생성
-        let entries = accounts.compactMap { account -> PieChartDataEntry? in
-            var value: Double = 0.0
+        // MARK: 파이차트에 사용될 entries 구성, 현재가치가 높은 순으로 정렬
+        let entries = accountTickers.compactMap { accountTicker -> PieChartDataEntry? in
             
-            if account.currency == "KRW" {
-                // MARK:  원화 계좌: 단순 잔액 사용
-                value = account.balance
-            } else {
-                // MARK:  코인 계좌: "KRW-BTC"와 같이 구성된 마켓코드 사용
-                let marketCode = "\(account.unit_currency)-\(account.currency)"
-                // MARK:  최신 ticker가 있으면 해당 가격으로 계산, 없으면 avg_buy_price 사용
-                if let ticker = tickerDictionary[marketCode] {
-                    value = (account.balance + account.locked) * ticker.trade_price
-                } else {
-                    value = (account.balance + account.locked) * account.avg_buy_price
-                }
-            }
+            // MARK: 현재가치
+            let currentPrice = accountTicker.ticker.trade_price
             
-            // MARK:  0 이하인 경우 제외
+            let value = (accountTicker.account.balance + accountTicker.account.locked) * currentPrice
             guard value > 0 else { return nil }
-            return PieChartDataEntry(value: value, label: account.currency)
-        }
-        .sorted { $0.value > $1.value }
+            return PieChartDataEntry(value: value, label: accountTicker.account.currency)
+        }.sorted { $0.value > $1.value }
         
-        // MARK:  데이터가 있으면 차트에 반영
         if !entries.isEmpty {
             setData(entries: entries)
         }
@@ -409,7 +329,6 @@ fileprivate class AccountChartView: UIView {
         let data = PieChartData(dataSet: dataSet)
         data.setValueTextColor(ThemeColor.label1)
         data.setValueFont(.systemFont(ofSize: 12, weight: .medium))
-        
         data.setValueFormatter(PercentFormatter(chart: self.pieChart))
         self.pieChart.data = data
     }
