@@ -10,6 +10,9 @@ import Foundation
 // MARK: Account와 Ticker가 결합한 모델
 struct AccountTicker: Hashable{
     
+    /// 한글 코인명
+    let korName: String
+    
     /// 코인정보
     let account: Account
     

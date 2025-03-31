@@ -18,6 +18,12 @@ class AccountViewController: UIViewController {
     // MARK: disposeBag
     private let disposeBag = DisposeBag()
     
+    // MARK: Diffable Data Source
+    private var dataSource: AccountTableDataSource!
+    
+    // MARK: 테이블뷰 높이 제약을 저장할 변수
+    private var tableViewHeightConstraint: Constraint?
+    
     // MARK: 스크롤뷰
     private lazy var scrollView: UIScrollView = {
         let view = UIScrollView()
@@ -39,9 +45,20 @@ class AccountViewController: UIViewController {
         return view
     }()
     
-    // MARK: 1. 보유자산 차트뷰
+    // MARK: 2. 보유자산 차트뷰
     fileprivate let accountChartView: AccountChartView = {
         let view = AccountChartView()
+        return view
+    }()
+    
+    // MARK: 3. 보유자산 테이블뷰
+    private lazy var accountTableView: UITableView = {
+        let view = UITableView()
+        view.register(AccountCell.self, forCellReuseIdentifier: AccountCell.cellId)
+        view.backgroundColor = .clear
+        view.showsVerticalScrollIndicator = true
+        view.separatorStyle = .none
+        view.isScrollEnabled = false
         return view
     }()
     
@@ -52,6 +69,13 @@ class AccountViewController: UIViewController {
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    // MARK: accountTableView의 layout 업데이트 후 contentSize를 가져와 높이 제약 업데이트
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        accountTableView.layoutIfNeeded()
+        tableViewHeightConstraint?.update(offset: accountTableView.contentSize.height)
     }
     
     override func viewDidLoad() {
@@ -76,11 +100,20 @@ class AccountViewController: UIViewController {
             make.width.equalToSuperview()
         }
         
-        [accountAmountView, accountChartView].forEach(self.stackView.addArrangedSubview(_:))
+        // MARK: 보유자산뷰, 보유자산 차트뷰, 보유자산 테이블뷰 배치
+        [accountAmountView, accountChartView, accountTableView].forEach(self.stackView.addArrangedSubview(_:))
+        
+        // MARK: accountTableView의 높이 제약 저장 (초기값 0)
+        accountTableView.snp.makeConstraints { make in
+            tableViewHeightConstraint = make.height.equalTo(0).constraint
+        }
     }
     
     // MARK: 바인딩 설정
     private func bind() {
+        
+        // MARK: DataSource 연결
+        self.dataSource = AccountTableDataSource(tableView: self.accountTableView)
         
         // MARK: 보유원화 구독
         self.viewModel.accountKRWSubject
@@ -105,6 +138,9 @@ class AccountViewController: UIViewController {
                 
                 // MARK: 보유자산 파이차트 갱신
                 self.accountChartView.update(with: accountTicker)
+                
+                // MARK: 보유자산 테이블뷰 갱신
+                self.dataSource.update(with: accountTicker)
             }).disposed(by: disposeBag)
         
         // MARK: 메세지 구독

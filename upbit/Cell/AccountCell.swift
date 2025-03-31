@@ -15,7 +15,7 @@ class AccountCell: UITableViewCell {
     // MARK: 코인명 라벨
     private lazy var nameLabel: UILabel = {
         let label = UILabel()
-        label.font = .systemFont(ofSize: 18, weight: .bold)
+        label.font = .systemFont(ofSize: 14, weight: .bold)
         label.textColor = ThemeColor.label1
         return label
     }()
@@ -23,42 +23,50 @@ class AccountCell: UITableViewCell {
     // MARK: 코인 심볼 라벨
     private lazy var codeLabel: UILabel = {
         let label = UILabel()
-        label.font = .systemFont(ofSize: 14, weight: .medium)
-        label.textColor = ThemeColor.label1
+        label.font = .systemFont(ofSize: 12, weight: .bold)
+        label.textColor = ThemeColor.label2
         return label
     }()
     
     // MARK: 코인 수량 라벨
     private lazy var balanceLabel: UILabel = {
         let label = UILabel()
-        label.font = .systemFont(ofSize: 14, weight: .medium)
-        label.textColor = ThemeColor.label1
+        label.font = .systemFont(ofSize: 12, weight: .medium)
+        label.textColor = ThemeColor.label2
+        label.adjustsFontSizeToFitWidth = true
+        label.minimumScaleFactor = 0.5
         return label
     }()
     
     // MARK: 코인 구매평균가 라벨
     private lazy var averageLabel: UILabel = {
         let label = UILabel()
-        label.font = .systemFont(ofSize: 14, weight: .medium)
-        label.textColor = ThemeColor.label1
+        label.font = .systemFont(ofSize: 12, weight: .medium)
+        label.textColor = ThemeColor.label2
+        label.adjustsFontSizeToFitWidth = true
+        label.minimumScaleFactor = 0.5
         return label
     }()
     
     // MARK: 코인 총평가액 라벨
     private lazy var amountLabel: UILabel = {
         let label = UILabel()
-        label.font = .systemFont(ofSize: 20, weight: .bold)
+        label.font = .systemFont(ofSize: 16, weight: .medium)
         label.textColor = ThemeColor.label1
         label.textAlignment = .right
+        label.adjustsFontSizeToFitWidth = true
+        label.minimumScaleFactor = 0.5
         return label
     }()
     
     // MARK: 코인 수익/손실액 라벨
     private lazy var changeLabel: UILabel = {
         let label = UILabel()
-        label.font = .systemFont(ofSize: 18, weight: .medium)
+        label.font = .systemFont(ofSize: 14, weight: .medium)
         label.textColor = ThemeColor.evenPrimary
         label.textAlignment = .right
+        label.adjustsFontSizeToFitWidth = true
+        label.minimumScaleFactor = 0.5
         return label
     }()
     
@@ -76,11 +84,21 @@ class AccountCell: UITableViewCell {
     override func prepareForReuse() {
         super.prepareForReuse()
         
-        [nameLabel, codeLabel, balanceLabel, averageLabel, amountLabel, changeLabel].forEach { $0.text = "-" }
+        self.initializedLayout()
+    }
+    
+    // MARK: 데이터 초기화
+    private func initializedLayout() {
+        [nameLabel, codeLabel, balanceLabel, averageLabel, amountLabel, changeLabel].forEach { $0.text = " " }
+        
+        changeLabel.textColor = ChangeType.even.color
     }
     
     // MARK: 셀 레이아웃 설정
     private func layout() {
+        
+        self.selectionStyle = .none
+        
         [nameLabel, codeLabel, balanceLabel, averageLabel, amountLabel, changeLabel].forEach(self.contentView.addSubview(_:))
         
         nameLabel.snp.makeConstraints { make in
@@ -119,5 +137,51 @@ class AccountCell: UITableViewCell {
             make.trailing.equalToSuperview().offset(-16)
             make.top.equalTo(self.contentView.snp.centerY).offset(2)
         }
+        
+        // MARK: 데이터 초기설정
+        self.initializedLayout()
+    }
+    
+    // MARK: data binding in cell
+    func configure(with accountTicker: AccountTicker) {
+        
+        // MARK: 보유 수량(수량 + 주문중 묶인 수량)
+        let count = accountTicker.account.balance + accountTicker.account.locked
+        
+        // MARK: 투자된 금액
+        let investedAmount: Double = Double(accountTicker.account.avg_buy_price) * Double(count)
+        
+        // MARK: 현재의 가치
+        let currentAmount: Double = Double(accountTicker.ticker.trade_price) * Double(count)
+        
+        // MARK: 코인 수익/손실액
+        let changeAmount = currentAmount - investedAmount
+        
+        // MARK: 코인 수익/손실률
+        let changeRate = investedAmount != 0 ? (changeAmount / investedAmount * 100) : 0.0
+
+        // MARK: 양수면 '+' 부호 지정
+        let sign = changeAmount >= 0 ? "+" : ""
+        
+        // MARK: 코인 이름
+        self.nameLabel.text = accountTicker.korName
+        
+        // MARK: 코인 심볼
+        self.codeLabel.text = accountTicker.account.currency
+        
+        // MARK: 코인 수량
+        self.balanceLabel.text = "보유수량 \(count.formattedStringWithCommaAndDecimal(places: 6, removeZero: true)) \(accountTicker.account.currency)"
+        
+        // MARK: 코인 평균 구매가
+        self.averageLabel.text = "매수평균 \(accountTicker.account.avg_buy_price.formattedStringWithCommaAndDecimal(places: 2, removeZero: false)) \(accountTicker.account.unit_currency)"
+        
+        // MARK: 코인 총 평가액
+        self.amountLabel.text = "\(currentAmount.formattedStringWithCommaAndDecimal(places: 0)) \(accountTicker.account.unit_currency)"
+        
+        // MARK: 코인 수익/손실액
+        self.changeLabel.text = "\(sign)\(changeRate.formattedStringWithCommaAndDecimal(places: 2, removeZero: false))% (\(changeAmount.formattedStringWithCommaAndDecimal(places: 0)))"
+        
+        // MARK: 코인 수익/손실 라벨 색상 설정
+        self.changeLabel.textColor = changeAmount.changeType.color
     }
 }

@@ -82,8 +82,10 @@ class AccountViewModel {
                                     // MARK: 원화는 Ticker 정보가 없으므로 별도로 처리
                                     guard account.currency != "KRW" else { return nil }
                                     let marketCode = "\(account.unit_currency)-\(account.currency)"
-                                    guard let ticker = tickers.first(where: { $0.market == marketCode }) else { return nil }
-                                    return AccountTicker(account: account, ticker: ticker)
+                                    
+                                    // MARK: 매칭된 한글명, 현재가 추출
+                                    guard let marketInfo = markets.first(where: { $0.market == marketCode }), let ticker = tickers.first(where: { $0.market == marketCode }) else { return nil }
+                                    return AccountTicker(korName: marketInfo.koreanName, account: account, ticker: ticker)
                                 }
                                 
                                 //MARK: AccountRelay 방출
@@ -128,7 +130,7 @@ class AccountViewModel {
             let marketCode = "\(accountTicker.account.unit_currency)-\(accountTicker.account.currency)"
             if marketCode == ticker.code {
                 // MARK: code가 일치하면 ticker 업데이트
-                let updatedAccountTicker = AccountTicker(account: accountTicker.account, ticker: ticker)
+                let updatedAccountTicker = AccountTicker(korName: accountTicker.korName, account: accountTicker.account, ticker: ticker)
                 currentTickers[index] = updatedAccountTicker
             }
         }
