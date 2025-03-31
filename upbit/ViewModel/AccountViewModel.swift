@@ -20,11 +20,11 @@ class AccountViewModel {
     private let webSocketService = UpbitWebSocketService()
     
     // MARK: - Place for Output
-    // MARK: 내가 보유한 자산 리스트
-    let accountSubject: BehaviorSubject<[Account]> = BehaviorSubject(value: [])
+    // MARK: 내가 보유한 자산 + 현재가 리스트
+    let accountTickerRelay: BehaviorRelay<[AccountTicker]> = BehaviorRelay(value: [])
     
-    // MARK: 내가 보유한 코인 ticker
-    let tickerRelay: BehaviorRelay<[SocketTicker]> = BehaviorRelay(value: [])
+    // MARK: 내가 보유한 원화
+    let accountKRWSubject: PublishSubject<Account> = PublishSubject<Account>()
     
     // MARK: 메세지 주제
     let messageSubject: PublishSubject<String> = PublishSubject<String>()
@@ -45,23 +45,69 @@ class AccountViewModel {
         // MARK: 보유 자산 구독
         AccountManager.shared.accountsObservable
             .subscribe(onNext: { [weak self] accounts in
-                guard let self = self else { return }
+                // MARK: 보유한 자산이 없으면 프로세스 종료
+                guard let self = self, !accounts.isEmpty else { return }
                 
-                // MARK: 보유자산 방출
-                self.accountSubject.onNext(accounts)
+                // MARK: 원화 자산은 따로 방출
+                if let accountKRW = accounts.first(where: { $0.currency == "KRW" }) {
+                    self.accountKRWSubject.onNext(accountKRW)
+                }
                 
-                // MARK: 보유원화를 제외한 자산의 마켓 코드 배열(currency가 KRW면 원화)
-                let codes = accounts.filter({$0.currency != "KRW"}).map { "\($0.unit_currency)-\($0.currency)"}
-                
-                /*
-                 codes의 예시
-                 ["KRW-BTC", "KRW-DOGE", "KRW-STORJ", "KRW-EOSDAC", "KRW-GAS", "KRW-HORUS", "KRW-ADD", "KRW-MEETONE", "KRW-CHL", "KRW-BLACK", "KRW-STPT", "KRW-SHIB"]
-                 */
-                
-                // MARK: 원화를 제외한 자산(코인)이 있다면 현재가 조회
-                if !codes.isEmpty {
-                    // MARK: 현재가(Ticker) 조회
-                    self.webSocketService.subscribeTo(types: [.ticker], symbol: codes)
+                // MARK: 1. 거래 가능한 마켓 정보 가져오기(자산별 현재가 검색시, 업비트에서 지원하지 않는 코인 소지시 404에러 방출함)
+                UpbitApiService.request(endpoint: .marketAll(is_details: true)) { [weak self] (result: Result<[MarketInfo], Error>) in
+                    guard let self = self else { return }
+                    switch result {
+                    case .success(let markets):
+                        
+                        // MARK: 업비트에서 지원하는 마켓 코드 Set
+                        let supportedMarkets = Set(markets.map { $0.market })
+                        
+                        // MARK: 업비트에서 지원하는 보유한 자산의 코드 String -> 예시: "KRW-BTC,KRW-DOGE,..."
+                        let codes = accounts
+                            .filter { $0.currency != "KRW" }
+                            .map { "\($0.unit_currency)-\($0.currency)" }
+                            .filter { supportedMarkets.contains($0) }
+                            .joined(separator: ",")
+                        
+                        // MARK: 원화를 제외한 코드가 없다면 프로세스 종료
+                        guard !codes.isEmpty else { return }
+                        
+                        // MARK: 2. 자산별 현재가 가져오기
+                        UpbitApiService.request(endpoint: .ticker(markets: codes)) { [weak self] (result: Result<[ApiTicker], Error>) in
+                            guard let self = self else { return }
+                            switch result {
+                            case .success(let tickers):
+                                // MARK: Account와 ApiTicker를 결합하여 AccountTicker 배열 생성
+                                let accountTickers: [AccountTicker] = accounts.compactMap { account in
+                                    // MARK: 원화는 Ticker 정보가 없으므로 별도로 처리
+                                    guard account.currency != "KRW" else { return nil }
+                                    let marketCode = "\(account.unit_currency)-\(account.currency)"
+                                    
+                                    // MARK: 매칭된 한글명, 현재가 추출
+                                    guard let marketInfo = markets.first(where: { $0.market == marketCode }), let ticker = tickers.first(where: { $0.market == marketCode }) else { return nil }
+                                    return AccountTicker(korName: marketInfo.koreanName, account: account, ticker: ticker)
+                                }
+                                
+                                //MARK: AccountRelay 방출
+                                self.accountTickerRelay.accept(accountTickers)
+                                
+                                // MARK: WebSocket 현재가(Ticker) 조회
+                                let codeArray = codes.components(separatedBy: ",")
+                                self.webSocketService.subscribeTo(types: [.ticker], symbol: codeArray)
+                                break
+                                
+                            case .failure(let error):
+                                print(error.localizedDescription)
+                                self.messageSubject.onNext(error.localizedDescription)
+                                break
+                            }
+                        }
+                        break
+                        
+                    case .failure(let error):
+                        print(error.localizedDescription)
+                        self.messageSubject.onNext(error.localizedDescription)
+                    }
                 }
             }).disposed(by: disposeBag)
     }
@@ -77,16 +123,18 @@ class AccountViewModel {
     
     // MARK: tickerRelay 업데이트
     private func updateTicker(with ticker: SocketTicker) {
-        var tickers = self.tickerRelay.value
+        // MARK: 최신 AccountTicker
+        var currentTickers = accountTickerRelay.value
         
-        if let index = tickers.firstIndex(where: { $0.code == ticker.code }) {
-            tickers[index] = ticker
-        } else {
-            tickers.append(ticker)
+        for (index, accountTicker) in currentTickers.enumerated() {
+            let marketCode = "\(accountTicker.account.unit_currency)-\(accountTicker.account.currency)"
+            if marketCode == ticker.code {
+                // MARK: code가 일치하면 ticker 업데이트
+                let updatedAccountTicker = AccountTicker(korName: accountTicker.korName, account: accountTicker.account, ticker: ticker)
+                currentTickers[index] = updatedAccountTicker
+            }
         }
-        
-        // MARK: 업데이트된 ticker Relay 방출
-        self.tickerRelay.accept(tickers)
+        accountTickerRelay.accept(currentTickers)
     }
     
     

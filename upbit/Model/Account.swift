@@ -8,7 +8,7 @@
 import Foundation
 
 // MARK: 내 자산 모델
-struct Account: Decodable {
+struct Account: Decodable, Hashable {
     ///화폐를 의미하는 영문 대문자 코드
     let currency: String
     

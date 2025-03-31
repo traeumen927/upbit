@@ -7,7 +7,7 @@
 
 import Foundation
 
-enum CurrencyType: String {
+enum CurrencyType: String, CaseIterable {
     case krw = "KRW"
     case btc = "BTC"
     case usdt = "USDT"
