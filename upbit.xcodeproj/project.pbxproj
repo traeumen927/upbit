@@ -10,6 +10,7 @@
 		F10629E12D71DD8B00EC48B6 /* UpbitWebSocketService.swift in Sources */ = {isa = PBXBuildFile; fileRef = F10629E02D71DD8B00EC48B6 /* UpbitWebSocketService.swift */; };
 		F10629E32D71DEC600EC48B6 /* SocketRequestType.swift in Sources */ = {isa = PBXBuildFile; fileRef = F10629E22D71DEC600EC48B6 /* SocketRequestType.swift */; };
 		F10629E52D71E09E00EC48B6 /* SocketTicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = F10629E42D71E09E00EC48B6 /* SocketTicker.swift */; };
+		F10B157E2D9A79F300FF6D5C /* AccountCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F10B157D2D9A79F300FF6D5C /* AccountCell.swift */; };
 		F1160EE12D6D8C1E006A19EC /* UpbitApiService.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1160EE02D6D8C1E006A19EC /* UpbitApiService.swift */; };
 		F1160EE32D6D9313006A19EC /* MarketInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1160EE22D6D9313006A19EC /* MarketInfo.swift */; };
 		F1160EE82D6D9BEF006A19EC /* MarketTableDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1160EE72D6D9BEF006A19EC /* MarketTableDataSource.swift */; };
@@ -64,6 +65,7 @@
 		F10629E02D71DD8B00EC48B6 /* UpbitWebSocketService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpbitWebSocketService.swift; sourceTree = "<group>"; };
 		F10629E22D71DEC600EC48B6 /* SocketRequestType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SocketRequestType.swift; sourceTree = "<group>"; };
 		F10629E42D71E09E00EC48B6 /* SocketTicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SocketTicker.swift; sourceTree = "<group>"; };
+		F10B157D2D9A79F300FF6D5C /* AccountCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountCell.swift; sourceTree = "<group>"; };
 		F1160EE02D6D8C1E006A19EC /* UpbitApiService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpbitApiService.swift; sourceTree = "<group>"; };
 		F1160EE22D6D9313006A19EC /* MarketInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarketInfo.swift; sourceTree = "<group>"; };
 		F1160EE72D6D9BEF006A19EC /* MarketTableDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarketTableDataSource.swift; sourceTree = "<group>"; };
@@ -264,6 +266,7 @@
 			isa = PBXGroup;
 			children = (
 				F129F0492D6361C800F3A74C /* MarketCell.swift */,
+				F10B157D2D9A79F300FF6D5C /* AccountCell.swift */,
 			);
 			path = Cell;
 			sourceTree = "<group>";
@@ -414,6 +417,7 @@
 				F11D099D2D7B1F3F00A8B2E0 /* Account.swift in Sources */,
 				F129EFFB2D6310F100F3A74C /* AppDelegate.swift in Sources */,
 				F129F0382D631C0100F3A74C /* MainTabBarCoordinator.swift in Sources */,
+				F10B157E2D9A79F300FF6D5C /* AccountCell.swift in Sources */,
 				F15FE9D32D9825E100D89A2A /* AccountTicker.swift in Sources */,
 				F1C651362D9591DF0075F637 /* PercentFormatter.swift in Sources */,
 				F11D09A02D7B208600A8B2E0 /* AccountManager.swift in Sources */,
