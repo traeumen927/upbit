@@ -18,6 +18,9 @@ class MarketViewController: UIViewController {
     // MARK: disposeBag
     private let disposeBag = DisposeBag()
     
+    // MARK: 코디네이터 참조
+    weak var coordinator: MarketCoordinator?
+    
     // MARK: Diffable Data Source
     private var dataSource: MarketTableDataSource!
     
