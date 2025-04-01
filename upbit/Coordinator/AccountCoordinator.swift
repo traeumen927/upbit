@@ -24,7 +24,9 @@ class AccountCoordinator: Coordinator {
     }
     
     func showDetail(marketInfo: MarketInfo) {
-        let detailCoordinator = DetailPageCoordinator(navigationController: UINavigationController(), marketInfo: marketInfo)
+        let detailNavigationController = UINavigationController()
+        detailNavigationController.modalPresentationStyle = .fullScreen
+        let detailCoordinator = DetailPageCoordinator(navigationController: detailNavigationController, marketInfo: marketInfo)
         detailCoordinator.start()
         
         self.navigationController.present(detailCoordinator.navigationController, animated: true)
