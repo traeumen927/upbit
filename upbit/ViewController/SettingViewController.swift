@@ -11,6 +11,9 @@ class SettingViewController: UIViewController {
     // MARK: ViewModel
     private let viewModel: SettingViewModel
     
+    // MARK: 코디네이터 참조
+    weak var coordinator: SettingCoordinator?
+    
     init(viewModel: SettingViewModel) {
         self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)

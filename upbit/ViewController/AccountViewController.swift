@@ -18,6 +18,9 @@ class AccountViewController: UIViewController {
     // MARK: disposeBag
     private let disposeBag = DisposeBag()
     
+    // MARK: 코디네이터 참조
+    weak var coordinator: AccountCoordinator?
+    
     // MARK: Diffable Data Source
     private var dataSource: AccountTableDataSource!
     

@@ -14,24 +14,21 @@ class MainTabBarCoordinator {
         let tabBarController = UITabBarController()
         
         // MARK: - 거래소 탭
-        let marketViewModel = MarketViewModel()
-        let marketViewController = MarketViewController(viewModel: marketViewModel)
-        marketViewController.tabBarItem = UITabBarItem(title: "거래소", image: UIImage(systemName: "bitcoinsign"), tag: 0)
+        let marketCoordinator = MarketCoordinator(navigationController: UINavigationController())
+        marketCoordinator.start()
         
         // MARK: - 투자내역 탭
-        let accountViewModel = AccountViewModel()
-        let accountViewController = AccountViewController(viewModel: accountViewModel)
-        accountViewController.tabBarItem = UITabBarItem(title: "투자내역", image: UIImage(systemName: "chart.pie"), tag: 1)
+        let accountCoordinator = AccountCoordinator(navigationController: UINavigationController())
+        accountCoordinator.start()
         
         // MARK: - 설정 탭
-        let settingViewModel = SettingViewModel()
-        let settingViewController = SettingViewController(viewModel: settingViewModel)
-        settingViewController.tabBarItem = UITabBarItem(title: "설정", image: UIImage(systemName: "gear"), tag: 2)
+        let settingCoordinator = SettingCoordinator(navigationController: UINavigationController())
+        settingCoordinator.start()
         
         // MARK: - 탭바 컨트롤러에 각 네비게이션 컨트롤러를 추가
-        tabBarController.viewControllers = [marketViewController.wrappedInNavigationController(),
-                                            accountViewController.wrappedInNavigationController(),
-                                            settingViewController.wrappedInNavigationController()]
+        tabBarController.viewControllers = [marketCoordinator.navigationController,
+                                            accountCoordinator.navigationController,
+                                            settingCoordinator.navigationController]
         
         // MARK: appearance 설정
         let appearance = UITabBarAppearance()

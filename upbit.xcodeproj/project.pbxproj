@@ -57,6 +57,12 @@
 		F129F04E2D6362D000F3A74C /* UIDouble.swift in Sources */ = {isa = PBXBuildFile; fileRef = F129F04D2D6362D000F3A74C /* UIDouble.swift */; };
 		F133C8CE2D74246500A2F308 /* Decodable.swift in Sources */ = {isa = PBXBuildFile; fileRef = F133C8CD2D74246500A2F308 /* Decodable.swift */; };
 		F15FE9D32D9825E100D89A2A /* AccountTicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = F15FE9D22D9825E100D89A2A /* AccountTicker.swift */; };
+		F19484DD2D9C0CF20040E675 /* AccountCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = F19484DC2D9C0CF20040E675 /* AccountCoordinator.swift */; };
+		F19484DF2D9C0FC40040E675 /* DetailPageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F19484DE2D9C0FC40040E675 /* DetailPageViewController.swift */; };
+		F19484E12D9C0FE00040E675 /* DetailPageViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F19484E02D9C0FE00040E675 /* DetailPageViewModel.swift */; };
+		F19484E32D9C14850040E675 /* MarketCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = F19484E22D9C14850040E675 /* MarketCoordinator.swift */; };
+		F19484E52D9C14D70040E675 /* SettingCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = F19484E42D9C14D70040E675 /* SettingCoordinator.swift */; };
+		F19484E92D9C158D0040E675 /* DetailPageCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = F19484E82D9C158D0040E675 /* DetailPageCoordinator.swift */; };
 		F1C651362D9591DF0075F637 /* PercentFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1C651352D9591DF0075F637 /* PercentFormatter.swift */; };
 		F1F1362C2D76D8660044832C /* UIView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1F1362B2D76D8660044832C /* UIView.swift */; };
 		F1F591B52D7492260046D507 /* SortOption.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1F591B42D7492260046D507 /* SortOption.swift */; };
@@ -105,6 +111,12 @@
 		F129F04D2D6362D000F3A74C /* UIDouble.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIDouble.swift; sourceTree = "<group>"; };
 		F133C8CD2D74246500A2F308 /* Decodable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Decodable.swift; sourceTree = "<group>"; };
 		F15FE9D22D9825E100D89A2A /* AccountTicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountTicker.swift; sourceTree = "<group>"; };
+		F19484DC2D9C0CF20040E675 /* AccountCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountCoordinator.swift; sourceTree = "<group>"; };
+		F19484DE2D9C0FC40040E675 /* DetailPageViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailPageViewController.swift; sourceTree = "<group>"; };
+		F19484E02D9C0FE00040E675 /* DetailPageViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailPageViewModel.swift; sourceTree = "<group>"; };
+		F19484E22D9C14850040E675 /* MarketCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarketCoordinator.swift; sourceTree = "<group>"; };
+		F19484E42D9C14D70040E675 /* SettingCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingCoordinator.swift; sourceTree = "<group>"; };
+		F19484E82D9C158D0040E675 /* DetailPageCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailPageCoordinator.swift; sourceTree = "<group>"; };
 		F1C651352D9591DF0075F637 /* PercentFormatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PercentFormatter.swift; sourceTree = "<group>"; };
 		F1F1362B2D76D8660044832C /* UIView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIView.swift; sourceTree = "<group>"; };
 		F1F591B42D7492260046D507 /* SortOption.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SortOption.swift; sourceTree = "<group>"; };
@@ -237,6 +249,7 @@
 				F129F0312D6317B300F3A74C /* MarketViewController.swift */,
 				F129F0332D63186E00F3A74C /* AccountViewController.swift */,
 				F129F0352D63188100F3A74C /* SettingViewController.swift */,
+				F19484DE2D9C0FC40040E675 /* DetailPageViewController.swift */,
 			);
 			path = ViewController;
 			sourceTree = "<group>";
@@ -247,6 +260,7 @@
 				F129F02B2D63175600F3A74C /* MarketViewModel.swift */,
 				F129F02D2D63176400F3A74C /* AccountViewModel.swift */,
 				F129F02F2D63176C00F3A74C /* SettingViewModel.swift */,
+				F19484E02D9C0FE00040E675 /* DetailPageViewModel.swift */,
 			);
 			path = ViewModel;
 			sourceTree = "<group>";
@@ -298,6 +312,10 @@
 			children = (
 				F129F0292D63153600F3A74C /* Coordinator.swift */,
 				F129F0372D631C0100F3A74C /* MainTabBarCoordinator.swift */,
+				F19484E22D9C14850040E675 /* MarketCoordinator.swift */,
+				F19484DC2D9C0CF20040E675 /* AccountCoordinator.swift */,
+				F19484E42D9C14D70040E675 /* SettingCoordinator.swift */,
+				F19484E82D9C158D0040E675 /* DetailPageCoordinator.swift */,
 			);
 			path = Coordinator;
 			sourceTree = "<group>";
@@ -415,8 +433,11 @@
 				F129F0302D63176C00F3A74C /* SettingViewModel.swift in Sources */,
 				F129F0462D635FA000F3A74C /* SingleCandleView.swift in Sources */,
 				F129F03A2D631CDC00F3A74C /* UIViewController.swift in Sources */,
+				F19484DF2D9C0FC40040E675 /* DetailPageViewController.swift in Sources */,
+				F19484DD2D9C0CF20040E675 /* AccountCoordinator.swift in Sources */,
 				F129F02C2D63175600F3A74C /* MarketViewModel.swift in Sources */,
 				F1160EE32D6D9313006A19EC /* MarketInfo.swift in Sources */,
+				F19484E12D9C0FE00040E675 /* DetailPageViewModel.swift in Sources */,
 				F11D099D2D7B1F3F00A8B2E0 /* Account.swift in Sources */,
 				F129EFFB2D6310F100F3A74C /* AppDelegate.swift in Sources */,
 				F129F0382D631C0100F3A74C /* MainTabBarCoordinator.swift in Sources */,
@@ -426,11 +447,14 @@
 				F1C651362D9591DF0075F637 /* PercentFormatter.swift in Sources */,
 				F11D09A02D7B208600A8B2E0 /* AccountManager.swift in Sources */,
 				F10629E52D71E09E00EC48B6 /* SocketTicker.swift in Sources */,
+				F19484E32D9C14850040E675 /* MarketCoordinator.swift in Sources */,
+				F19484E52D9C14D70040E675 /* SettingCoordinator.swift in Sources */,
 				F133C8CE2D74246500A2F308 /* Decodable.swift in Sources */,
 				F129F0362D63188100F3A74C /* SettingViewController.swift in Sources */,
 				F129F04E2D6362D000F3A74C /* UIDouble.swift in Sources */,
 				F129EFFC2D6310F100F3A74C /* SceneDelegate.swift in Sources */,
 				F1160EE82D6D9BEF006A19EC /* MarketTableDataSource.swift in Sources */,
+				F19484E92D9C158D0040E675 /* DetailPageCoordinator.swift in Sources */,
 				F11D099B2D7B1E0800A8B2E0 /* Payload.swift in Sources */,
 				F129F02E2D63176400F3A74C /* AccountViewModel.swift in Sources */,
 				F129F0342D63186E00F3A74C /* AccountViewController.swift in Sources */,
