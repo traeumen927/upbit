@@ -164,7 +164,7 @@ class AccountCell: UITableViewCell {
         let sign = changeAmount >= 0 ? "+" : ""
         
         // MARK: 코인 이름
-        self.nameLabel.text = accountTicker.korName
+        self.nameLabel.text = accountTicker.marketInfo.koreanName
         
         // MARK: 코인 심볼
         self.codeLabel.text = accountTicker.account.currency

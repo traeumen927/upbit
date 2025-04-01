@@ -9,4 +9,9 @@ import Foundation
 
 class DetailPageViewModel {
     
+    private let marketInfo: MarketInfo
+    
+    init(marketInfo: MarketInfo) {
+        self.marketInfo = marketInfo
+    }
 }

@@ -23,8 +23,8 @@ class MarketCoordinator: Coordinator {
         navigationController.setViewControllers([viewController], animated: false)
     }
     
-    func showDetail() {
-        let detailCoordinator = DetailPageCoordinator(navigationController: UINavigationController())
+    func showDetail(marketInfo: MarketInfo) {
+        let detailCoordinator = DetailPageCoordinator(navigationController: UINavigationController(), marketInfo: marketInfo)
         detailCoordinator.start()
         
         self.navigationController.present(detailCoordinator.navigationController, animated: true)

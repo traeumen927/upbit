@@ -153,6 +153,17 @@ class AccountViewController: UIViewController {
                 guard let self = self else { return }
                 self.view.makeToast(message, duration: 2.0, position: .bottom)
             }).disposed(by: disposeBag)
+        
+        // MARK: 셀 선택 이벤트
+        self.accountTableView.rx.itemSelected
+            .subscribe(onNext: { [weak self] indexPath in
+                guard let self = self,
+                      let accountTicker = self.dataSource.itemIdentifier(for: indexPath)
+                else { return }
+                // MARK: 디테일 페이지 이동
+                self.coordinator?.showDetail(marketInfo: accountTicker.marketInfo)
+            })
+            .disposed(by: disposeBag)
     }
     
     // MARK: 웹소켓 연결
