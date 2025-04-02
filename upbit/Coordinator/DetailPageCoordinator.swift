@@ -21,6 +21,7 @@ class DetailPageCoordinator: Coordinator {
         let viewModel = DetailPageViewModel(marketInfo: self.marketInfo)
         let viewController = DetailPageViewController(viewModel: viewModel)
         viewController.coordinator = self
-        navigationController.setViewControllers([viewController], animated: false)
+        viewController.hidesBottomBarWhenPushed = true
+        navigationController.pushViewController(viewController, animated: true)
     }
 }

@@ -21,6 +21,24 @@ class DetailPageViewController: UIViewController {
     // MARK: 코디네이터 참조
     weak var coordinator: DetailPageCoordinator?
     
+    // MARK: 현재가 라벨
+    private lazy var priceLabel: UILabel = {
+        let label = UILabel()
+        label.font = UIFont.systemFont(ofSize: 24, weight: .bold)
+        label.text = " "
+        label.textColor = ThemeColor.evenPrimary
+        return label
+    }()
+    
+    // MARK: 변동금액 라벨
+    private lazy var changeLabel: UILabel = {
+        let label = UILabel()
+        label.font = UIFont.systemFont(ofSize: 16, weight: .medium)
+        label.text = " "
+        label.textColor = ThemeColor.evenPrimary
+        return label
+    }()
+    
     // MARK: 메뉴 및 페이지뷰 관련 프로퍼티
     private let menuTitles = ["메뉴1", "메뉴2", "메뉴3"] // 필요한 만큼 메뉴 추가
     private var menuButtons: [UIButton] = []
@@ -43,13 +61,13 @@ class DetailPageViewController: UIViewController {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-        
+    
     // MARK: Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
-        layout()
-        setupMenuBar()
-        setupPageViewController()
+        self.layout()
+        self.bind()
+        self.setupMenuBar()
         
         // 내부 UIScrollView를 찾아 delegate 설정 (수동 스와이프 시 인디케이터 업데이트)
         if let scrollView = pageViewController.view.subviews.compactMap({ $0 as? UIScrollView }).first {
@@ -59,7 +77,70 @@ class DetailPageViewController: UIViewController {
     
     // MARK: Layout Setup
     private func layout() {
+        self.title = self.viewModel.marketInfo.koreanName
+        
         view.backgroundColor = ThemeColor.background1
+        
+        // MARK: 상단 현재가, 변동금액 레이아웃 배치
+        [self.priceLabel, self.changeLabel].forEach(self.view.addSubview(_:))
+        
+        priceLabel.snp.makeConstraints { make in
+            make.top.equalTo(view.safeAreaLayoutGuide.snp.top).offset(16)
+            make.leading.trailing.equalToSuperview().inset(16)
+        }
+        
+        changeLabel.snp.makeConstraints { make in
+            make.top.equalTo(self.priceLabel.snp.bottom).offset(4)
+            make.leading.trailing.equalToSuperview().inset(16)
+        }
+        
+        
+        // MARK: pageViewController 설정
+        let page1 = UIViewController()
+        page1.view.backgroundColor = .blue
+        let page2 = UIViewController()
+        page2.view.backgroundColor = .green
+        let page3 = UIViewController()
+        page3.view.backgroundColor = .orange
+        
+        pages = [page1, page2, page3]
+        
+        pageViewController = UIPageViewController(transitionStyle: .scroll,
+                                                  navigationOrientation: .horizontal,
+                                                  options: nil)
+        pageViewController.dataSource = self
+        pageViewController.delegate = self
+        
+        pageViewController.setViewControllers([pages[0]], direction: .forward, animated: false, completion: nil)
+        
+        addChild(pageViewController)
+        view.addSubview(pageViewController.view)
+        pageViewController.didMove(toParent: self)
+        
+        pageViewController.view.snp.makeConstraints { make in
+            make.top.equalTo(view.safeAreaLayoutGuide.snp.top).offset(250)
+            make.leading.trailing.bottom.equalToSuperview()
+        }
+    }
+    
+    private func bind() {
+        // MARK: 실시간 코인 현재가 구독
+        self.viewModel.tickerSubejct
+            .asObservable()
+            .observe(on: MainScheduler.instance)
+            .subscribe(onNext: {[weak self] ticker in
+                guard let self = self else { return }
+                updateTicker(with: ticker)
+            }).disposed(by: disposeBag)
+    }
+    
+    // MARK: 실시간 현재가에 따라 업데이트
+    private func updateTicker(with ticker: SocketTicker) {
+        self.priceLabel.text = "₩\(ticker.trade_price.formattedStringWithCommaAndDecimal(places: 6))"
+        self.priceLabel.textColor = ticker.change.color
+        
+        self.changeLabel.text = "\(ticker.change.sign)\((ticker.change_rate * 100).formattedStringWithCommaAndDecimal(places: 2, removeZero: false))% (\(ticker.signed_change_price.formattedStringWithCommaAndDecimal(places: 8, removeZero: true)))"
+        self.changeLabel.textColor = ticker.change.color
     }
     
     // 메뉴 바 및 인디케이터 설정
@@ -67,7 +148,7 @@ class DetailPageViewController: UIViewController {
         let menuContainer = UIView()
         view.addSubview(menuContainer)
         menuContainer.snp.makeConstraints { make in
-            make.top.equalTo(view.safeAreaLayoutGuide.snp.top)
+            make.top.equalTo(view.safeAreaLayoutGuide.snp.top).offset(200)
             make.leading.trailing.equalToSuperview()
             make.height.equalTo(50)
         }
@@ -101,34 +182,6 @@ class DetailPageViewController: UIViewController {
         }
     }
     
-    // PageViewController 설정
-    private func setupPageViewController() {
-        let page1 = UIViewController()
-        page1.view.backgroundColor = .blue
-        let page2 = UIViewController()
-        page2.view.backgroundColor = .green
-        let page3 = UIViewController()
-        page3.view.backgroundColor = .orange
-        
-        pages = [page1, page2, page3]
-        
-        pageViewController = UIPageViewController(transitionStyle: .scroll,
-                                                  navigationOrientation: .horizontal,
-                                                  options: nil)
-        pageViewController.dataSource = self
-        pageViewController.delegate = self
-        
-        pageViewController.setViewControllers([pages[0]], direction: .forward, animated: false, completion: nil)
-        
-        addChild(pageViewController)
-        view.addSubview(pageViewController.view)
-        pageViewController.didMove(toParent: self)
-        
-        pageViewController.view.snp.makeConstraints { make in
-            make.top.equalTo(view.safeAreaLayoutGuide.snp.top).offset(50)
-            make.leading.trailing.bottom.equalToSuperview()
-        }
-    }
     
     // MARK: 메뉴 버튼 액션
     @objc private func menuButtonTapped(_ sender: UIButton) {
@@ -160,6 +213,16 @@ class DetailPageViewController: UIViewController {
         UIView.animate(withDuration: animated ? 0.3 : 0.0) {
             self.indicatorView.frame.origin.x = newLeading
         }
+    }
+    
+    // MARK: 웹소켓 연결
+    override func viewWillAppear(_ animated: Bool) {
+        self.viewModel.connectWebSocket()
+    }
+    
+    // MARK: 웹소켓 연결 해제
+    override func viewWillDisappear(_ animated: Bool) {
+        self.viewModel.disconnectWebSocket()
     }
 }
 

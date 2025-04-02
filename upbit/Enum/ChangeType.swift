@@ -23,6 +23,17 @@ enum ChangeType: String, Codable {
         }
     }
     
+    var sign: String {
+        switch self {
+        case .even:
+            return ""
+        case .rise:
+            return "▲"
+        case .fall:
+            return "▼"
+        }
+    }
+    
     init(from decoder: Decoder) throws {
         let container = try decoder.singleValueContainer()
         let rawValue = try container.decode(String.self)

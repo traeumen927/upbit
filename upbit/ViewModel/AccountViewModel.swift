@@ -200,7 +200,6 @@ class AccountViewModel {
             print("\(className): peerClosed")
             break
         }
-        
     }
     
     // MARK: 웹소켓으로부터 받은 바이너리 데이터 핸들링
