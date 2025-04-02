@@ -23,10 +23,11 @@ Coin trading app using Upbit API
 
 
 ## Upbit Rest Api와 WebSocket의 실시간 데이터를 활용한 거래소(초기화면) 페이지
-원화마켓 및 즐겨찾기 필터 제공
+원화마켓, 코인명 검색 및 정렬 필터 제공
 <p align="center">
-  <img src="https://github.com/user-attachments/assets/e7a573b6-003b-467b-9ffa-308f1b5824c1" width="30%">
-  <img src="https://github.com/user-attachments/assets/661958bb-b46e-4b7a-8675-287badc39bd7" width="30%">
+ <img src="https://github.com/user-attachments/assets/ad6bf26a-c463-4d0b-acd7-1aa9adce9777" width="30%">
+ <img src="https://github.com/user-attachments/assets/aedce98f-6291-4bce-8336-013ba9ee5fb6" width="30%">
+ <img src="https://github.com/user-attachments/assets/ab080fad-231d-419e-9927-d915be211d2c" width="30%">
 </p>
 
 
@@ -35,8 +36,8 @@ Coin trading app using Upbit API
 ## Upbit Rest Api와 WebSocket의 실시간 데이터를 활용한 투자내역 페이지
 업비트 자산 API, 실시간 호가 API 통해 보유원화, 보유코인 및 가치정보(평가손익 등) 제공
 <p align="center">
-  <img src="https://github.com/user-attachments/assets/a7f555f1-f011-410f-8bcb-890012184923" width="30%">
-  <img src="https://github.com/user-attachments/assets/0fb9be6e-7158-4899-a0f7-03a84cdbeca3" width="30%">
+ <img src="https://github.com/user-attachments/assets/6d04e167-01f5-461d-821a-489686b9a23d" width="30%">
+ <img src="https://github.com/user-attachments/assets/0212568e-a8bb-492f-97a9-89603ee92442" width="30%">
 </p>
 
 
