@@ -1,0 +1,151 @@
+//
+//  OrderViewController.swift
+//  upbit
+//
+//  Created by 홍정연 on 4/10/25.
+//
+
+import UIKit
+import RxSwift
+
+class OrderViewController: UIViewController {
+    
+    // MARK: ViewModel
+    private let viewModel: OrderViewModel
+    
+    // MARK: disposeBag
+    private let disposeBag = DisposeBag()
+    
+    // MARK: 호가정보
+    private var orderbookUnits: [obUnits] = [obUnits]()
+    
+    // MARK: 현재가
+    private var ticker:SocketTicker?
+    
+    // MARK: 호가창 가운데 정렬 여부
+    private var isAlignCenter:Bool = false
+    
+    private lazy var tableView: UITableView = {
+        let tableview = UITableView()
+        tableview.register(OrderCell.self, forCellReuseIdentifier: OrderCell.cellId)
+        tableview.backgroundColor = .clear
+        tableview.showsVerticalScrollIndicator = false
+        tableview.separatorStyle = .none
+        tableview.delegate = self
+        tableview.dataSource = self
+        return tableview
+    }()
+    
+    init(viewModel: OrderViewModel) {
+        self.viewModel = viewModel
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        self.layout()
+        self.bind()
+    }
+    
+    private func layout() {
+        self.view.addSubview(self.tableView)
+        
+        tableView.snp.makeConstraints { make in
+            make.top.equalTo(view.safeAreaLayoutGuide.snp.top)
+            make.leading.bottom.equalToSuperview()
+            make.width.equalToSuperview().multipliedBy(0.45)
+        }
+    }
+    
+    private func bind() {
+        
+        // MARK: 호가 구독, 0.25초 마다 이벤트 방출
+        self.viewModel.orderbookObservable
+            .throttle(.milliseconds(250), latest: true, scheduler: MainScheduler.instance)
+            .subscribe(onNext: { [weak self] orderbook in
+                guard let self = self else { return }
+                self.orderbookUnits = orderbook.orderbook_units
+                self.tableView.reloadData()
+                // MARK: 최초 1회 가운데 정렬
+                if !isAlignCenter { centerTableView() }
+            }).disposed(by: disposeBag)
+        
+        // MARK: 현재가 구독
+        self.viewModel.tickerObservable
+            .subscribe(onNext: { [weak self] ticker in
+                guard let self = self else { return }
+                self.ticker = ticker
+            }).disposed(by: disposeBag)
+    }
+    
+    // MARK: 호가창 테이블뷰의 스크롤을 가운데로 정렬
+    private func centerTableView() {
+        if orderbookUnits.count == 0 { return }
+        let middleIndexPath = IndexPath(row: orderbookUnits.count, section: 0)
+        self.tableView.scrollToRow(at: middleIndexPath, at: .middle, animated: false)
+        self.isAlignCenter = true
+    }
+}
+
+
+extension OrderViewController: UITableViewDelegate, UITableViewDataSource {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        // MARK: 호가 정보하나당 매수호가, 매도호가가 존재하기 때문에, item 1개당 로우 2개 배치
+        return self.orderbookUnits.count * 2
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        
+        let cell = tableView.dequeueReusableCell(withIdentifier: OrderCell.cellId, for: indexPath) as! OrderCell
+        cell.selectionStyle = .none
+        
+        // MARK: 가져올 인덱스, indexPath.row보다 orderbookUnits.count가 크면 동일 인덱스의 매수호가 사용하고, indexPath.row가 동일할 때 부터 index를 0으로 초기화 하기 위해 호가정보의 갯수를 빼줌
+        let index = indexPath.row < orderbookUnits.count ? indexPath.row : indexPath.row - orderbookUnits.count
+        
+        // MARK: n번째의 호가 정보
+        let orderBook = indexPath.row < orderbookUnits.count ? orderbookUnits[orderbookUnits.count - 1 - index] : orderbookUnits[index]
+        
+        // MARK: index에 따라 매수호가, 매도호가 데이터 사용
+        let price = indexPath.row < orderbookUnits.count ? orderBook.ask_price : orderBook.bid_price
+        
+        // MARK: index에 따라 매수잔량, 매도잔량 데이터 사용
+        let size = indexPath.row < orderbookUnits.count ? orderBook.ask_size : orderBook.bid_size
+        
+        // MARK: 매수, 매도 잔량중 최고치
+        let maxSize = orderbookUnits.isEmpty ? 0 : orderbookUnits.max(by: { max($0.ask_size, $0.bid_size) < max($1.ask_size, $1.bid_size) }).map { max($0.ask_size, $0.bid_size) } ?? 0
+        
+        // MARK: 셀 구성
+        cell.configure(price: price, ticker: self.ticker, size: size, maxSize: maxSize, isAsk: indexPath.row < orderbookUnits.count)
+        
+        // MARK: 실시간 호가 강조 테두리 설정
+        if let tradePrice = ticker?.trade_price, tradePrice == price {
+            cell.layer.borderWidth = 1.0
+            cell.layer.borderColor = ThemeColor.evenPrimary.cgColor
+        } else {
+            cell.layer.borderWidth = 0.0
+        }
+        
+        return cell
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        
+        // MARK: 선택된 셀의 인덱스 계산
+        let index = indexPath.row < orderbookUnits.count ? indexPath.row : indexPath.row - orderbookUnits.count
+        
+        // MARK: 선택된 호가 정보 가져오기
+        let orderBook = indexPath.row < orderbookUnits.count ? orderbookUnits[orderbookUnits.count - 1 - index] : orderbookUnits[index]
+        
+        // MARK: 매수 또는 매도 호가에 따라 다른 값 설정
+        let price = indexPath.row < orderbookUnits.count ? orderBook.ask_price : orderBook.bid_price
+        let size = indexPath.row < orderbookUnits.count ? orderBook.ask_size : orderBook.bid_size
+        let isAsk = indexPath.row < orderbookUnits.count // 매수(true)인지 매도(false)인지 확인
+        
+        // MARK: 선택된 데이터 출력 (또는 원하는 로직 처리)
+        print("선택된 값 - Price: \(price), Size: \(size), isAsk: \(isAsk)")
+    }
+}

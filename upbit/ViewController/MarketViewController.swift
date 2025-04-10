@@ -70,6 +70,8 @@ class MarketViewController: UIViewController {
     
     // MARK: 레이아웃 설정
     private func layout() {
+        self.title = "거래소"
+        
         // MARK: 우측 상단 BarbuttonItem 정렬 기능 설정
         self.configureSortMenu()
         
@@ -127,6 +129,17 @@ class MarketViewController: UIViewController {
                 guard let self = self else { return }
                 self.view.makeToast(message, duration: 2.0, position: .bottom)
             }).disposed(by: disposeBag)
+        
+        // MARK: 셀 선택 이벤트
+        self.marketTableView.rx.itemSelected
+            .subscribe(onNext: { [weak self] indexPath in
+                guard let self = self,
+                      let marketTicker = self.dataSource.itemIdentifier(for: indexPath)
+                else { return }
+                // MARK: 디테일 페이지 이동
+                self.coordinator?.showDetail(marketInfo: marketTicker.marketInfo)
+            })
+            .disposed(by: disposeBag)
     }
     
     // MARK: 코인 정렬메뉴 설정

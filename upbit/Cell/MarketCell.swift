@@ -204,7 +204,7 @@ class MarketCell: UITableViewCell {
         changeRateView.setPercentage(marketTicker.ticker.signed_change_rate * 100)
         
         // MARK: 증감액
-        changePriceLabel.text = "\(marketTicker.ticker.signed_change_price.formattedStringWithCommaAndDecimal(places: 6))"
+        changePriceLabel.text = "\(marketTicker.ticker.change.sign)\(marketTicker.ticker.change_price.formattedStringWithCommaAndDecimal(places: 6))"
         
         // MARK: 증감액 색상
         changePriceLabel.textColor = marketTicker.ticker.change.color

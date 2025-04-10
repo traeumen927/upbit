@@ -19,17 +19,17 @@ struct MarketTicker: Hashable{
     
     // MARK: 자동 합성이 불가능 하므로, 존재형 타입을 저장 프로퍼티로 사용할 경우에는 직접 Equtable/Hashable 구현을 제공해야함
     static func == (lhs: MarketTicker, rhs: MarketTicker) -> Bool {
-            // marketInfo는 구체 타입이므로 자동 비교 가능
-            guard lhs.marketInfo == rhs.marketInfo else { return false }
-            // ticker의 경우, 두 ticker의 타입이 같은지 먼저 확인하고 hashValue를 비교하는 방식
-            guard type(of: lhs.ticker) == type(of: rhs.ticker) else { return false }
-            return lhs.ticker.hashValue == rhs.ticker.hashValue
-        }
-
-        func hash(into hasher: inout Hasher) {
-            hasher.combine(marketInfo)
-            hasher.combine(ticker.hashValue)
-        }
+        // marketInfo는 구체 타입이므로 자동 비교 가능
+        guard lhs.marketInfo == rhs.marketInfo else { return false }
+        // ticker의 경우, 두 ticker의 타입이 같은지 먼저 확인하고 hashValue를 비교하는 방식
+        guard type(of: lhs.ticker) == type(of: rhs.ticker) else { return false }
+        return lhs.ticker.hashValue == rhs.ticker.hashValue
+    }
+    
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(marketInfo)
+        hasher.combine(ticker.hashValue)
+    }
 }
 
 // MARK: Api Ticker와 SocketTicker의 공통된 변수

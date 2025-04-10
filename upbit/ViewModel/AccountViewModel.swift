@@ -85,7 +85,7 @@ class AccountViewModel {
                                     
                                     // MARK: 매칭된 한글명, 현재가 추출
                                     guard let marketInfo = markets.first(where: { $0.market == marketCode }), let ticker = tickers.first(where: { $0.market == marketCode }) else { return nil }
-                                    return AccountTicker(korName: marketInfo.koreanName, account: account, ticker: ticker)
+                                    return AccountTicker(marketInfo: marketInfo, account: account, ticker: ticker)
                                 }
                                 
                                 //MARK: AccountRelay 방출
@@ -130,7 +130,7 @@ class AccountViewModel {
             let marketCode = "\(accountTicker.account.unit_currency)-\(accountTicker.account.currency)"
             if marketCode == ticker.code {
                 // MARK: code가 일치하면 ticker 업데이트
-                let updatedAccountTicker = AccountTicker(korName: accountTicker.korName, account: accountTicker.account, ticker: ticker)
+                let updatedAccountTicker = AccountTicker(marketInfo: accountTicker.marketInfo, account: accountTicker.account, ticker: ticker)
                 currentTickers[index] = updatedAccountTicker
             }
         }
@@ -200,7 +200,6 @@ class AccountViewModel {
             print("\(className): peerClosed")
             break
         }
-        
     }
     
     // MARK: 웹소켓으로부터 받은 바이너리 데이터 핸들링
