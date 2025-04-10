@@ -8,9 +8,6 @@
 import UIKit
 import SnapKit
 
-import UIKit
-import SnapKit
-
 protocol MenuPageViewDelegate: AnyObject {
     func menuPageView(_ menuPageView: MenuPageView, didSelectPageAt index: Int)
 }
@@ -88,7 +85,8 @@ class MenuPageView: UIView {
         for (index, title) in menuTitles.enumerated() {
             let button = UIButton(type: .system)
             button.setTitle(title, for: .normal)
-            button.setTitleColor(.white, for: .normal)
+            button.setTitleColor(ThemeColor.label1, for: .normal)
+            button.titleLabel?.font = .systemFont(ofSize: 16, weight: .medium)
             button.tag = index
             button.addTarget(self, action: #selector(menuButtonTapped(_:)), for: .touchUpInside)
             menuStackView.addArrangedSubview(button)
@@ -97,7 +95,7 @@ class MenuPageView: UIView {
         
         // 4. 메뉴 하단 인디케이터
         indicatorView = UIView()
-        indicatorView.backgroundColor = .red
+        indicatorView.backgroundColor = ThemeColor.evenPrimary
         menuContainer.addSubview(indicatorView)
         indicatorView.snp.makeConstraints { make in
             make.height.equalTo(2)

@@ -22,6 +22,9 @@ class DetailPageViewController: UIViewController {
     // MARK: 코디네이터 참조
     weak var coordinator: DetailPageCoordinator?
     
+    // MARK: 전달받은 메뉴 하위 페이지 배열
+    private let pages: [UIViewController]
+    
     // MARK: 현재가 라벨
     private lazy var priceLabel: UILabel = {
         let label = UILabel()
@@ -42,23 +45,17 @@ class DetailPageViewController: UIViewController {
     
     // MARK: 메뉴가 있는 PageView
     private lazy var menuPageView: MenuPageView = {
-        
-        let vc1 = UIViewController()
-        vc1.view.backgroundColor = .systemIndigo
-        
-        let vc2 = UIViewController()
-        vc2.view.backgroundColor = .lightGray
-        
-        let view = MenuPageView(menuTitles: ["메뉴1", "메뉴2"], pages: [vc1, vc2])
-        
+        let view = MenuPageView(menuTitles: ["주문", "차트", "호가", "종목토론방"], pages: self.pages)
         view.delegate = self
+        
         return view
     }()
     
     
     // MARK: Initializer
-    init(viewModel: DetailPageViewModel) {
+    init(viewModel: DetailPageViewModel, pages: [UIViewController]) {
         self.viewModel = viewModel
+        self.pages = pages
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -93,7 +90,7 @@ class DetailPageViewController: UIViewController {
         }
         
         menuPageView.snp.makeConstraints { make in
-            make.top.equalTo(self.changeLabel.snp.bottom).offset(20)
+            make.top.equalTo(self.changeLabel.snp.bottom).offset(16)
             make.leading.trailing.bottom.equalToSuperview()
         }
         
