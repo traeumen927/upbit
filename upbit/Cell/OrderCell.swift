@@ -137,7 +137,7 @@ class OrderCell: UITableViewCell {
     }
     
     // MARK: 호가, 개장가, 잔량, 잔량최대치, 매수/매도 여부
-    func configure(price: Double, ticker: SocketTicker, size: Double, maxSize: Double, isAsk:Bool) {
+    func configure(price: Double, ticker: SocketTicker?, size: Double, maxSize: Double, isAsk:Bool) {
         // MARK: 셀 배경색
         self.contentView.backgroundColor = isAsk ? ThemeColor.fallBackground : ThemeColor.riseBackground
         
@@ -160,6 +160,8 @@ class OrderCell: UITableViewCell {
             make.leading.equalToSuperview()
             make.width.equalToSuperview().multipliedBy(percent / 100)
         }
+        
+        guard let ticker = ticker else { return }
         
         // MARK: 변동률
         let rate = ticker.opening_price.percentageDifference(to: price)

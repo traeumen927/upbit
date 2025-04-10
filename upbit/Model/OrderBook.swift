@@ -49,7 +49,7 @@ struct Orderbook: Decodable {
 }
 
 // MARK: OrderBook Units 구성요소(호가정보)
-struct obUnits: Decodable {
+struct obUnits: Decodable, Hashable {
     ///매도 호가
     let ask_price: Double
     ///매수 호가

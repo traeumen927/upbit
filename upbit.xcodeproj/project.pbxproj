@@ -55,6 +55,7 @@
 		F129F04A2D6361C800F3A74C /* MarketCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F129F0492D6361C800F3A74C /* MarketCell.swift */; };
 		F129F04C2D63628300F3A74C /* PercentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F129F04B2D63628300F3A74C /* PercentView.swift */; };
 		F129F04E2D6362D000F3A74C /* UIDouble.swift in Sources */ = {isa = PBXBuildFile; fileRef = F129F04D2D6362D000F3A74C /* UIDouble.swift */; };
+		F13061682DA8053900B4B42E /* OrderBookTableDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = F13061672DA8053900B4B42E /* OrderBookTableDataSource.swift */; };
 		F133C8CE2D74246500A2F308 /* Decodable.swift in Sources */ = {isa = PBXBuildFile; fileRef = F133C8CD2D74246500A2F308 /* Decodable.swift */; };
 		F14442712DA4055E006B90BC /* MenuPageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F14442702DA4055E006B90BC /* MenuPageView.swift */; };
 		F15FE9D32D9825E100D89A2A /* AccountTicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = F15FE9D22D9825E100D89A2A /* AccountTicker.swift */; };
@@ -120,6 +121,7 @@
 		F129F0492D6361C800F3A74C /* MarketCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarketCell.swift; sourceTree = "<group>"; };
 		F129F04B2D63628300F3A74C /* PercentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PercentView.swift; sourceTree = "<group>"; };
 		F129F04D2D6362D000F3A74C /* UIDouble.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIDouble.swift; sourceTree = "<group>"; };
+		F13061672DA8053900B4B42E /* OrderBookTableDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrderBookTableDataSource.swift; sourceTree = "<group>"; };
 		F133C8CD2D74246500A2F308 /* Decodable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Decodable.swift; sourceTree = "<group>"; };
 		F14442702DA4055E006B90BC /* MenuPageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuPageView.swift; sourceTree = "<group>"; };
 		F15FE9D22D9825E100D89A2A /* AccountTicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountTicker.swift; sourceTree = "<group>"; };
@@ -170,6 +172,7 @@
 			children = (
 				F1160EE72D6D9BEF006A19EC /* MarketTableDataSource.swift */,
 				F10B15812D9AA92300FF6D5C /* AccountTableDataSource.swift */,
+				F13061672DA8053900B4B42E /* OrderBookTableDataSource.swift */,
 			);
 			path = DataSource;
 			sourceTree = "<group>";
@@ -490,6 +493,7 @@
 				F10629E52D71E09E00EC48B6 /* SocketTicker.swift in Sources */,
 				F19484E32D9C14850040E675 /* MarketCoordinator.swift in Sources */,
 				F19484E52D9C14D70040E675 /* SettingCoordinator.swift in Sources */,
+				F13061682DA8053900B4B42E /* OrderBookTableDataSource.swift in Sources */,
 				F133C8CE2D74246500A2F308 /* Decodable.swift in Sources */,
 				F129F0362D63188100F3A74C /* SettingViewController.swift in Sources */,
 				F129F04E2D6362D000F3A74C /* UIDouble.swift in Sources */,
