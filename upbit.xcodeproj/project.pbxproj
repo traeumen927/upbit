@@ -66,6 +66,8 @@
 		F16DE5982DA7F4E800E357D2 /* ChatViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F16DE5972DA7F4E800E357D2 /* ChatViewModel.swift */; };
 		F16DE59A2DA7F4EA00E357D2 /* OrderBookViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F16DE5992DA7F4EA00E357D2 /* OrderBookViewModel.swift */; };
 		F16DE59C2DA7F4EE00E357D2 /* ChartViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F16DE59B2DA7F4EE00E357D2 /* ChartViewModel.swift */; };
+		F16DE5A02DA7F88A00E357D2 /* OrderCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F16DE59F2DA7F88A00E357D2 /* OrderCell.swift */; };
+		F16DE5A22DA7FBF800E357D2 /* OrderBook.swift in Sources */ = {isa = PBXBuildFile; fileRef = F16DE5A12DA7FBF800E357D2 /* OrderBook.swift */; };
 		F19484DD2D9C0CF20040E675 /* AccountCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = F19484DC2D9C0CF20040E675 /* AccountCoordinator.swift */; };
 		F19484DF2D9C0FC40040E675 /* DetailPageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F19484DE2D9C0FC40040E675 /* DetailPageViewController.swift */; };
 		F19484E12D9C0FE00040E675 /* DetailPageViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F19484E02D9C0FE00040E675 /* DetailPageViewModel.swift */; };
@@ -129,6 +131,8 @@
 		F16DE5972DA7F4E800E357D2 /* ChatViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatViewModel.swift; sourceTree = "<group>"; };
 		F16DE5992DA7F4EA00E357D2 /* OrderBookViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrderBookViewModel.swift; sourceTree = "<group>"; };
 		F16DE59B2DA7F4EE00E357D2 /* ChartViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChartViewModel.swift; sourceTree = "<group>"; };
+		F16DE59F2DA7F88A00E357D2 /* OrderCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrderCell.swift; sourceTree = "<group>"; };
+		F16DE5A12DA7FBF800E357D2 /* OrderBook.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrderBook.swift; sourceTree = "<group>"; };
 		F19484DC2D9C0CF20040E675 /* AccountCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountCoordinator.swift; sourceTree = "<group>"; };
 		F19484DE2D9C0FC40040E675 /* DetailPageViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailPageViewController.swift; sourceTree = "<group>"; };
 		F19484E02D9C0FE00040E675 /* DetailPageViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailPageViewModel.swift; sourceTree = "<group>"; };
@@ -268,7 +272,10 @@
 				F129F0332D63186E00F3A74C /* AccountViewController.swift */,
 				F129F0352D63188100F3A74C /* SettingViewController.swift */,
 				F19484DE2D9C0FC40040E675 /* DetailPageViewController.swift */,
-				F16DE5892DA7F2C300E357D2 /* DetailChild */,
+				F16DE58B2DA7F33C00E357D2 /* OrderViewController.swift */,
+				F16DE58F2DA7F4B700E357D2 /* ChartViewController.swift */,
+				F16DE5912DA7F4BC00E357D2 /* OrderBookViewController.swift */,
+				F16DE5932DA7F4BD00E357D2 /* ChatViewController.swift */,
 			);
 			path = ViewController;
 			sourceTree = "<group>";
@@ -280,7 +287,10 @@
 				F129F02D2D63176400F3A74C /* AccountViewModel.swift */,
 				F129F02F2D63176C00F3A74C /* SettingViewModel.swift */,
 				F19484E02D9C0FE00040E675 /* DetailPageViewModel.swift */,
-				F16DE58A2DA7F2E200E357D2 /* DetailChild */,
+				F16DE58D2DA7F38100E357D2 /* OrderViewModel.swift */,
+				F16DE59B2DA7F4EE00E357D2 /* ChartViewModel.swift */,
+				F16DE5992DA7F4EA00E357D2 /* OrderBookViewModel.swift */,
+				F16DE5972DA7F4E800E357D2 /* ChatViewModel.swift */,
 			);
 			path = ViewModel;
 			sourceTree = "<group>";
@@ -288,13 +298,14 @@
 		F129F0242D63146900F3A74C /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				F11D099A2D7B1E0800A8B2E0 /* Payload.swift */,
 				F1160EEF2D6DAB72006A19EC /* MarketTicker.swift */,
 				F15FE9D22D9825E100D89A2A /* AccountTicker.swift */,
 				F1160EE22D6D9313006A19EC /* MarketInfo.swift */,
 				F11D099C2D7B1F3F00A8B2E0 /* Account.swift */,
 				F1160EEB2D6DA66C006A19EC /* ApiTicker.swift */,
 				F10629E42D71E09E00EC48B6 /* SocketTicker.swift */,
-				F11D099A2D7B1E0800A8B2E0 /* Payload.swift */,
+				F16DE5A12DA7FBF800E357D2 /* OrderBook.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -304,6 +315,7 @@
 			children = (
 				F129F0492D6361C800F3A74C /* MarketCell.swift */,
 				F10B157D2D9A79F300FF6D5C /* AccountCell.swift */,
+				F16DE59F2DA7F88A00E357D2 /* OrderCell.swift */,
 			);
 			path = Cell;
 			sourceTree = "<group>";
@@ -339,28 +351,6 @@
 				F19484E82D9C158D0040E675 /* DetailPageCoordinator.swift */,
 			);
 			path = Coordinator;
-			sourceTree = "<group>";
-		};
-		F16DE5892DA7F2C300E357D2 /* DetailChild */ = {
-			isa = PBXGroup;
-			children = (
-				F16DE58B2DA7F33C00E357D2 /* OrderViewController.swift */,
-				F16DE58F2DA7F4B700E357D2 /* ChartViewController.swift */,
-				F16DE5912DA7F4BC00E357D2 /* OrderBookViewController.swift */,
-				F16DE5932DA7F4BD00E357D2 /* ChatViewController.swift */,
-			);
-			path = DetailChild;
-			sourceTree = "<group>";
-		};
-		F16DE58A2DA7F2E200E357D2 /* DetailChild */ = {
-			isa = PBXGroup;
-			children = (
-				F16DE58D2DA7F38100E357D2 /* OrderViewModel.swift */,
-				F16DE59B2DA7F4EE00E357D2 /* ChartViewModel.swift */,
-				F16DE5992DA7F4EA00E357D2 /* OrderBookViewModel.swift */,
-				F16DE5972DA7F4E800E357D2 /* ChatViewModel.swift */,
-			);
-			path = DetailChild;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -486,8 +476,10 @@
 				F19484E12D9C0FE00040E675 /* DetailPageViewModel.swift in Sources */,
 				F14442712DA4055E006B90BC /* MenuPageView.swift in Sources */,
 				F11D099D2D7B1F3F00A8B2E0 /* Account.swift in Sources */,
+				F16DE5A22DA7FBF800E357D2 /* OrderBook.swift in Sources */,
 				F129EFFB2D6310F100F3A74C /* AppDelegate.swift in Sources */,
 				F129F0382D631C0100F3A74C /* MainTabBarCoordinator.swift in Sources */,
+				F16DE5A02DA7F88A00E357D2 /* OrderCell.swift in Sources */,
 				F10B15822D9AA92300FF6D5C /* AccountTableDataSource.swift in Sources */,
 				F16DE59A2DA7F4EA00E357D2 /* OrderBookViewModel.swift in Sources */,
 				F10B157E2D9A79F300FF6D5C /* AccountCell.swift in Sources */,

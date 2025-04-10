@@ -26,6 +26,9 @@ class DetailPageViewModel {
     // MARK: 실시간 현재가 정보
     let tickerSubejct: PublishSubject<SocketTicker> = PublishSubject<SocketTicker>()
     
+    // MARK: 실시간 호가 정보
+    let orderbookSubejct: PublishSubject<Orderbook> = PublishSubject<Orderbook>()
+    
     
     init(marketInfo: MarketInfo) {
         self.marketInfo = marketInfo
@@ -45,7 +48,8 @@ class DetailPageViewModel {
     // MARK: 선택된 코인 Ticker WebSocket 요청
     private func requestTicker() {
         let code = self.marketInfo.market
-        self.webSocketService.subscribeTo(types: [.ticker], symbol: [code])
+        // MARK: 현재가, 호가 요청
+        self.webSocketService.subscribeTo(types: [.ticker, .orderbook], symbol: [code])
     }
     
     // MARK: WebSocketDelegate에서 발생하는 WebSocket Event 처리
@@ -115,6 +119,10 @@ class DetailPageViewModel {
     private func handleSocketData(data: Data) {
         if let ticker: SocketTicker = SocketTicker.parseData(data) {
             self.tickerSubejct.onNext(ticker)
+        }
+        
+        if let orderbook: Orderbook = Orderbook.parseData(data) {
+            self.orderbookSubejct.onNext(orderbook)
         }
     }
     
