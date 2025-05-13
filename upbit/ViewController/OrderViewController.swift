@@ -25,6 +25,14 @@ class OrderViewController: UIViewController {
     // MARK: 호가창 가운데 정렬 여부
     private var isAlignCenter:Bool = false
     
+    // MARK: 선택된 기준가
+    private var seletedPrice: Double = 0.0 {
+        didSet {
+            // MARK: 기준가 업데이트
+            self.priceLabel.text = "₩\(seletedPrice.formattedStringWithDecimal())"
+        }
+    }
+    
     
     // MARK: 호가 테이블뷰
     private lazy var tableView: UITableView = {
@@ -44,20 +52,40 @@ class OrderViewController: UIViewController {
         let control = UISegmentedControl(items: ["매수", "매도"])
         control.selectedSegmentIndex = 0
         
-        // 색상설정
-        control.backgroundColor = ThemeColor.background3
-        control.selectedSegmentTintColor = ThemeColor.background1
-        control.setTitleTextAttributes([.foregroundColor: ThemeColor.label1], for: .selected)
-        control.setTitleTextAttributes([.foregroundColor: ThemeColor.label2], for: .normal)
-        
-        // 폰트설정
-        let attributes: [NSAttributedString.Key: Any] = [
-            .font: UIFont.systemFont(ofSize: 14, weight: .medium)
+        let normalAttributes: [NSAttributedString.Key: Any] = [
+            .font: UIFont.systemFont(ofSize: 14, weight: .medium),
+            .foregroundColor: ThemeColor.label2
         ]
-        control.setTitleTextAttributes(attributes, for: .normal)
-        control.setTitleTextAttributes(attributes, for: .selected)
+
+        let selectedAttributes: [NSAttributedString.Key: Any] = [
+            .font: UIFont.systemFont(ofSize: 14, weight: .medium),
+            .foregroundColor: ThemeColor.label1
+        ]
+
+        control.setTitleTextAttributes(normalAttributes, for: .normal)
+        control.setTitleTextAttributes(selectedAttributes, for: .selected)
         
         return control
+    }()
+    
+    // MARK: 매수/매도 버튼
+    private lazy var orderButton: UIButton = {
+        let button = UIButton()
+        button.titleLabel?.font = .systemFont(ofSize: 18, weight: .bold)
+        button.layer.cornerRadius = 8
+        button.setTitleColor(.white, for: .normal)
+        
+        return button
+    }()
+    
+    // MARK: 기준가 라벨
+    private lazy var priceLabel: UILabel = {
+        let label = UILabel()
+        label.font = .systemFont(ofSize: 18, weight: .medium)
+        label.textColor = ThemeColor.label1
+        label.textAlignment = .right
+        
+        return label
     }()
     
     init(viewModel: OrderViewModel) {
@@ -92,9 +120,15 @@ class OrderViewController: UIViewController {
                                           blur: 24,
                                           spread: 0)
         
+        // MARK: 매수/매도 구성요소 스택뷰
+        let orderStackView = UIStackView()
+        orderStackView.axis = .vertical
+        orderStackView.spacing = 12
+        
         [self.tableView, orderBackgroundView].forEach(self.view.addSubview(_:))
         orderBackgroundView.addSubview(orderView)
-        [self.segmentedControl].forEach(orderView.addSubview(_:))
+        [self.segmentedControl, orderStackView, self.orderButton].forEach(orderView.addSubview(_:))
+        [self.priceLabel].forEach(orderStackView.addArrangedSubview(_:))
         
         tableView.snp.makeConstraints { make in
             make.top.equalTo(view.safeAreaLayoutGuide.snp.top)
@@ -118,6 +152,18 @@ class OrderViewController: UIViewController {
             make.top.equalToSuperview().offset(12)
             make.leading.trailing.equalToSuperview().inset(8)
         }
+        
+        orderStackView.snp.makeConstraints { make in
+            make.top.equalTo(self.segmentedControl.snp.bottom).offset(24)
+            make.leading.trailing.equalToSuperview().inset(8)
+        }
+        
+        orderButton.snp.makeConstraints { make in
+            
+            make.leading.trailing.equalToSuperview().inset(8)
+            make.bottom.equalToSuperview().offset(-12)
+            make.height.equalTo(48)
+        }
     }
     
     private func bind() {
@@ -138,6 +184,33 @@ class OrderViewController: UIViewController {
             .subscribe(onNext: { [weak self] ticker in
                 guard let self = self else { return }
                 self.ticker = ticker
+            }).disposed(by: disposeBag)
+        
+        // MARK: 현재가 구독 (1회용)
+        self.viewModel.tickerObservable
+            .take(1)
+            .observe(on: MainScheduler.instance)
+            .bind(onNext: { [weak self] ticker in
+                self?.seletedPrice = ticker.trade_price
+            })
+            .disposed(by: disposeBag)
+        
+        // MARK: segmentedControl Index 구독
+        self.segmentedControl.rx.selectedSegmentIndex
+            .distinctUntilChanged()
+            .subscribe(onNext: { [weak self] index in
+                guard let self = self else { return }
+                
+                // MARK: 매수(index == 0), 매도(index == 1)
+                let isAsk = index == 0
+                
+                // MARK: 버튼 레이아웃 설정
+                let buttonTitle = isAsk ? "매수" : "매도"
+                let buttonColor = isAsk ? ThemeColor.risePrimary : ThemeColor.fallPrimary
+                
+                self.orderButton.setTitle(buttonTitle, for: .normal)
+                self.orderButton.backgroundColor = buttonColor
+                
             }).disposed(by: disposeBag)
     }
     
@@ -206,5 +279,8 @@ extension OrderViewController: UITableViewDelegate, UITableViewDataSource {
         
         // MARK: 선택된 데이터 출력 (또는 원하는 로직 처리)
         print("선택된 값 - Price: \(price), Size: \(size), isAsk: \(isAsk)")
+        
+        // MARK: 선택된 가격 저장
+        self.seletedPrice = price
     }
 }
