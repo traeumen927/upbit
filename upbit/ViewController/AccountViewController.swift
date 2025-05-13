@@ -38,7 +38,7 @@ class AccountViewController: UIViewController {
         let view = UIStackView()
         view.axis = .vertical
         view.spacing = 10
-        view.backgroundColor = ThemeColor.background2
+        view.backgroundColor = ThemeColor.background3
         return view
     }()
     

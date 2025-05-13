@@ -78,6 +78,7 @@
 		F1C651362D9591DF0075F637 /* PercentFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1C651352D9591DF0075F637 /* PercentFormatter.swift */; };
 		F1F1362C2D76D8660044832C /* UIView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1F1362B2D76D8660044832C /* UIView.swift */; };
 		F1F591B52D7492260046D507 /* SortOption.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1F591B42D7492260046D507 /* SortOption.swift */; };
+		F1FA76002DD364D2006BB987 /* CALayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1FA75FF2DD364D2006BB987 /* CALayer.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -144,6 +145,7 @@
 		F1C651352D9591DF0075F637 /* PercentFormatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PercentFormatter.swift; sourceTree = "<group>"; };
 		F1F1362B2D76D8660044832C /* UIView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIView.swift; sourceTree = "<group>"; };
 		F1F591B42D7492260046D507 /* SortOption.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SortOption.swift; sourceTree = "<group>"; };
+		F1FA75FF2DD364D2006BB987 /* CALayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CALayer.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -255,6 +257,7 @@
 				F129F0412D6359F600F3A74C /* UIColor.swift */,
 				F129F04D2D6362D000F3A74C /* UIDouble.swift */,
 				F1C651352D9591DF0075F637 /* PercentFormatter.swift */,
+				F1FA75FF2DD364D2006BB987 /* CALayer.swift */,
 			);
 			path = Extension;
 			sourceTree = "<group>";
@@ -506,6 +509,7 @@
 				F16DE5902DA7F4B700E357D2 /* ChartViewController.swift in Sources */,
 				F129F03C2D631CFE00F3A74C /* KeyboardAdjustable.swift in Sources */,
 				F129F0442D635A0700F3A74C /* ThemeColor.swift in Sources */,
+				F1FA76002DD364D2006BB987 /* CALayer.swift in Sources */,
 				F16DE5922DA7F4BC00E357D2 /* OrderBookViewController.swift in Sources */,
 				F1160EE12D6D8C1E006A19EC /* UpbitApiService.swift in Sources */,
 				F16DE58C2DA7F33C00E357D2 /* OrderViewController.swift in Sources */,

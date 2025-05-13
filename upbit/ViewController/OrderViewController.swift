@@ -25,6 +25,8 @@ class OrderViewController: UIViewController {
     // MARK: 호가창 가운데 정렬 여부
     private var isAlignCenter:Bool = false
     
+    
+    // MARK: 호가 테이블뷰
     private lazy var tableView: UITableView = {
         let tableview = UITableView()
         tableview.register(OrderCell.self, forCellReuseIdentifier: OrderCell.cellId)
@@ -33,7 +35,29 @@ class OrderViewController: UIViewController {
         tableview.separatorStyle = .none
         tableview.delegate = self
         tableview.dataSource = self
+        tableview.contentInsetAdjustmentBehavior = .never
         return tableview
+    }()
+    
+    // MARK: 매수/매도 컨트롤러
+    private lazy var segmentedControl: UISegmentedControl = {
+        let control = UISegmentedControl(items: ["매수", "매도"])
+        control.selectedSegmentIndex = 0
+        
+        // 색상설정
+        control.backgroundColor = ThemeColor.background3
+        control.selectedSegmentTintColor = ThemeColor.background1
+        control.setTitleTextAttributes([.foregroundColor: ThemeColor.label1], for: .selected)
+        control.setTitleTextAttributes([.foregroundColor: ThemeColor.label2], for: .normal)
+        
+        // 폰트설정
+        let attributes: [NSAttributedString.Key: Any] = [
+            .font: UIFont.systemFont(ofSize: 14, weight: .medium)
+        ]
+        control.setTitleTextAttributes(attributes, for: .normal)
+        control.setTitleTextAttributes(attributes, for: .selected)
+        
+        return control
     }()
     
     init(viewModel: OrderViewModel) {
@@ -52,12 +76,47 @@ class OrderViewController: UIViewController {
     }
     
     private func layout() {
-        self.view.addSubview(self.tableView)
+        
+        // MARK: 매수/매도 페이지 바탕
+        let orderBackgroundView: UIView = UIView()
+        orderBackgroundView.backgroundColor = ThemeColor.background2
+        
+        // MARK: 매수/매도 페이지
+        let orderView: UIView = UIView()
+        orderView.backgroundColor = ThemeColor.background1
+        orderView.layer.cornerRadius = 12
+        orderView.layer.applySketchShadow(color: ThemeColor.tintDark,
+                                          alpha: 0.08,
+                                          x: 0,
+                                          y: 4,
+                                          blur: 24,
+                                          spread: 0)
+        
+        [self.tableView, orderBackgroundView].forEach(self.view.addSubview(_:))
+        orderBackgroundView.addSubview(orderView)
+        [self.segmentedControl].forEach(orderView.addSubview(_:))
         
         tableView.snp.makeConstraints { make in
             make.top.equalTo(view.safeAreaLayoutGuide.snp.top)
             make.leading.bottom.equalToSuperview()
             make.width.equalToSuperview().multipliedBy(0.45)
+        }
+        
+        orderBackgroundView.snp.makeConstraints { make in
+            make.top.equalTo(self.tableView.snp.top)
+            make.leading.equalTo(self.tableView.snp.trailing)
+            make.trailing.bottom.equalToSuperview()
+        }
+        
+        orderView.snp.makeConstraints { make in
+            make.top.equalToSuperview().offset(20)
+            make.leading.trailing.equalToSuperview().inset(16)
+            make.bottom.greaterThanOrEqualToSuperview().offset(-50)
+        }
+        
+        segmentedControl.snp.makeConstraints { make in
+            make.top.equalToSuperview().offset(12)
+            make.leading.trailing.equalToSuperview().inset(8)
         }
     }
     
