@@ -57,6 +57,8 @@
 		F129F04E2D6362D000F3A74C /* UIDouble.swift in Sources */ = {isa = PBXBuildFile; fileRef = F129F04D2D6362D000F3A74C /* UIDouble.swift */; };
 		F13061682DA8053900B4B42E /* OrderBookTableDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = F13061672DA8053900B4B42E /* OrderBookTableDataSource.swift */; };
 		F133C8CE2D74246500A2F308 /* Decodable.swift in Sources */ = {isa = PBXBuildFile; fileRef = F133C8CD2D74246500A2F308 /* Decodable.swift */; };
+		F1350E5B2DD63A630006B02F /* BorderedTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1350E5A2DD63A630006B02F /* BorderedTextField.swift */; };
+		F1350E5D2DD63A720006B02F /* BorderedTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1350E5C2DD63A720006B02F /* BorderedTextView.swift */; };
 		F14442712DA4055E006B90BC /* MenuPageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F14442702DA4055E006B90BC /* MenuPageView.swift */; };
 		F15FE9D32D9825E100D89A2A /* AccountTicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = F15FE9D22D9825E100D89A2A /* AccountTicker.swift */; };
 		F16DE58C2DA7F33C00E357D2 /* OrderViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F16DE58B2DA7F33C00E357D2 /* OrderViewController.swift */; };
@@ -124,6 +126,8 @@
 		F129F04D2D6362D000F3A74C /* UIDouble.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIDouble.swift; sourceTree = "<group>"; };
 		F13061672DA8053900B4B42E /* OrderBookTableDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrderBookTableDataSource.swift; sourceTree = "<group>"; };
 		F133C8CD2D74246500A2F308 /* Decodable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Decodable.swift; sourceTree = "<group>"; };
+		F1350E5A2DD63A630006B02F /* BorderedTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BorderedTextField.swift; sourceTree = "<group>"; };
+		F1350E5C2DD63A720006B02F /* BorderedTextView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BorderedTextView.swift; sourceTree = "<group>"; };
 		F14442702DA4055E006B90BC /* MenuPageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuPageView.swift; sourceTree = "<group>"; };
 		F15FE9D22D9825E100D89A2A /* AccountTicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountTicker.swift; sourceTree = "<group>"; };
 		F16DE58B2DA7F33C00E357D2 /* OrderViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrderViewController.swift; sourceTree = "<group>"; };
@@ -332,6 +336,8 @@
 				F129F0452D635FA000F3A74C /* SingleCandleView.swift */,
 				F129F04B2D63628300F3A74C /* PercentView.swift */,
 				F14442702DA4055E006B90BC /* MenuPageView.swift */,
+				F1350E5A2DD63A630006B02F /* BorderedTextField.swift */,
+				F1350E5C2DD63A720006B02F /* BorderedTextView.swift */,
 			);
 			path = CustomView;
 			sourceTree = "<group>";
@@ -492,6 +498,8 @@
 				F15FE9D32D9825E100D89A2A /* AccountTicker.swift in Sources */,
 				F1C651362D9591DF0075F637 /* PercentFormatter.swift in Sources */,
 				F11D09A02D7B208600A8B2E0 /* AccountManager.swift in Sources */,
+				F1350E5B2DD63A630006B02F /* BorderedTextField.swift in Sources */,
+				F1350E5D2DD63A720006B02F /* BorderedTextView.swift in Sources */,
 				F16DE5942DA7F4BD00E357D2 /* ChatViewController.swift in Sources */,
 				F10629E52D71E09E00EC48B6 /* SocketTicker.swift in Sources */,
 				F19484E32D9C14850040E675 /* MarketCoordinator.swift in Sources */,

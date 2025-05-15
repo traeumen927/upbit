@@ -29,7 +29,7 @@ class OrderViewController: UIViewController {
     private var seletedPrice: Double = 0.0 {
         didSet {
             // MARK: 기준가 업데이트
-            self.priceLabel.text = "₩\(seletedPrice.formattedStringWithDecimal())"
+            self.priceTextFeild.text = "₩\(seletedPrice.formattedStringWithDecimal())"
         }
     }
     
@@ -56,12 +56,12 @@ class OrderViewController: UIViewController {
             .font: UIFont.systemFont(ofSize: 14, weight: .medium),
             .foregroundColor: ThemeColor.label2
         ]
-
+        
         let selectedAttributes: [NSAttributedString.Key: Any] = [
             .font: UIFont.systemFont(ofSize: 14, weight: .medium),
             .foregroundColor: ThemeColor.label1
         ]
-
+        
         control.setTitleTextAttributes(normalAttributes, for: .normal)
         control.setTitleTextAttributes(selectedAttributes, for: .selected)
         
@@ -78,14 +78,55 @@ class OrderViewController: UIViewController {
         return button
     }()
     
-    // MARK: 기준가 라벨
+    // MARK: 기준가 타이틀
     private lazy var priceLabel: UILabel = {
         let label = UILabel()
-        label.font = .systemFont(ofSize: 18, weight: .medium)
+        label.font = .systemFont(ofSize: 14, weight: .bold)
         label.textColor = ThemeColor.label1
-        label.textAlignment = .right
+        label.textAlignment = .left
+        label.text = "기준가"
         
         return label
+    }()
+    
+    // MARK: 기준가 텍스트
+    private lazy var priceTextFeild: BorderedTextField = {
+        let textField = BorderedTextField()
+        textField.alignment = .right
+        textField.keyboardType = .decimalPad
+        textField.font = .systemFont(ofSize: 14, weight: .medium)
+        textField.isInteractionEnabled = false
+        
+        return textField
+    }()
+    
+    
+    // MARK: 거래 수량 타이틀
+    private lazy var amountLabel: UILabel = {
+        let label = UILabel()
+        label.font = .systemFont(ofSize: 14, weight: .bold)
+        label.textColor = ThemeColor.label1
+        label.textAlignment = .left
+        
+        return label
+    }()
+    
+    // MARK: 거래 수량 텍스트
+    private lazy var amountTextFeild: BorderedTextField = {
+        let textField = BorderedTextField()
+        textField.alignment = .right
+        textField.keyboardType = .decimalPad
+        textField.font = .systemFont(ofSize: 14, weight: .medium)
+        return textField
+    }()
+    
+    // MARK: 거래 비중 슬라이더
+    private lazy var orderSlider: UISlider = {
+        let slider = UISlider()
+        slider.minimumValue = 0
+        slider.maximumValue = 100
+        
+        return slider
     }()
     
     init(viewModel: OrderViewModel) {
@@ -123,12 +164,12 @@ class OrderViewController: UIViewController {
         // MARK: 매수/매도 구성요소 스택뷰
         let orderStackView = UIStackView()
         orderStackView.axis = .vertical
-        orderStackView.spacing = 12
+        orderStackView.spacing = 6
         
         [self.tableView, orderBackgroundView].forEach(self.view.addSubview(_:))
         orderBackgroundView.addSubview(orderView)
         [self.segmentedControl, orderStackView, self.orderButton].forEach(orderView.addSubview(_:))
-        [self.priceLabel].forEach(orderStackView.addArrangedSubview(_:))
+        [self.priceLabel, self.priceTextFeild, UIView(), self.amountLabel, self.amountTextFeild, self.orderSlider].forEach(orderStackView.addArrangedSubview(_:))
         
         tableView.snp.makeConstraints { make in
             make.top.equalTo(view.safeAreaLayoutGuide.snp.top)
@@ -159,7 +200,6 @@ class OrderViewController: UIViewController {
         }
         
         orderButton.snp.makeConstraints { make in
-            
             make.leading.trailing.equalToSuperview().inset(8)
             make.bottom.equalToSuperview().offset(-12)
             make.height.equalTo(48)
@@ -203,6 +243,15 @@ class OrderViewController: UIViewController {
                 
                 // MARK: 매수(index == 0), 매도(index == 1)
                 let isAsk = index == 0
+                
+                // MARK: 기준가 레이아웃 설정
+                self.amountTextFeild.text = "0"
+                
+                // MARK: 수량 레이아웃 설정
+                let amountTitle: String = isAsk ? "매수 수량" : "매도 수량"
+                self.amountLabel.text = amountTitle
+                
+                self.amountTextFeild.text = "0"
                 
                 // MARK: 버튼 레이아웃 설정
                 let buttonTitle = isAsk ? "매수" : "매도"
