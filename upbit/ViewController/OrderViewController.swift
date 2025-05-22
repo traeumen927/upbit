@@ -7,6 +7,7 @@
 
 import UIKit
 import RxSwift
+import Toast
 
 class OrderViewController: UIViewController {
     
@@ -129,6 +130,24 @@ class OrderViewController: UIViewController {
         return slider
     }()
     
+    // MARK: 보유 화폐 InfoValueView
+    private lazy var accountInfoView: InfoValueView = {
+        let view = InfoValueView()
+//        view.title = "제목"
+//        view.value = "값"
+//        view.unitText = "USD"
+        return view
+    }()
+    
+    // MARK: 주문가능 수량 InfoValueView
+    private lazy var orderableInfoView: InfoValueView = {
+        let view = InfoValueView()
+//        view.title = "제목"
+//        view.value = "값"
+//        view.unitText = "USD"
+        return view
+    }()
+    
     init(viewModel: OrderViewModel) {
         self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
@@ -169,7 +188,7 @@ class OrderViewController: UIViewController {
         [self.tableView, orderBackgroundView].forEach(self.view.addSubview(_:))
         orderBackgroundView.addSubview(orderView)
         [self.segmentedControl, orderStackView, self.orderButton].forEach(orderView.addSubview(_:))
-        [self.priceLabel, self.priceTextFeild, UIView(), self.amountLabel, self.amountTextFeild, self.orderSlider].forEach(orderStackView.addArrangedSubview(_:))
+        [self.priceLabel, self.priceTextFeild, UIView(), self.amountLabel, self.amountTextFeild, self.orderSlider, self.accountInfoView, self.orderableInfoView].forEach(orderStackView.addArrangedSubview(_:))
         
         tableView.snp.makeConstraints { make in
             make.top.equalTo(view.safeAreaLayoutGuide.snp.top)
@@ -232,6 +251,44 @@ class OrderViewController: UIViewController {
             .observe(on: MainScheduler.instance)
             .bind(onNext: { [weak self] ticker in
                 self?.seletedPrice = ticker.trade_price
+            })
+            .disposed(by: disposeBag)
+        
+        // MARK: 주문가능정보 구독
+        self.viewModel.chanceSubject
+            .observe(on: MainScheduler.instance)
+            .subscribe(onNext: { [weak self] chance in
+                guard let self = self else { return }
+                
+            }).disposed(by: disposeBag)
+        
+        // MARK: 메세지 구독
+        self.viewModel.messageSubject
+            .observe(on: MainScheduler.instance)
+            .subscribe(onNext: { [weak self] message in
+                guard let self = self else { return }
+                self.view.makeToast(message, duration: 2.0, position: .bottom)
+            }).disposed(by: disposeBag)
+        
+        
+        // MARK: segementedControl Index + chanceSubejct 결합
+        Observable.combineLatest(
+                viewModel.chanceSubject,
+                segmentedControl.rx.selectedSegmentIndex
+            )
+            .observe(on: MainScheduler.instance)
+            .subscribe(onNext: { [weak self] chance, index in
+                guard let self = self else { return }
+                let isBuy = index == 0
+
+                let account = isBuy ? chance.bidAccount : chance.askAccount
+                let title = isBuy ? "보유원화" : "보유화폐"
+                let unit = account.currency
+                let amount = account.balance.formattedStringWithCommaAndDecimal(places: 6, removeZero: true)
+
+                self.accountInfoView.title = title
+                self.accountInfoView.unitText = unit
+                self.accountInfoView.value = amount
             })
             .disposed(by: disposeBag)
         

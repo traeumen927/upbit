@@ -148,7 +148,7 @@ extension UpbitApiService {
         // MARK: 인증이 필요한 요청에 사용되는 Json Web Token 생성
         private func generateJWT() -> String {
             
-            // MARK: 난수생성
+            // MARK: 난수생성(number used once)
             let nonce = UUID().uuidString
             
             // MARK: 파라미터가 있는 경우 (HTTP 쿼리 문자열, 혹은 body를 통해 파라미터를 전달하는 경우 모두 JWT 페이로드의 query_hash 값을 설정해야합니다)

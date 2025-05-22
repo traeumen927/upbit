@@ -16,7 +16,7 @@ enum AbType: String, Codable {
     
     init(from decoder: Decoder) throws {
         let container = try decoder.singleValueContainer()
-        let rawValue = try container.decode(String.self)
+        let rawValue = try container.decode(String.self).uppercased()
         switch rawValue {
         case "ASK":
             self = .ask

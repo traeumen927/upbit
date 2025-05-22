@@ -18,21 +18,24 @@ class OrderViewModel {
     // MARK: 호가 Observable
     private(set) var orderbookObservable: Observable<Orderbook>
     
+    // MARK: - Place for Input
+    // MARK: 선택된 마켓
+    private let market: String
+    
     // MARK: - Place for Output
+    // MARK: 주문가능정보 주제
+    let chanceSubject: PublishSubject<Chance> = PublishSubject<Chance>()
+    
     // MARK: 메세지 주제
     let messageSubject: PublishSubject<String> = PublishSubject<String>()
     
-    init(tickerObservable: Observable<SocketTicker>, orderbookObservable: Observable<Orderbook>) {
+    init(market: String, tickerObservable: Observable<SocketTicker>, orderbookObservable: Observable<Orderbook>) {
+        self.market = market
         self.tickerObservable = tickerObservable
         self.orderbookObservable = orderbookObservable
         
-        bind()
+        self.fetchChance(market: market)
     }
-    
-    private func bind() {
-        self.fetchChance(market: "KRW-BTC")
-    }
-    
     
     // MARK: 주문 가능 정보 조회
     private func fetchChance(market: String) {
@@ -41,9 +44,10 @@ class OrderViewModel {
             guard let self = self else { return }
             switch result {
             case .success(let chance):
-                print(chance)
+                self.chanceSubject.onNext(chance)
             case .failure(let error):
                 self.messageSubject.onNext(error.localizedDescription)
+                print("error: \(error.localizedDescription)")
             }
         }
     }

@@ -10,13 +10,13 @@ import Foundation
 // MARK: 주문 가능 정보
 struct Chance: Decodable {
     /// 매수 수수료 비율
-    let bidFee: Double
+    let bidFee: String
     /// 매도 수수료 비율
-    let askFee: Double
+    let askFee: String
     /// 메이커 매수 수수료 비율
-    let makerBidFee: Double
+    let makerBidFee: String
     /// 메이커 매도 수수료 비율
-    let makerAskFee: Double
+    let makerAskFee: String
     /// 마켓에 대한 정보
     let market: ChanceMarket
     /// 매수 시 사용하는 화폐의 계좌 상태
@@ -52,7 +52,7 @@ struct ChanceMarket: Decodable {
     /// 매도 시 제약사항
     let ask: CurrencyInfo
     /// 최대 매도/매수 금액
-    let maxTotal: Decimal
+    let maxTotal: String
     /// 마켓 운영 상태
     let state: String
 
@@ -72,7 +72,7 @@ struct CurrencyInfo: Decodable {
     /// 화폐를 의미하는 영문 대문자 코드
     let currency: String
     /// 최소 매도/매수 금액
-    let minTotal: Decimal
+    let minTotal: String
 
     enum CodingKeys: String, CodingKey {
         case currency
