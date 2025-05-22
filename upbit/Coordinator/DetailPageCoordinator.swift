@@ -22,9 +22,20 @@ class DetailPageCoordinator: Coordinator {
         let viewModel = DetailPageViewModel(marketInfo: self.marketInfo)
         
         // MARK: 각 하위 PageViewController들
-        let orderViewController = OrderViewController(viewModel: OrderViewModel(tickerObservable: viewModel.tickerSubejct.asObservable(), orderbookObservable: viewModel.orderbookSubejct.asObservable()))
+        
+        // MARK: 주문 페이지
+        let orderViewController = OrderViewController(viewModel:
+                                                        OrderViewModel(market: self.marketInfo.market,
+                                                                       tickerObservable:  viewModel.tickerSubejct.asObservable(),
+                                                                       orderbookObservable: viewModel.orderbookSubejct.asObservable()))
+        
+        // MARK: 차트 페이지
         let chartViewController = ChartViewController(viewModel: ChartViewModel())
+        
+        // MARK: 호가 페이지
         let orderBookViewController = OrderBookViewController(viewModel: OrderBookViewModel())
+        
+        // MARK: 종목토론방 페이지
         let chatViewController = ChatViewController(viewModel: ChatViewModel())
         
         // MARK: 각 하위 controller 배열

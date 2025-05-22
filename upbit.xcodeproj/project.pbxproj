@@ -57,6 +57,8 @@
 		F129F04E2D6362D000F3A74C /* UIDouble.swift in Sources */ = {isa = PBXBuildFile; fileRef = F129F04D2D6362D000F3A74C /* UIDouble.swift */; };
 		F13061682DA8053900B4B42E /* OrderBookTableDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = F13061672DA8053900B4B42E /* OrderBookTableDataSource.swift */; };
 		F133C8CE2D74246500A2F308 /* Decodable.swift in Sources */ = {isa = PBXBuildFile; fileRef = F133C8CD2D74246500A2F308 /* Decodable.swift */; };
+		F1350E5B2DD63A630006B02F /* BorderedTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1350E5A2DD63A630006B02F /* BorderedTextField.swift */; };
+		F1350E5D2DD63A720006B02F /* BorderedTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1350E5C2DD63A720006B02F /* BorderedTextView.swift */; };
 		F14442712DA4055E006B90BC /* MenuPageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F14442702DA4055E006B90BC /* MenuPageView.swift */; };
 		F15FE9D32D9825E100D89A2A /* AccountTicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = F15FE9D22D9825E100D89A2A /* AccountTicker.swift */; };
 		F16DE58C2DA7F33C00E357D2 /* OrderViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F16DE58B2DA7F33C00E357D2 /* OrderViewController.swift */; };
@@ -76,8 +78,11 @@
 		F19484E52D9C14D70040E675 /* SettingCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = F19484E42D9C14D70040E675 /* SettingCoordinator.swift */; };
 		F19484E92D9C158D0040E675 /* DetailPageCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = F19484E82D9C158D0040E675 /* DetailPageCoordinator.swift */; };
 		F1C651362D9591DF0075F637 /* PercentFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1C651352D9591DF0075F637 /* PercentFormatter.swift */; };
+		F1DB09DC2DD758D400C17743 /* Chance.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1DB09DB2DD758D400C17743 /* Chance.swift */; };
 		F1F1362C2D76D8660044832C /* UIView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1F1362B2D76D8660044832C /* UIView.swift */; };
 		F1F591B52D7492260046D507 /* SortOption.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1F591B42D7492260046D507 /* SortOption.swift */; };
+		F1F7AD812DDCD7FB00037102 /* InfoValueView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1F7AD802DDCD7FB00037102 /* InfoValueView.swift */; };
+		F1FA76002DD364D2006BB987 /* CALayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1FA75FF2DD364D2006BB987 /* CALayer.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -123,6 +128,8 @@
 		F129F04D2D6362D000F3A74C /* UIDouble.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIDouble.swift; sourceTree = "<group>"; };
 		F13061672DA8053900B4B42E /* OrderBookTableDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrderBookTableDataSource.swift; sourceTree = "<group>"; };
 		F133C8CD2D74246500A2F308 /* Decodable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Decodable.swift; sourceTree = "<group>"; };
+		F1350E5A2DD63A630006B02F /* BorderedTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BorderedTextField.swift; sourceTree = "<group>"; };
+		F1350E5C2DD63A720006B02F /* BorderedTextView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BorderedTextView.swift; sourceTree = "<group>"; };
 		F14442702DA4055E006B90BC /* MenuPageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuPageView.swift; sourceTree = "<group>"; };
 		F15FE9D22D9825E100D89A2A /* AccountTicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountTicker.swift; sourceTree = "<group>"; };
 		F16DE58B2DA7F33C00E357D2 /* OrderViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrderViewController.swift; sourceTree = "<group>"; };
@@ -142,8 +149,11 @@
 		F19484E42D9C14D70040E675 /* SettingCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingCoordinator.swift; sourceTree = "<group>"; };
 		F19484E82D9C158D0040E675 /* DetailPageCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailPageCoordinator.swift; sourceTree = "<group>"; };
 		F1C651352D9591DF0075F637 /* PercentFormatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PercentFormatter.swift; sourceTree = "<group>"; };
+		F1DB09DB2DD758D400C17743 /* Chance.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Chance.swift; sourceTree = "<group>"; };
 		F1F1362B2D76D8660044832C /* UIView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIView.swift; sourceTree = "<group>"; };
 		F1F591B42D7492260046D507 /* SortOption.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SortOption.swift; sourceTree = "<group>"; };
+		F1F7AD802DDCD7FB00037102 /* InfoValueView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InfoValueView.swift; sourceTree = "<group>"; };
+		F1FA75FF2DD364D2006BB987 /* CALayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CALayer.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -255,6 +265,7 @@
 				F129F0412D6359F600F3A74C /* UIColor.swift */,
 				F129F04D2D6362D000F3A74C /* UIDouble.swift */,
 				F1C651352D9591DF0075F637 /* PercentFormatter.swift */,
+				F1FA75FF2DD364D2006BB987 /* CALayer.swift */,
 			);
 			path = Extension;
 			sourceTree = "<group>";
@@ -309,6 +320,7 @@
 				F1160EEB2D6DA66C006A19EC /* ApiTicker.swift */,
 				F10629E42D71E09E00EC48B6 /* SocketTicker.swift */,
 				F16DE5A12DA7FBF800E357D2 /* OrderBook.swift */,
+				F1DB09DB2DD758D400C17743 /* Chance.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -329,6 +341,9 @@
 				F129F0452D635FA000F3A74C /* SingleCandleView.swift */,
 				F129F04B2D63628300F3A74C /* PercentView.swift */,
 				F14442702DA4055E006B90BC /* MenuPageView.swift */,
+				F1350E5A2DD63A630006B02F /* BorderedTextField.swift */,
+				F1350E5C2DD63A720006B02F /* BorderedTextView.swift */,
+				F1F7AD802DDCD7FB00037102 /* InfoValueView.swift */,
 			);
 			path = CustomView;
 			sourceTree = "<group>";
@@ -460,9 +475,11 @@
 				F16DE58E2DA7F38100E357D2 /* OrderViewModel.swift in Sources */,
 				F129F03E2D631D1A00F3A74C /* UILabel.swift in Sources */,
 				F1160EF02D6DAB72006A19EC /* MarketTicker.swift in Sources */,
+				F1DB09DC2DD758D400C17743 /* Chance.swift in Sources */,
 				F1160EEE2D6DA6F0006A19EC /* CurrencyType.swift in Sources */,
 				F10629E32D71DEC600EC48B6 /* SocketRequestType.swift in Sources */,
 				F1160EEC2D6DA66C006A19EC /* ApiTicker.swift in Sources */,
+				F1F7AD812DDCD7FB00037102 /* InfoValueView.swift in Sources */,
 				F129F02A2D63153600F3A74C /* Coordinator.swift in Sources */,
 				F10629E12D71DD8B00EC48B6 /* UpbitWebSocketService.swift in Sources */,
 				F1F591B52D7492260046D507 /* SortOption.swift in Sources */,
@@ -489,6 +506,8 @@
 				F15FE9D32D9825E100D89A2A /* AccountTicker.swift in Sources */,
 				F1C651362D9591DF0075F637 /* PercentFormatter.swift in Sources */,
 				F11D09A02D7B208600A8B2E0 /* AccountManager.swift in Sources */,
+				F1350E5B2DD63A630006B02F /* BorderedTextField.swift in Sources */,
+				F1350E5D2DD63A720006B02F /* BorderedTextView.swift in Sources */,
 				F16DE5942DA7F4BD00E357D2 /* ChatViewController.swift in Sources */,
 				F10629E52D71E09E00EC48B6 /* SocketTicker.swift in Sources */,
 				F19484E32D9C14850040E675 /* MarketCoordinator.swift in Sources */,
@@ -506,6 +525,7 @@
 				F16DE5902DA7F4B700E357D2 /* ChartViewController.swift in Sources */,
 				F129F03C2D631CFE00F3A74C /* KeyboardAdjustable.swift in Sources */,
 				F129F0442D635A0700F3A74C /* ThemeColor.swift in Sources */,
+				F1FA76002DD364D2006BB987 /* CALayer.swift in Sources */,
 				F16DE5922DA7F4BC00E357D2 /* OrderBookViewController.swift in Sources */,
 				F1160EE12D6D8C1E006A19EC /* UpbitApiService.swift in Sources */,
 				F16DE58C2DA7F33C00E357D2 /* OrderViewController.swift in Sources */,
