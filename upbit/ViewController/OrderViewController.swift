@@ -288,7 +288,7 @@ class OrderViewController: UIViewController {
                 let account = isBuy ? chance.bidAccount : chance.askAccount
                 let accountTitle = isBuy ? "보유원화" : "보유화폐"
                 let accountUnit = account.currency
-                let accountValue = account.balance.formattedStringWithCommaAndDecimal(places: 6, removeZero: true)
+                let accountValue = account.balanceDecimal.formattedStringWithTruncation(places: isBuy ? 0 : 6)
                 
                 self.accountInfoView.title = accountTitle
                 self.accountInfoView.unitText = accountUnit
@@ -298,7 +298,7 @@ class OrderViewController: UIViewController {
                 let minOrderInfo = isBuy ? chance.market.bid : chance.market.ask
                 self.minOrderInfoView.title = "최소주문"
                 self.minOrderInfoView.unitText = minOrderInfo.currency
-                self.minOrderInfoView.value = minOrderInfo.minTotalDecimal.formattedStringWithCommaAndDecimal(places: 6, removeZero: true)
+                self.minOrderInfoView.value = minOrderInfo.minTotalDecimal.formattedStringWithTruncation(places: 6)
             })
             .disposed(by: disposeBag)
         
@@ -358,7 +358,7 @@ class OrderViewController: UIViewController {
                     percentage: percentage,
                     chance: chance
                 )
-                self.amountTextFeild.text = amount.formattedStringWithCommaAndDecimal(places: 8, removeZero: true)
+                self.amountTextFeild.text = amount.formattedStringWithTruncation(places: 8)
             })
             .disposed(by: disposeBag)
 
@@ -386,17 +386,8 @@ class OrderViewController: UIViewController {
                 let amountRaw = self.amountTextFeild.text ?? "0"
                 let amount = Decimal(string: amountRaw) ?? 0
                 
-                // MARK: 총액
-                let total = price * amount
-                
-                // MARK: 최소주문금액(매수: 원화기준, 매도: 화폐기준)
-                let minTotal = isBuy ? chance.market.bid.minTotalDecimal : chance.market.ask.minTotalDecimal
-                
-                // MARK: 최소주문금액 미충족시 Message 안내
-                if total < minTotal {
-                    let formatted = minTotal.formattedStringWithCommaAndDecimal(places: 2)
-                    let message = "최소 주문 금액은 \(formatted) \(isBuy ? chance.market.bid.currency : chance.market.ask.currency)입니다."
-                    self.view.makeToast(message, duration: 2.0, position: .bottom)
+                // MARK: 주문 유효성 검사
+                guard self.validateOrder(isBuy: isBuy, price: price, amount: amount, chance: chance) else {
                     return
                 }
             }).disposed(by: disposeBag)
@@ -406,6 +397,53 @@ class OrderViewController: UIViewController {
     private func noticeOrder() {
         
     }
+    
+    // MARK: 주문 유효성 검사
+    private func validateOrder(isBuy: Bool, price: Decimal, amount: Decimal, chance: Chance) -> Bool {
+        let feeRate = isBuy ? chance.bidFeeDecimal : chance.askFeeDecimal
+        let total = (amount * price * (1 + feeRate)).truncatedTo8Digits()
+        let maxTotal = chance.market.maxTotalDecimal
+        let minTotal = isBuy ? chance.market.bid.minTotalDecimal : chance.market.ask.minTotalDecimal
+
+        if total < minTotal {
+            let formatted = minTotal.formattedStringWithTruncation(places: 0)
+            let currency = isBuy ? chance.market.bid.currency : chance.market.ask.currency
+            self.view.makeToast("최소 주문 금액은 \(formatted) \(currency)입니다.",
+                                duration: 2.0, position: .bottom)
+            return false
+        }
+
+        if total > maxTotal {
+            let formatted = maxTotal.formattedStringWithTruncation(places: 0)
+            let currency = isBuy ? chance.market.bid.currency : chance.market.ask.currency
+            self.view.makeToast("최대 주문 금액을 초과했습니다.\n(최대: \(formatted) \(currency))",
+                                duration: 2.0, position: .bottom)
+            return false
+        }
+
+        if isBuy {
+            let krwFloor = NSDecimalNumber(decimal: chance.bidAccount.balanceDecimal).rounding(
+                accordingToBehavior: NSDecimalNumberHandler(
+                    roundingMode: .down,
+                    scale: 0,
+                    raiseOnExactness: false,
+                    raiseOnOverflow: false,
+                    raiseOnUnderflow: false,
+                    raiseOnDivideByZero: false
+                )
+            ).decimalValue
+
+            if total > krwFloor {
+                let formatted = krwFloor.formattedStringWithTruncation(places: 0)
+                self.view.makeToast("최대 주문 가능 금액은 \(formatted) KRW입니다.",
+                                    duration: 2.0, position: .bottom)
+                return false
+            }
+        }
+
+        return true
+    }
+
     
     // MARK: 기준가 변동시 슬라이더 기준 최대 매수/매도 수량 재계산
     private func recalculateAmountBySlider() {
@@ -421,10 +459,7 @@ class OrderViewController: UIViewController {
             percentage: percentage,
             chance: chance
         )
-        
-        print(amount)
-        
-        amountTextFeild.text = amount.formattedStringWithCommaAndDecimal(places: 8, removeZero: true)
+        amountTextFeild.text = amount.formattedStringWithTruncation(places: 8)
     }
     
     // MARK: 슬라이더 위치 기반 매수/매도수량 계산

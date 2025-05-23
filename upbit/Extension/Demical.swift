@@ -8,13 +8,6 @@
 import Foundation
 
 extension Decimal {
-    func formattedStringWithCommaAndDecimal(places: Int = 2, removeZero: Bool = false) -> String {
-        let formatter = NumberFormatter()
-        formatter.numberStyle = .decimal
-        formatter.minimumFractionDigits = removeZero ? 0 : places
-        formatter.maximumFractionDigits = places
-        return formatter.string(for: self) ?? "\(self)"
-    }
     
     /// 소수점 8자리까지 버림 처리 (업비트 스타일)
     func truncatedTo8Digits() -> Decimal {
@@ -28,5 +21,24 @@ extension Decimal {
         )
         let number = NSDecimalNumber(decimal: self)
         return number.rounding(accordingToBehavior: behavior).decimalValue
+    }
+    
+    // 원하는 자리까지 절삭
+    func formattedStringWithTruncation(places: Int) -> String {
+        let handler = NSDecimalNumberHandler(
+            roundingMode: .down, // ❗️반올림이 아닌 절삭
+            scale: Int16(places),
+            raiseOnExactness: false,
+            raiseOnOverflow: false,
+            raiseOnUnderflow: false,
+            raiseOnDivideByZero: false
+        )
+        let truncated = NSDecimalNumber(decimal: self).rounding(accordingToBehavior: handler)
+        
+        let formatter = NumberFormatter()
+        formatter.numberStyle = .decimal
+        formatter.minimumFractionDigits = 0
+        formatter.maximumFractionDigits = places
+        return formatter.string(from: truncated) ?? truncated.stringValue
     }
 }
