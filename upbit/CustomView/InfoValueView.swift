@@ -98,8 +98,8 @@ class InfoValueView: UIView {
         
         titleLabel.snp.makeConstraints { make in
             make.leading.equalToSuperview()
-            make.top.greaterThanOrEqualToSuperview().offset(6)
-            make.bottom.lessThanOrEqualToSuperview().offset(-6)
+            make.top.greaterThanOrEqualToSuperview().offset(2)
+            make.bottom.lessThanOrEqualToSuperview().offset(-2)
         }
         
         updateLayoutBasedOnUnit()

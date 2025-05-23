@@ -7,6 +7,8 @@
 
 import Foundation
 
+import Foundation
+
 // MARK: 주문 가능 정보
 struct Chance: Decodable {
     /// 매수 수수료 비율
@@ -33,6 +35,12 @@ struct Chance: Decodable {
         case bidAccount = "bid_account"
         case askAccount = "ask_account"
     }
+
+    // MARK: - Decimal 변환 편의 프로퍼티
+    var bidFeeDecimal: Decimal { Decimal(string: bidFee) ?? 0 }
+    var askFeeDecimal: Decimal { Decimal(string: askFee) ?? 0 }
+    var makerBidFeeDecimal: Decimal { Decimal(string: makerBidFee) ?? 0 }
+    var makerAskFeeDecimal: Decimal { Decimal(string: makerAskFee) ?? 0 }
 }
 
 // MARK: 마켓 정보
@@ -65,6 +73,9 @@ struct ChanceMarket: Decodable {
         case maxTotal = "max_total"
         case state
     }
+
+    /// 최대 매도/매수 금액 (Decimal)
+    var maxTotalDecimal: Decimal { Decimal(string: maxTotal) ?? 0 }
 }
 
 // MARK: 주문 화폐 정보
@@ -78,4 +89,7 @@ struct CurrencyInfo: Decodable {
         case currency
         case minTotal = "min_total"
     }
+
+    /// 최소 주문 금액 (Decimal)
+    var minTotalDecimal: Decimal { Decimal(string: minTotal) ?? 0 }
 }

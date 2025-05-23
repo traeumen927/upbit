@@ -59,6 +59,7 @@
 		F133C8CE2D74246500A2F308 /* Decodable.swift in Sources */ = {isa = PBXBuildFile; fileRef = F133C8CD2D74246500A2F308 /* Decodable.swift */; };
 		F1350E5B2DD63A630006B02F /* BorderedTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1350E5A2DD63A630006B02F /* BorderedTextField.swift */; };
 		F1350E5D2DD63A720006B02F /* BorderedTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1350E5C2DD63A720006B02F /* BorderedTextView.swift */; };
+		F13D7AFB2DE053DE00986AB1 /* Demical.swift in Sources */ = {isa = PBXBuildFile; fileRef = F13D7AFA2DE053DE00986AB1 /* Demical.swift */; };
 		F14442712DA4055E006B90BC /* MenuPageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F14442702DA4055E006B90BC /* MenuPageView.swift */; };
 		F15FE9D32D9825E100D89A2A /* AccountTicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = F15FE9D22D9825E100D89A2A /* AccountTicker.swift */; };
 		F16DE58C2DA7F33C00E357D2 /* OrderViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F16DE58B2DA7F33C00E357D2 /* OrderViewController.swift */; };
@@ -130,6 +131,7 @@
 		F133C8CD2D74246500A2F308 /* Decodable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Decodable.swift; sourceTree = "<group>"; };
 		F1350E5A2DD63A630006B02F /* BorderedTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BorderedTextField.swift; sourceTree = "<group>"; };
 		F1350E5C2DD63A720006B02F /* BorderedTextView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BorderedTextView.swift; sourceTree = "<group>"; };
+		F13D7AFA2DE053DE00986AB1 /* Demical.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Demical.swift; sourceTree = "<group>"; };
 		F14442702DA4055E006B90BC /* MenuPageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuPageView.swift; sourceTree = "<group>"; };
 		F15FE9D22D9825E100D89A2A /* AccountTicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountTicker.swift; sourceTree = "<group>"; };
 		F16DE58B2DA7F33C00E357D2 /* OrderViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrderViewController.swift; sourceTree = "<group>"; };
@@ -266,6 +268,7 @@
 				F129F04D2D6362D000F3A74C /* UIDouble.swift */,
 				F1C651352D9591DF0075F637 /* PercentFormatter.swift */,
 				F1FA75FF2DD364D2006BB987 /* CALayer.swift */,
+				F13D7AFA2DE053DE00986AB1 /* Demical.swift */,
 			);
 			path = Extension;
 			sourceTree = "<group>";
@@ -489,6 +492,7 @@
 				F129F0462D635FA000F3A74C /* SingleCandleView.swift in Sources */,
 				F129F03A2D631CDC00F3A74C /* UIViewController.swift in Sources */,
 				F19484DF2D9C0FC40040E675 /* DetailPageViewController.swift in Sources */,
+				F13D7AFB2DE053DE00986AB1 /* Demical.swift in Sources */,
 				F16DE59C2DA7F4EE00E357D2 /* ChartViewModel.swift in Sources */,
 				F19484DD2D9C0CF20040E675 /* AccountCoordinator.swift in Sources */,
 				F129F02C2D63175600F3A74C /* MarketViewModel.swift in Sources */,

@@ -169,16 +169,15 @@ class OrderCell: UITableViewCell {
         // MARK: 개장가 대미 변동률
         self.rateLabel.text = "\(rate.formattedStringWithCommaAndDecimal(places: 3))%"
         
-        switch ticker.change {
-        case .even:
-            self.priceLabel.textColor = ThemeColor.evenPrimary
-            self.rateLabel.textColor = ThemeColor.evenPrimary
-        case .rise:
+        if rate > 0 {
             self.priceLabel.textColor = ThemeColor.risePrimary
             self.rateLabel.textColor = ThemeColor.risePrimary
-        case .fall:
+        } else if rate < 0 {
             self.priceLabel.textColor = ThemeColor.fallPrimary
             self.rateLabel.textColor = ThemeColor.fallPrimary
+        } else {
+            self.priceLabel.textColor = ThemeColor.evenPrimary
+            self.rateLabel.textColor = ThemeColor.evenPrimary
         }
     }
 }

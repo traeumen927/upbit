@@ -23,14 +23,20 @@ class OrderViewController: UIViewController {
     // MARK: 현재가
     private var ticker:SocketTicker?
     
+    // MARK: 주문 가능 정보
+    private var chance:Chance?
+    
     // MARK: 호가창 가운데 정렬 여부
     private var isAlignCenter:Bool = false
     
     // MARK: 선택된 기준가
-    private var seletedPrice: Double = 0.0 {
+    private var selectedPrice: Double = 0.0 {
         didSet {
             // MARK: 기준가 업데이트
-            self.priceTextFeild.text = "₩\(seletedPrice.formattedStringWithDecimal())"
+            self.priceTextFeild.text = "₩\(selectedPrice.formattedStringWithDecimal())"
+            
+            // MARK: 슬라이더 기준 수량 재계산
+            self.recalculateAmountBySlider()
         }
     }
     
@@ -133,18 +139,14 @@ class OrderViewController: UIViewController {
     // MARK: 보유 화폐 InfoValueView
     private lazy var accountInfoView: InfoValueView = {
         let view = InfoValueView()
-//        view.title = "제목"
-//        view.value = "값"
-//        view.unitText = "USD"
+        
         return view
     }()
     
-    // MARK: 주문가능 수량 InfoValueView
-    private lazy var orderableInfoView: InfoValueView = {
+    // MARK: 최소주문 수량 InfoValueView
+    private lazy var minOrderInfoView: InfoValueView = {
         let view = InfoValueView()
-//        view.title = "제목"
-//        view.value = "값"
-//        view.unitText = "USD"
+        
         return view
     }()
     
@@ -188,7 +190,7 @@ class OrderViewController: UIViewController {
         [self.tableView, orderBackgroundView].forEach(self.view.addSubview(_:))
         orderBackgroundView.addSubview(orderView)
         [self.segmentedControl, orderStackView, self.orderButton].forEach(orderView.addSubview(_:))
-        [self.priceLabel, self.priceTextFeild, UIView(), self.amountLabel, self.amountTextFeild, self.orderSlider, self.accountInfoView, self.orderableInfoView].forEach(orderStackView.addArrangedSubview(_:))
+        [self.priceLabel, self.priceTextFeild, UIView(), self.amountLabel, self.amountTextFeild, self.orderSlider, self.accountInfoView, self.minOrderInfoView].forEach(orderStackView.addArrangedSubview(_:))
         
         tableView.snp.makeConstraints { make in
             make.top.equalTo(view.safeAreaLayoutGuide.snp.top)
@@ -250,16 +252,16 @@ class OrderViewController: UIViewController {
             .take(1)
             .observe(on: MainScheduler.instance)
             .bind(onNext: { [weak self] ticker in
-                self?.seletedPrice = ticker.trade_price
+                self?.selectedPrice = ticker.trade_price
             })
             .disposed(by: disposeBag)
         
-        // MARK: 주문가능정보 구독
+        // MARK: 주문 가능 정보 구독
         self.viewModel.chanceSubject
             .observe(on: MainScheduler.instance)
             .subscribe(onNext: { [weak self] chance in
                 guard let self = self else { return }
-                
+                self.chance = chance
             }).disposed(by: disposeBag)
         
         // MARK: 메세지 구독
@@ -272,7 +274,8 @@ class OrderViewController: UIViewController {
         
         
         // MARK: segementedControl Index + chanceSubejct 결합
-        Observable.combineLatest(
+        Observable
+            .combineLatest(
                 viewModel.chanceSubject,
                 segmentedControl.rx.selectedSegmentIndex
             )
@@ -280,15 +283,22 @@ class OrderViewController: UIViewController {
             .subscribe(onNext: { [weak self] chance, index in
                 guard let self = self else { return }
                 let isBuy = index == 0
-
+                
+                // ✅ accountInfoView 업데이트
                 let account = isBuy ? chance.bidAccount : chance.askAccount
-                let title = isBuy ? "보유원화" : "보유화폐"
-                let unit = account.currency
-                let amount = account.balance.formattedStringWithCommaAndDecimal(places: 6, removeZero: true)
-
-                self.accountInfoView.title = title
-                self.accountInfoView.unitText = unit
-                self.accountInfoView.value = amount
+                let accountTitle = isBuy ? "보유원화" : "보유화폐"
+                let accountUnit = account.currency
+                let accountValue = account.balance.formattedStringWithCommaAndDecimal(places: 6, removeZero: true)
+                
+                self.accountInfoView.title = accountTitle
+                self.accountInfoView.unitText = accountUnit
+                self.accountInfoView.value = accountValue
+                
+                // ✅ minOrderInfoView 업데이트
+                let minOrderInfo = isBuy ? chance.market.bid : chance.market.ask
+                self.minOrderInfoView.title = "최소주문"
+                self.minOrderInfoView.unitText = minOrderInfo.currency
+                self.minOrderInfoView.value = minOrderInfo.minTotalDecimal.formattedStringWithCommaAndDecimal(places: 6, removeZero: true)
             })
             .disposed(by: disposeBag)
         
@@ -297,6 +307,9 @@ class OrderViewController: UIViewController {
             .distinctUntilChanged()
             .subscribe(onNext: { [weak self] index in
                 guard let self = self else { return }
+                
+                // MARK: 슬라이더 초기화
+                self.orderSlider.value = 0
                 
                 // MARK: 매수(index == 0), 매도(index == 1)
                 let isAsk = index == 0
@@ -318,6 +331,124 @@ class OrderViewController: UIViewController {
                 self.orderButton.backgroundColor = buttonColor
                 
             }).disposed(by: disposeBag)
+        
+        
+        // MARK: 슬라이더 값 구독, 값 변경 시 주문 가능 금액에 맞춰 수량 수정
+        orderSlider.rx.value
+            .withLatestFrom(
+                Observable.combineLatest(
+                    viewModel.chanceSubject,
+                    segmentedControl.rx.selectedSegmentIndex
+                )
+            ) { sliderValue, combined -> (sliderValue: Float, chance: Chance, index: Int) in
+                (sliderValue, combined.0, combined.1)
+            }
+            .observe(on: MainScheduler.instance)
+            .subscribe(onNext: { [weak self] (sliderValue, chance, index) in
+                guard let self = self else { return }
+
+                let isBuy = index == 0
+                let percentage = Decimal(Double(sliderValue) / 100.0)
+                let price = Decimal(self.selectedPrice)
+                
+                
+                let amount = self.calculateOrderAmount(
+                    isBuy: isBuy,
+                    price: price,
+                    percentage: percentage,
+                    chance: chance
+                )
+                self.amountTextFeild.text = amount.formattedStringWithCommaAndDecimal(places: 8, removeZero: true)
+            })
+            .disposed(by: disposeBag)
+
+
+
+        
+        // MARK: 매수/매도 버튼 탭 구독
+        orderButton.rx.tap
+            .withLatestFrom(Observable.combineLatest(
+                // MARK: 버튼탭시 거래가능정보와 segmentedIndex 값 가져옴
+                viewModel.chanceSubject,
+                segmentedControl.rx.selectedSegmentIndex
+            ))
+            .observe(on: MainScheduler.instance)
+            .subscribe(onNext: {[weak self] chance, index in
+                guard let self = self else { return }
+                
+                // MARK: 매수/매도
+                let isBuy = index == 0
+                
+                // MARK: 기준가
+                let price = Decimal(self.selectedPrice)
+                
+                // MARK: 수량
+                let amountRaw = self.amountTextFeild.text ?? "0"
+                let amount = Decimal(string: amountRaw) ?? 0
+                
+                // MARK: 총액
+                let total = price * amount
+                
+                // MARK: 최소주문금액(매수: 원화기준, 매도: 화폐기준)
+                let minTotal = isBuy ? chance.market.bid.minTotalDecimal : chance.market.ask.minTotalDecimal
+                
+                // MARK: 최소주문금액 미충족시 Message 안내
+                if total < minTotal {
+                    let formatted = minTotal.formattedStringWithCommaAndDecimal(places: 2)
+                    let message = "최소 주문 금액은 \(formatted) \(isBuy ? chance.market.bid.currency : chance.market.ask.currency)입니다."
+                    self.view.makeToast(message, duration: 2.0, position: .bottom)
+                    return
+                }
+            }).disposed(by: disposeBag)
+    }
+    
+    // MARK: 주문진행 여부 Alert
+    private func noticeOrder() {
+        
+    }
+    
+    // MARK: 기준가 변동시 슬라이더 기준 최대 매수/매도 수량 재계산
+    private func recalculateAmountBySlider() {
+        guard let chance = self.chance else { return }
+
+        let isBuy = segmentedControl.selectedSegmentIndex == 0
+        let price = Decimal(selectedPrice)
+        let percentage = Decimal(Double(orderSlider.value) / 100.0)
+
+        let amount = calculateOrderAmount(
+            isBuy: isBuy,
+            price: price,
+            percentage: percentage,
+            chance: chance
+        )
+        
+        print(amount)
+        
+        amountTextFeild.text = amount.formattedStringWithCommaAndDecimal(places: 8, removeZero: true)
+    }
+    
+    // MARK: 슬라이더 위치 기반 매수/매도수량 계산
+    private func calculateOrderAmount(isBuy: Bool, price: Decimal, percentage: Decimal, chance: Chance) -> Decimal {
+        if isBuy {
+            let krwFloor = NSDecimalNumber(decimal: chance.bidAccount.balanceDecimal).rounding(
+                accordingToBehavior: NSDecimalNumberHandler(
+                    roundingMode: .down,
+                    scale: 0,
+                    raiseOnExactness: false,
+                    raiseOnOverflow: false,
+                    raiseOnUnderflow: false,
+                    raiseOnDivideByZero: false
+                )
+            ).decimalValue
+
+            let feeRate = chance.bidFeeDecimal
+            let unitPriceWithFee = price * (1 + feeRate)
+            let maxAmount = (krwFloor / unitPriceWithFee).truncatedTo8Digits()
+            return (maxAmount * percentage).truncatedTo8Digits()
+        } else {
+            let availableAsset = chance.askAccount.balanceDecimal
+            return (availableAsset * percentage).truncatedTo8Digits()
+        }
     }
     
     // MARK: 호가창 테이블뷰의 스크롤을 가운데로 정렬
@@ -387,6 +518,6 @@ extension OrderViewController: UITableViewDelegate, UITableViewDataSource {
         print("선택된 값 - Price: \(price), Size: \(size), isAsk: \(isAsk)")
         
         // MARK: 선택된 가격 저장
-        self.seletedPrice = price
+        self.selectedPrice = price
     }
 }

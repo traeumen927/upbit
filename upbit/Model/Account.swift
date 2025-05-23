@@ -45,4 +45,8 @@ struct Account: Decodable, Hashable {
         avg_buy_price_modified = try container.decode(Bool.self, forKey: .avg_buy_price_modified)
         unit_currency = try container.decode(String.self, forKey: .unit_currency)
     }
+    
+    // MARK: - Decimal 변환 편의 프로퍼티
+    var balanceDecimal: Decimal { Decimal(balance)}
+    var lockedDecimal: Decimal { Decimal(locked)}
 }
