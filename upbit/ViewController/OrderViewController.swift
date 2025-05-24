@@ -136,17 +136,23 @@ class OrderViewController: UIViewController {
         return slider
     }()
     
+    // MARK: 총 매수/매도 금액 InfoValueView
+    private lazy var orderInfoView: InfoValueView = {
+        let view = InfoValueView()
+        view.unitText = "KRW"
+        return view
+    }()
+    
+    
     // MARK: 보유 화폐 InfoValueView
     private lazy var accountInfoView: InfoValueView = {
         let view = InfoValueView()
-        
         return view
     }()
     
     // MARK: 최소주문 수량 InfoValueView
     private lazy var minOrderInfoView: InfoValueView = {
         let view = InfoValueView()
-        
         return view
     }()
     
@@ -190,7 +196,7 @@ class OrderViewController: UIViewController {
         [self.tableView, orderBackgroundView].forEach(self.view.addSubview(_:))
         orderBackgroundView.addSubview(orderView)
         [self.segmentedControl, orderStackView, self.orderButton].forEach(orderView.addSubview(_:))
-        [self.priceLabel, self.priceTextFeild, UIView(), self.amountLabel, self.amountTextFeild, self.orderSlider, self.accountInfoView, self.minOrderInfoView].forEach(orderStackView.addArrangedSubview(_:))
+        [self.priceLabel, self.priceTextFeild, UIView(), self.amountLabel, self.amountTextFeild, self.orderSlider, self.orderInfoView, self.accountInfoView, self.minOrderInfoView].forEach(orderStackView.addArrangedSubview(_:))
         
         tableView.snp.makeConstraints { make in
             make.top.equalTo(view.safeAreaLayoutGuide.snp.top)
@@ -314,13 +320,18 @@ class OrderViewController: UIViewController {
                 // MARK: 매수(index == 0), 매도(index == 1)
                 let isAsk = index == 0
                 
-                // MARK: 기준가 레이아웃 설정
-                self.amountTextFeild.text = "0"
-                
+
                 // MARK: 수량 레이아웃 설정
                 let amountTitle: String = isAsk ? "매수 수량" : "매도 수량"
                 self.amountLabel.text = amountTitle
                 
+                self.amountTextFeild.text = "0"
+                
+                // MARK: 매수/매도금액 레이아웃 설정
+                self.orderInfoView.title = isAsk ? "매수금액" : "매도금액"
+                self.orderInfoView.value = "0"
+                
+                // MARK: 기준가 레이아웃 설정
                 self.amountTextFeild.text = "0"
                 
                 // MARK: 버튼 레이아웃 설정
@@ -358,7 +369,15 @@ class OrderViewController: UIViewController {
                     percentage: percentage,
                     chance: chance
                 )
+                
+                // MARK: 수량 텍스트필드 업데이트
                 self.amountTextFeild.text = amount.formattedStringWithTruncation(places: 8)
+                
+                // ✅ 총 금액 계산(업비트에서 총 금액을 올림처리하여 보여주기 때문에 동일하게 적용)
+                let total: Decimal = (price * amount).rounded(scale: 0, mode: .up)
+                
+                // MARK: 총 주문 금액 업데이트
+                self.orderInfoView.value = total.formattedStringWithTruncation(places: 0)
             })
             .disposed(by: disposeBag)
 

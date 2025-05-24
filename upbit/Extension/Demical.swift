@@ -41,4 +41,17 @@ extension Decimal {
         formatter.maximumFractionDigits = places
         return formatter.string(from: truncated) ?? truncated.stringValue
     }
+    
+    // 반올림
+    func rounded(scale: Int, mode: NSDecimalNumber.RoundingMode = .plain) -> Decimal {
+        let handler = NSDecimalNumberHandler(
+            roundingMode: mode,
+            scale: Int16(scale),
+            raiseOnExactness: false,
+            raiseOnOverflow: false,
+            raiseOnUnderflow: false,
+            raiseOnDivideByZero: false
+        )
+        return NSDecimalNumber(decimal: self).rounding(accordingToBehavior: handler).decimalValue
+    }
 }
