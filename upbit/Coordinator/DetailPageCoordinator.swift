@@ -35,11 +35,14 @@ class DetailPageCoordinator: Coordinator {
         // MARK: 호가 페이지
         let orderBookViewController = OrderBookViewController(viewModel: OrderBookViewModel())
         
+        // MARK: 거래내역 페이지
+        let historyViewController = HistoryViewController(viewModel: HistoryViewModel())
+        
         // MARK: 종목토론방 페이지
         let chatViewController = ChatViewController(viewModel: ChatViewModel())
         
         // MARK: 각 하위 controller 배열
-        let pages = [orderViewController, chartViewController, orderBookViewController, chatViewController]
+        let pages = [orderViewController, chartViewController, orderBookViewController, historyViewController, chatViewController]
         
         let viewController = DetailPageViewController(viewModel: viewModel, pages: pages)
         viewController.coordinator = self

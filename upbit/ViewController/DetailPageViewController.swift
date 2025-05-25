@@ -45,7 +45,7 @@ class DetailPageViewController: UIViewController {
     
     // MARK: 메뉴가 있는 PageView
     private lazy var menuPageView: MenuPageView = {
-        let view = MenuPageView(menuTitles: ["주문", "차트", "호가", "종목토론방"], pages: self.pages)
+        let view = MenuPageView(menuTitles: ["주문", "차트", "호가", "거래내역", "종목토론방"], pages: self.pages)
         view.delegate = self
         
         return view
