@@ -40,7 +40,7 @@ class OrderViewModel {
     // MARK: 주문 가능 정보 조회
     private func fetchChance(market: String) {
         
-        UpbitApiService.request(endpoint: .ordersChance(market: market)) { [weak self] (result: Result<Chance, Error>) in
+        UpbitApiService.request(endpoint: .ordersChance(market: market), method: .get) { [weak self] (result: Result<Chance, Error>) in
             guard let self = self else { return }
             switch result {
             case .success(let chance):
@@ -48,6 +48,22 @@ class OrderViewModel {
             case .failure(let error):
                 self.messageSubject.onNext(error.localizedDescription)
                 print("error: \(error.localizedDescription)")
+            }
+        }
+    }
+    
+    // MARK: 주문 진행
+    func postOrders(market: String, side: String, volume: String, price: String, ordType: String) {
+        
+        UpbitApiService.request(endpoint: .orders(market: market, side: side, volume: volume, price: price, ordType: ordType), method: .post) { (result: Result<Order, Error>) in
+            switch result {
+            case .success(let order):
+                print("✅ 주문 성공: \(order)")
+                // 예: self.showToast("주문이 완료되었습니다.")
+                self.messageSubject.onNext("주문이 완료되었습니다.")
+            case .failure(let error):
+                print("❌ 주문 실패: \(error.localizedDescription)")
+                self.messageSubject.onNext("주문 실패: \(error.localizedDescription)")
             }
         }
     }

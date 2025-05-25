@@ -70,12 +70,12 @@ class MarketViewModel {
     // MARK: 업비트에서 거래 가능한 종목 조회 후, 종목별 현재가 조회
     private func fetchMarketTicker(currency: CurrencyType) {
         // MARK: 1. 거래 가능한 종목 가져오기
-        UpbitApiService.request(endpoint: .marketAll(is_details: true)) { [weak self] (result: Result<[MarketInfo], Error>) in
+        UpbitApiService.request(endpoint: .marketAll(is_details: true), method: .get) { [weak self] (result: Result<[MarketInfo], Error>) in
             guard let self = self else { return }
             switch result {
             case .success(let markets):
                 // MARK: 2. 화폐별 현재가 가져오기
-                UpbitApiService.request(endpoint: .tickerAll(quote_currencies: currency.rawValue)) { [weak self] (result: Result<[ApiTicker], Error>) in
+                UpbitApiService.request(endpoint: .tickerAll(quote_currencies: currency.rawValue), method: .get) { [weak self] (result: Result<[ApiTicker], Error>) in
                     guard let self = self else { return }
                     switch result {
                     case .success(let tickers):

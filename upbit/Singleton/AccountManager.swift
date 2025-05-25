@@ -27,7 +27,7 @@ class AccountManager {
     // MARK: 보유 자산 최신화
     func reload() {
         // MARK: 보유 자산 리스트 조회
-        UpbitApiService.request(endpoint: .accounts) { [weak self] (result: Result<[Account], Error>) in
+        UpbitApiService.request(endpoint: .accounts, method: .get) { [weak self] (result: Result<[Account], Error>) in
             guard let self = self else { return }
             switch result {
             case .success(let accounts):

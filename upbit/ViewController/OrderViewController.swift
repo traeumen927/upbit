@@ -303,7 +303,7 @@ class OrderViewController: UIViewController {
                 // ✅ minOrderInfoView 업데이트
                 let minOrderInfo = isBuy ? chance.market.bid : chance.market.ask
                 self.minOrderInfoView.title = "최소주문"
-                self.minOrderInfoView.unitText = minOrderInfo.currency
+                self.minOrderInfoView.unitText = chance.market.bid.currency
                 self.minOrderInfoView.value = minOrderInfo.minTotalDecimal.formattedStringWithTruncation(places: 6)
             })
             .disposed(by: disposeBag)
@@ -409,12 +409,70 @@ class OrderViewController: UIViewController {
                 guard self.validateOrder(isBuy: isBuy, price: price, amount: amount, chance: chance) else {
                     return
                 }
+                
+                let coin = chance.market.ask.currency
+                let unit = chance.market.bid.currency
+                let feeRate = isBuy ? chance.bidFeeDecimal : chance.askFeeDecimal
+                let fee = (amount * price * feeRate).rounded(scale: 0, mode: .plain)
+
+                self.presentOrderConfirmation(
+                    isBuy: isBuy,
+                    coin: coin,
+                    price: price,
+                    amount: amount,
+                    fee: fee,
+                    currency: unit
+                ) {
+                    //self.placeOrder(isBuy: isBuy, price: price, amount: amount)
+                }
             }).disposed(by: disposeBag)
     }
     
     // MARK: 주문진행 여부 Alert
-    private func noticeOrder() {
+    private func presentOrderConfirmation(
+        isBuy: Bool,
+        coin: String,
+        price: Decimal,
+        amount: Decimal,
+        fee: Decimal,
+        currency: String,
+        onConfirm: @escaping () -> Void
+    ) {
+        let title = isBuy ? "매수주문" : "매도주문"
+        let verb = isBuy ? "매수" : "매도"
+
+        let priceString = price.formattedStringWithTruncation(places: 0)
+        let amountString = amount.formattedStringWithTruncation(places: 8)
         
+        // ✅ 수량 × 단가 계산 후 무조건 올림 (업비트 방식)
+        let total = (price * amount).rounded(scale: 0, mode: .up)
+        let totalString = total.formattedStringWithTruncation(places: 0)
+
+        let message = """
+    \(coin) 기준가: \(priceString) \(currency)
+    합산금액 \(totalString) \(currency) \(verb) 진행하시겠습니까?
+    """
+
+        let alert = UIAlertController(title: title, message: message, preferredStyle: .actionSheet)
+
+        let confirmAction = UIAlertAction(title: "\(amountString) \(coin) \(verb)", style: .default) { _ in
+            
+            guard let chance = self.chance else { return }
+            let market = chance.market.id
+            let side = isBuy ? "bid" : "ask"
+            let volume = amount.description
+            let price = price.description
+            let ordType = "limit"
+            
+            self.viewModel.postOrders(market: market, side: side, volume: volume, price: price, ordType: ordType)
+        }
+
+        let cancelAction = UIAlertAction(title: "취소", style: .cancel, handler: nil)
+
+        alert.addAction(confirmAction)
+        alert.addAction(cancelAction)
+
+        self.present(alert, animated: true, completion: nil)
     }
     
     // MARK: 주문 유효성 검사
@@ -426,7 +484,7 @@ class OrderViewController: UIViewController {
 
         if total < minTotal {
             let formatted = minTotal.formattedStringWithTruncation(places: 0)
-            let currency = isBuy ? chance.market.bid.currency : chance.market.ask.currency
+            let currency = chance.market.bid.currency
             self.view.makeToast("최소 주문 금액은 \(formatted) \(currency)입니다.",
                                 duration: 2.0, position: .bottom)
             return false
@@ -434,7 +492,7 @@ class OrderViewController: UIViewController {
 
         if total > maxTotal {
             let formatted = maxTotal.formattedStringWithTruncation(places: 0)
-            let currency = isBuy ? chance.market.bid.currency : chance.market.ask.currency
+            let currency = chance.market.bid.currency
             self.view.makeToast("최대 주문 금액을 초과했습니다.\n(최대: \(formatted) \(currency))",
                                 duration: 2.0, position: .bottom)
             return false
@@ -454,7 +512,7 @@ class OrderViewController: UIViewController {
 
             if total > krwFloor {
                 let formatted = krwFloor.formattedStringWithTruncation(places: 0)
-                self.view.makeToast("최대 주문 가능 금액은 \(formatted) KRW입니다.",
+                self.view.makeToast("최대 주문 가능 금액은 \(formatted) \(chance.market.bid.currency)입니다.",
                                     duration: 2.0, position: .bottom)
                 return false
             }
@@ -478,7 +536,8 @@ class OrderViewController: UIViewController {
             percentage: percentage,
             chance: chance
         )
-        amountTextFeild.text = amount.formattedStringWithTruncation(places: 8)
+        self.amountTextFeild.text = amount.formattedStringWithTruncation(places: 8)
+        self.orderInfoView.value = (amount * price).rounded(scale: 0, mode: .up).description
     }
     
     // MARK: 슬라이더 위치 기반 매수/매도수량 계산

@@ -54,7 +54,7 @@ class AccountViewModel {
                 }
                 
                 // MARK: 1. 거래 가능한 마켓 정보 가져오기(자산별 현재가 검색시, 업비트에서 지원하지 않는 코인 소지시 404에러 방출함)
-                UpbitApiService.request(endpoint: .marketAll(is_details: true)) { [weak self] (result: Result<[MarketInfo], Error>) in
+                UpbitApiService.request(endpoint: .marketAll(is_details: true), method: .get) { [weak self] (result: Result<[MarketInfo], Error>) in
                     guard let self = self else { return }
                     switch result {
                     case .success(let markets):
@@ -73,7 +73,7 @@ class AccountViewModel {
                         guard !codes.isEmpty else { return }
                         
                         // MARK: 2. 자산별 현재가 가져오기
-                        UpbitApiService.request(endpoint: .ticker(markets: codes)) { [weak self] (result: Result<[ApiTicker], Error>) in
+                        UpbitApiService.request(endpoint: .ticker(markets: codes), method: .get) { [weak self] (result: Result<[ApiTicker], Error>) in
                             guard let self = self else { return }
                             switch result {
                             case .success(let tickers):
