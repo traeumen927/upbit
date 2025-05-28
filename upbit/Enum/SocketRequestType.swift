@@ -15,11 +15,22 @@ enum SocketRequestType: String {
     ///호가
     case orderbook
     
-    ///내 체결
-    case myTrade
+    ///내 주문 및 체결
+    case myOrder
     
     ///체결
     case trade
+    
+    
+    /// 인증의 필요 여부
+    var requiresAuth: Bool {
+        switch self {
+        case .myOrder:
+            return true
+        default:
+            return false
+        }
+    }
     
     init(from decoder: Decoder) throws {
         let container = try decoder.singleValueContainer()
@@ -29,8 +40,8 @@ enum SocketRequestType: String {
             self = .ticker
         case "orderbook":
             self = .orderbook
-        case "myTrade":
-            self = .myTrade
+        case "myOrder":
+            self = .myOrder
         case "trade":
             self = .trade
         default:

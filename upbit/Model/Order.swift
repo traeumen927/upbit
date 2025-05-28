@@ -7,6 +7,7 @@
 
 import Foundation
 
+/// 주문내역(*API 용)
 struct Order: Decodable {
     /// 주문의 고유 아이디
     let uuid: String
