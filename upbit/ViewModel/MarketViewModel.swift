@@ -50,13 +50,6 @@ class MarketViewModel {
     }
     
     private func bind() {
-        // MARK: 웹소켓 서비스의 웹소켓 이벤트 구독
-        self.webSocketService.socketEventSubject
-            .asObservable()
-            .subscribe(onNext: { [weak self] eventWrapper in
-                guard let self = self else { return }
-                self.didReceiveEvent(event: eventWrapper.event)
-            }).disposed(by: disposeBag)
         
         // MARK: 코인 검색어 구독
         self.searchQuerySubject
@@ -64,6 +57,77 @@ class MarketViewModel {
             .subscribe(onNext: { [weak self] query in
                 guard let self = self else { return }
                 self.queryMarketTickers(by: query)
+            }).disposed(by: disposeBag)
+        
+        
+        // MARK: WebSocket 대리자 바인딩
+        self.webSocketService.socketEventSubject
+            .subscribe(onNext: { wrapper in
+                
+                let source = wrapper.source
+                let event = wrapper.event
+                
+                let className = String(describing: self)
+                
+                switch event {
+                    // MARK: 소켓이 연결됨
+                case .connected(let headers):
+                    print("[\(source)] \(className): websocket is connected: \(headers)")
+                    // MARK: 업비트에서 거래 가능한 종목 조회 후, 종목별 현재가 조회
+                    self.fetchMarketTicker(currency: .krw)
+                    
+                    // MARK: 소켓이 연결 해제됨
+                case .disconnected(let reason, let code):
+                    print("[\(source)] \(className): websocket is disconnected: \(reason) with code: \(code)")
+                    
+                    // MARK: 텍스트 메세지를 받음
+                case .text(let string):
+                    print("[\(source)] \(className): Received text: \(string)")
+                    
+                    // MARK: 이진(binary) 데이터를 받음
+                case .binary(let data):
+                    // MARK: 바이너리 데이터 핸들링
+                    self.handleSocketData(data: data)
+                    break
+                    
+                    // MARK: 핑 메세지를 받음
+                case .ping(_):
+                    print("[\(source)] \(className): ping")
+                    break
+                    
+                    // MARK: 퐁 메세지를 받음
+                case .pong(_):
+                    print("[\(source)] \(className): pong")
+                    break
+                    
+                    // MARK: 연결의 안정성이 변경됨
+                case .viabilityChanged(_):
+                    print("[\(source)] \(className): viabilityChanged")
+                    break
+                    
+                    // MARK: 재연결이 제안됨
+                case .reconnectSuggested(_):
+                    print("[\(source)] \(className): reconnectSuggested")
+                    break
+                    
+                    // MARK: 소켓이 취소됨
+                case .cancelled:
+                    print("[\(source)] \(className): cancelled")
+                    break
+                    
+                    // MARK: 에러가 발생함
+                case .error(let error):
+                    print("[\(source)] \(className): error: \(error!.localizedDescription)")
+                    break
+                    
+                    // MARK: 피어가 연결을 종료함
+                case .peerClosed:
+                    print("[\(source)] \(className): peerClosed")
+                    break
+                    
+                @unknown default:
+                    print("[\(source)] \(className): unknown WebSocketEvent: \(event)")
+                }
             }).disposed(by: disposeBag)
     }
     
@@ -147,69 +211,6 @@ class MarketViewModel {
             }
             self.marketTickerSubject.onNext(self.filteredTickers)
             // TODO: 한글 초성 검색 or 검색과정중 필터링 진행(ex 비트코인 -> 빝, 비틐, 비트콩, 비트코이 ...)
-        }
-    }
-    
-    // MARK: WebSocketDelegate에서 발생하는 WebSocket Event 처리
-    private func didReceiveEvent(event: WebSocketEvent) {
-        
-        let className = String(describing: self)
-        
-        switch event {
-            
-            // MARK: 소켓이 연결됨
-        case .connected(let headers):
-            print("\(className): websocket is connected: \(headers)")
-            // MARK: 거래가능한 종목 조회 + 해당 종목의 현재가 조회
-            self.fetchMarketTicker(currency: .krw)
-            
-            // MARK: 소켓이 연결 해제됨
-        case .disconnected(let reason, let code):
-            print("\(className): websocket is disconnected: \(reason) with code: \(code)")
-            
-            // MARK: 텍스트 메세지를 받음
-        case .text(let string):
-            print("\(className): Received text: \(string)")
-            
-            // MARK: 이진(binary) 데이터를 받음
-        case .binary(let data):
-            self.handleSocketData(data: data)
-            break
-            
-            // MARK: 핑 메세지를 받음
-        case .ping(_):
-            print("\(className): ping")
-            break
-            
-            // MARK: 퐁 메세지를 받음
-        case .pong(_):
-            print("\(className): pong")
-            break
-            
-            // MARK: 연결의 안정성이 변경됨
-        case .viabilityChanged(_):
-            print("\(className): viabilityChanged")
-            break
-            
-            // MARK: 재연결이 제안됨
-        case .reconnectSuggested(_):
-            print("\(className): reconnectSuggested")
-            break
-            
-            // MARK: 소켓이 취소됨
-        case .cancelled:
-            print("\(className): cancelled")
-            break
-            
-            // MARK: 에러가 발생함
-        case .error(let error):
-            print("\(className): error: \(error!.localizedDescription)")
-            break
-            
-            // MARK: 피어가 연결을 종료함
-        case .peerClosed:
-            print("\(className): peerClosed")
-            break
         }
     }
     

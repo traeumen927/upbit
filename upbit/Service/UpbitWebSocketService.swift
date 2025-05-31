@@ -26,23 +26,27 @@ struct WebSocketEventWrapper {
 
 class UpbitWebSocketService {
     
-    // MARK: 인증이 필요 없는 요청을 담당하는 소켓
+    // MARK: Public 타입의 Endpoint를 담당하는 웹소켓(인증이 필요하지 않음)
     private var publicSocket: WebSocket?
     
-    // MARK: 인증이 필요한 요청을 담당하는 소켓
+    // MARK: Private 타입의 Endpoint를 담당하는 웹소켓(인증이 필요함)
     private var privateSocket: WebSocket?
     
-    private let uuid = UUID().uuidString
+    // MARK: Public ticket에 할당될 요청자의 식별값(유니크한 값)
+    private let publicUUID = UUID().uuidString
     
-    // MARK: 기본 URL
+    // MARK: Private ticket에 할당될 요청자의 식별값(유니크한 값)
+    private let privateUUID = UUID().uuidString
+    
+    // MARK: Public Endpoint URL
     private let publicURL: URL = {
         guard let url = URL(string: "wss://api.upbit.com/websocket/v1") else {
-            fatalError("유효하지 않은 base URL입니다.")
+            fatalError("유효하지 않은 public base URL입니다.")
         }
         return url
     }()
     
-    // MARK: 인증이 필요한 private URL
+    // MARK: Private Endpoint URL
     private let privateURL: URL = {
         guard let url = URL(string: "wss://api.upbit.com/websocket/v1/private") else {
             fatalError("유효하지 않은 private base URL입니다.")
@@ -54,55 +58,51 @@ class UpbitWebSocketService {
     // MARK: WebSocket didReceive Event 주제(public socket + private socket 이벤트 방출)
     let socketEventSubject: PublishSubject<WebSocketEventWrapper> = PublishSubject<WebSocketEventWrapper>()
     
+    
     init() {
         // MARK: public 소켓 연결
-        var publicRequest = URLRequest(url: publicURL)
-        publicRequest.timeoutInterval = 5
-        publicSocket = WebSocket(request: publicRequest)
-        publicSocket?.delegate = self
+        do {
+            var publicRequest = URLRequest(url: publicURL)
+            publicRequest.timeoutInterval = 5
+            let socket = WebSocket(request: publicRequest)
+            socket.delegate = self
+            self.publicSocket = socket
+        }
         
-        // MARK: private 소켓 연결
-        var privateRequest = URLRequest(url: privateURL)
-        privateRequest.timeoutInterval = 5
-        privateSocket = WebSocket(request: privateRequest)
-        privateSocket?.delegate = self
+        do {
+            // MARK: private 소켓 연결(인증 필요)
+            let jwtToken = generateWebSocketJWT()
+            
+            var privateRequest = URLRequest(url: privateURL)
+            privateRequest.timeoutInterval = 5
+            privateRequest.setValue("Bearer \(jwtToken)", forHTTPHeaderField: "authorization")
+            let socket = WebSocket(request: privateRequest)
+            socket.delegate = self
+            self.privateSocket = socket
+        }
     }
     
     // MARK: 웹소켓 요청
     func subscribeTo(types: [SocketRequestType], symbol: [String]) {
         
-        // MARK: 티켓 생성
-        let subscription: [[String: Any]] = [
-            ["ticket": uuid]
-        ]
-        
         // MARK: Public(인증이 필요 없는 요청)
         let publicTypes = types.filter { !$0.requiresAuth }
         if !publicTypes.isEmpty {
-            let publicPayload = subscription +
-            publicTypes.map { ["type": $0.rawValue, "codes": symbol] }
-            let data = try! JSONSerialization.data(withJSONObject: publicPayload)
-            self.publicSocket?.write(data: data)
+            var payload: [[String: Any]] = [["ticket": publicUUID]]
+            payload += publicTypes.map { ["type": $0.rawValue, "codes": symbol] }
+            let data = try! JSONSerialization.data(withJSONObject: payload)
+            publicSocket?.write(data: data)
         }
         
         // MARK: Private(인증이 필요한 요청)
         let privateTypes = types.filter { $0.requiresAuth }
         if !privateTypes.isEmpty {
-            var privatePayload = subscription +
-            privateTypes.map { ["type": $0.rawValue, "codes": symbol] }
-            
-            // MARK: 인증 토큰 추가
-            let token = generateWebSocketJWT()
-            privatePayload.append([
-                "type": "authorization",
-                "token": "Bearer \(token)"
-            ])
-            
-            let data = try! JSONSerialization.data(withJSONObject: privatePayload)
-            self.privateSocket?.write(data: data)
+            var payload: [[String: Any]] = [["ticket": privateUUID]]
+            payload += privateTypes.map { ["type": $0.rawValue, "codes": symbol] }
+            let data = try! JSONSerialization.data(withJSONObject: payload)
+            privateSocket?.write(data: data)
         }
     }
-    
     
     // MARK: WebSocket JWT 생성
     private func generateWebSocketJWT() -> String {
@@ -137,6 +137,7 @@ extension UpbitWebSocketService: WebSocketDelegate {
         } else {
             source = .public
         }
-        socketEventSubject.onNext(.init(source: source, event: event))
+        // MARK: 소켓 이벤트 방출
+        socketEventSubject.onNext(WebSocketEventWrapper(source: source, event: event))
     }
 }
