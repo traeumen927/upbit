@@ -203,7 +203,7 @@ class MarketViewModel {
             self.filteredTickers = self.marketTickers
             self.sortMarketTickers(by: self.sortOption)
         } else {
-            // MARK: 검색어가 포함된 방목이 있다면 필터링된 데이터 방출
+            // MARK: 검색어가 포함된 목록이 있다면 필터링된 데이터 방출
             let lowerQuery = trimmedQuery.lowercased()
             self.filteredTickers = marketTickers.filter {
                 $0.marketInfo.koreanName.lowercased().contains(lowerQuery) ||
