@@ -31,7 +31,7 @@ struct UpbitApiService {
         return apiKey
     }()
     
-    // MARK: plist파일에서 AccessKey추출(API 호출의 보안을 유지하기 위해 사용)
+    // MARK: plist파일에서 SecretKey 추출(API 호출의 보안을 유지하기 위해 사용)
     static let secretKey: String = {
         guard let path = Bundle.main.path(forResource: "ApiKey", ofType: "plist"),
               let config = NSDictionary(contentsOfFile: path),
