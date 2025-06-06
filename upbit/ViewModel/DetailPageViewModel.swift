@@ -54,10 +54,16 @@ class DetailPageViewModel {
                 case .connected(let headers):
                     print("[\(source)] \(className): websocket is connected: \(headers)")
                     
+                    let code = self.marketInfo.market
+                    
                     if source == .public {
                         // MARK: 현재가, 호가 요청
-                        self.requestTicker()
+                        self.webSocketService.subscribeTo(types: [.ticker, .orderbook], symbol: [code])
+                    } else if source == .private {
+                        // MARK: 내 주문 및 체결 요청
+                        self.webSocketService.subscribeTo(types: [.myOrder], symbol: [code])
                     }
+                    
                     
                     // MARK: 소켓이 연결 해제됨
                 case .disconnected(let reason, let code):
@@ -113,13 +119,7 @@ class DetailPageViewModel {
                 }
             }).disposed(by: disposeBag)
     }
-    
-    // MARK: 선택된 코인 Ticker WebSocket 요청
-    private func requestTicker() {
-        let code = self.marketInfo.market
-        // MARK: 현재가, 호가 요청
-        self.webSocketService.subscribeTo(types: [.ticker, .orderbook], symbol: [code])
-    }
+
     
     // MARK: 웹소켓으로부터 받은 바이너리 데이터 핸들링
     private func handleSocketData(data: Data) {

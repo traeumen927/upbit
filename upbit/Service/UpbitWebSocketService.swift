@@ -60,8 +60,8 @@ class UpbitWebSocketService {
     
     
     init() {
-        // MARK: public 소켓 연결
         do {
+            // MARK: public 소켓 연결
             var publicRequest = URLRequest(url: publicURL)
             publicRequest.timeoutInterval = 5
             let socket = WebSocket(request: publicRequest)
