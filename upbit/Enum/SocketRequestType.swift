@@ -8,7 +8,7 @@
 import Foundation
 
 // MARK: 웹소켓 통신에서 사용하는 구독 타입
-enum SocketRequestType: String {
+enum SocketRequestType: String, Codable {
     ///현재가
     case ticker
     
