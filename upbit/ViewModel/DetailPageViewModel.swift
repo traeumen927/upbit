@@ -24,13 +24,13 @@ class DetailPageViewModel {
     
     // MARK: - Place for Output
     // MARK: 실시간 현재가 정보
-    let tickerSubejct: PublishSubject<SocketTicker> = PublishSubject<SocketTicker>()
+    let tickerSubject: PublishSubject<SocketTicker> = PublishSubject<SocketTicker>()
     
     // MARK: 실시간 호가 정보
-    let orderbookSubejct: PublishSubject<Orderbook> = PublishSubject<Orderbook>()
+    let orderbookSubject: PublishSubject<Orderbook> = PublishSubject<Orderbook>()
     
     // MARK: 실시간 주문 및 체결 정보
-    let myOrderSubejct: PublishSubject<MyOrder> = PublishSubject<MyOrder>()
+    let myOrderSubject: PublishSubject<MyOrder> = PublishSubject<MyOrder>()
     
     
     init(marketInfo: MarketInfo) {
@@ -61,11 +61,11 @@ class DetailPageViewModel {
                     
                     // MARK: 소켓이 연결 해제됨
                 case .disconnected(let reason, let code):
-                    print("\(source)]] \(className): websocket is disconnected: \(reason) with code: \(code)")
+                    print("[\(source)] \(className): websocket is disconnected: \(reason) with code: \(code)")
                     
                     // MARK: 텍스트 메세지를 받음
                 case .text(let string):
-                    print("[\(source)]] \(className): Received text: \(string)")
+                    print("[\(source)] \(className): Received text: \(string)")
                     
                     // MARK: 이진(binary) 데이터를 받음
                 case .binary(let data):
@@ -75,37 +75,37 @@ class DetailPageViewModel {
                     
                     // MARK: 핑 메세지를 받음
                 case .ping(_):
-                    print("[\(source)]] \(className): ping")
+                    print("[\(source)] \(className): ping")
                     break
                     
                     // MARK: 퐁 메세지를 받음
                 case .pong(_):
-                    print("[\(source)]] \(className): pong")
+                    print("[\(source)] \(className): pong")
                     break
                     
                     // MARK: 연결의 안정성이 변경됨
                 case .viabilityChanged(_):
-                    print("[\(source)]] \(className): viabilityChanged")
+                    print("[\(source)] \(className): viabilityChanged")
                     break
                     
                     // MARK: 재연결이 제안됨
                 case .reconnectSuggested(_):
-                    print("[\(source)]] \(className): reconnectSuggested")
+                    print("[\(source)] \(className): reconnectSuggested")
                     break
                     
                     // MARK: 소켓이 취소됨
                 case .cancelled:
-                    print("[\(source)]] \(className): cancelled")
+                    print("[\(source)] \(className): cancelled")
                     break
                     
                     // MARK: 에러가 발생함
                 case .error(let error):
-                    print("[\(source)]] \(className): error: \(error!.localizedDescription)")
+                    print("[\(source)] \(className): error: \(error!.localizedDescription)")
                     break
                     
                     // MARK: 피어가 연결을 종료함
                 case .peerClosed:
-                    print("[\(source)]] \(className): peerClosed")
+                    print("[\(source)] \(className): peerClosed")
                     break
                     
                 @unknown default:
@@ -126,17 +126,17 @@ class DetailPageViewModel {
         
         // MARK: 현재가
         if let ticker: SocketTicker = SocketTicker.parseData(data) {
-            self.tickerSubejct.onNext(ticker)
+            self.tickerSubject.onNext(ticker)
         }
         
         // MARK: 호가
         if let orderbook: Orderbook = Orderbook.parseData(data) {
-            self.orderbookSubejct.onNext(orderbook)
+            self.orderbookSubject.onNext(orderbook)
         }
         
         // MARK: 주문내역
         if let myOrder: MyOrder = MyOrder.parseData(data) {
-            self.myOrderSubejct.onNext(myOrder)
+            self.myOrderSubject.onNext(myOrder)
             print("myOrder: \(myOrder)")
         }
     }

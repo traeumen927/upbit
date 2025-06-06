@@ -99,7 +99,7 @@ class DetailPageViewController: UIViewController {
     
     private func bind() {
         // MARK: 실시간 코인 현재가 구독
-        self.viewModel.tickerSubejct
+        self.viewModel.tickerSubject
             .asObservable()
             .observe(on: MainScheduler.instance)
             .subscribe(onNext: {[weak self] ticker in
