@@ -27,8 +27,8 @@ struct MyOrder: Decodable {
     /// 주문 상태 (*wait: 체결 대기, watch: 예약 주문 대기, trade: 체결 발생, done: 전체 체결 완료, cancel: 주문 취소)
     let state: String
     
-    /// 체결의 고유 아이디
-    let trade_uuid: String
+    /// 체결의 고유 아이디 (JSON이 null로 올 수 있으므로 Optional)
+    let trade_uuid: String?
     
     /// 주문 가격, 체결 가격 (state: trade 일 때)
     let price: Double
@@ -63,20 +63,20 @@ struct MyOrder: Decodable {
     /// 체결된 금액
     let executed_funds: Double
     
-    /// IOC, FOK 설정 (*ioc, fok)
-    let time_in_force: String
+    /// IOC, FOK 설정 (*ioc, fok) (JSON이 null로 올 수 있으므로 Optional)
+    let time_in_force: String?
     
-    /// 체결 시 발생한 수수료 (trade 타입이 아닐 경우 null 값)
-    let trade_fee: Double
+    /// 체결 시 발생한 수수료 (trade 타입이 아닐 경우 null 값) (Optional)
+    let trade_fee: Double?
     
-    /// 체결이 발생한 주문의 maker / taker 여부 (trade 타입이 아닐 경우 null 값)
-    let is_maker: Bool
+    /// 체결이 발생한 주문의 maker / taker 여부 (trade 타입이 아닐 경우 null 값) (Optional)
+    let is_maker: Bool?
     
-    /// 조회용 사용자 지정값 ( *identifier 필드는 2024-10-18 이후에 생성된 주문에 대해서만 제공합니다.)
+    /// 조회용 사용자 지정값 ( *identifier 필드는 2024-10-18 이후에 생성된 주문에 대해서만 제공합니다.) (Optional)
     let identifier: String?
     
-    /// 체결 타임스탬프 (millisecond)
-    let trade_timestamp: Int64
+    /// 체결 타임스탬프 (millisecond, JSON이 null로 올 수 있으므로 Optional)
+    let trade_timestamp: Int64?
     
     /// 주문 타임스탬프 (millisecond)
     let order_timestamp: Int64
