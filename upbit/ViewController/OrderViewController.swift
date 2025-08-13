@@ -7,6 +7,8 @@
 
 import UIKit
 import RxSwift
+import RxCocoa
+import SnapKit
 import Toast
 
 class OrderViewController: UIViewController {
@@ -19,12 +21,15 @@ class OrderViewController: UIViewController {
     
     // MARK: 호가정보
     private var orderbookUnits: [obUnits] = [obUnits]()
-    
+
     // MARK: 현재가
     private var ticker:SocketTicker?
-    
+
     // MARK: 주문 가능 정보
     private var chance:Chance?
+
+    // MARK: 실시간 주문 정보
+    private var myOrders: [MyOrder] = []
     
     // MARK: 호가창 가운데 정렬 여부
     private var isAlignCenter:Bool = false
@@ -95,7 +100,16 @@ class OrderViewController: UIViewController {
         
         return label
     }()
-    
+
+    // MARK: 실시간 주문 표시 라벨
+    private lazy var myOrderLabel: UILabel = {
+        let label = UILabel()
+        label.font = .systemFont(ofSize: 12)
+        label.textColor = ThemeColor.label1
+        label.numberOfLines = 0
+        return label
+    }()
+
     // MARK: 기준가 텍스트
     private lazy var priceTextFeild: BorderedTextField = {
         let textField = BorderedTextField()
@@ -196,7 +210,7 @@ class OrderViewController: UIViewController {
         [self.tableView, orderBackgroundView].forEach(self.view.addSubview(_:))
         orderBackgroundView.addSubview(orderView)
         [self.segmentedControl, orderStackView, self.orderButton].forEach(orderView.addSubview(_:))
-        [self.priceLabel, self.priceTextFeild, UIView(), self.amountLabel, self.amountTextFeild, self.orderSlider, self.orderInfoView, self.accountInfoView, self.minOrderInfoView].forEach(orderStackView.addArrangedSubview(_:))
+        [self.priceLabel, self.priceTextFeild, UIView(), self.amountLabel, self.amountTextFeild, self.orderSlider, self.orderInfoView, self.accountInfoView, self.minOrderInfoView, self.myOrderLabel].forEach(orderStackView.addArrangedSubview(_:))
         
         tableView.snp.makeConstraints { make in
             make.top.equalTo(view.safeAreaLayoutGuide.snp.top)
@@ -276,6 +290,15 @@ class OrderViewController: UIViewController {
             .subscribe(onNext: { [weak self] message in
                 guard let self = self else { return }
                 self.view.makeToast(message, duration: 2.0, position: .bottom)
+            }).disposed(by: disposeBag)
+
+        // MARK: 실시간 주문 구독
+        self.viewModel.myOrderSubject
+            .observe(on: MainScheduler.instance)
+            .subscribe(onNext: { [weak self] order in
+                guard let self = self else { return }
+                self.myOrders.insert(order, at: 0)
+                self.updateMyOrderLabel()
             }).disposed(by: disposeBag)
         
         
@@ -562,6 +585,17 @@ class OrderViewController: UIViewController {
             let availableAsset = chance.askAccount.balanceDecimal
             return (availableAsset * percentage).truncatedTo8Digits()
         }
+    }
+
+    // MARK: 실시간 주문 라벨 업데이트
+    private func updateMyOrderLabel() {
+        let texts = myOrders.prefix(5).map { order in
+            let side = order.ask_bid == "bid" ? "매수" : "매도"
+            let price = Decimal(order.price).formattedStringWithTruncation(places: 0)
+            let volume = Decimal(order.volume).formattedStringWithTruncation(places: 8)
+            return "\(side) \(volume) @ \(price)"
+        }
+        self.myOrderLabel.text = texts.joined(separator: "\n")
     }
     
     // MARK: 호가창 테이블뷰의 스크롤을 가운데로 정렬
