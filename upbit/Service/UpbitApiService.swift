@@ -89,9 +89,12 @@ extension UpbitApiService {
         
         // MARK: 주문 가능 정보
         case ordersChance(market: String)
-        
+
         // MARK: 주문
         case orders(market: String, side: String, volume: String, price: String, ordType: String)
+
+        // MARK: 주문 취소
+        case cancelOrder(uuid: String)
         
         // MARK: 요청 경로
         var path: String {
@@ -110,9 +113,12 @@ extension UpbitApiService {
                 
             case .ordersChance:
                 return "orders/chance"
-                
+
             case .orders:
                 return "orders"
+
+            case .cancelOrder:
+                return "order"
             }
         }
         
@@ -137,6 +143,9 @@ extension UpbitApiService {
                 
             case .orders(let market, let side, let volume, let price, let ordType):
                 return ["market" : market, "side" : side, "volume" : volume, "price" : price, "ord_type" : ordType]
+
+            case .cancelOrder(let uuid):
+                return ["uuid" : uuid]
             }
         }
         
@@ -148,7 +157,7 @@ extension UpbitApiService {
                 return nil
                 
                 // MARK: 인증이 필요한 요청
-            case .accounts, .ordersChance, .orders:
+            case .accounts, .ordersChance, .orders, .cancelOrder:
                 let jwt = self.generateJWT()
                 return ["Authorization": "Bearer \(jwt)"]
             }
