@@ -224,6 +224,7 @@
 		F129EFFA2D6310F100F3A74C /* upbit */ = {
 			isa = PBXGroup;
 			children = (
+				F144506D2E4C9C5D008781D3 /* App */,
 				F129F0272D63149200F3A74C /* Resource */,
 				F129F01E2D63143C00F3A74C /* Enum */,
 				F11D099E2D7B207300A8B2E0 /* Singleton */,
@@ -237,8 +238,6 @@
 				F129F0232D63146100F3A74C /* ViewModel */,
 				F129F0222D63145A00F3A74C /* ViewController */,
 				F129F0252D63147000F3A74C /* Cell */,
-				F129EFF32D6310F100F3A74C /* AppDelegate.swift */,
-				F129EFF82D6310F100F3A74C /* SceneDelegate.swift */,
 				F129EFF52D6310F100F3A74C /* Info.plist */,
 				F129F03F2D6320C000F3A74C /* ApiKey.plist */,
 			);
@@ -384,6 +383,15 @@
 				F19484E82D9C158D0040E675 /* DetailPageCoordinator.swift */,
 			);
 			path = Coordinator;
+			sourceTree = "<group>";
+		};
+		F144506D2E4C9C5D008781D3 /* App */ = {
+			isa = PBXGroup;
+			children = (
+				F129EFF32D6310F100F3A74C /* AppDelegate.swift */,
+				F129EFF82D6310F100F3A74C /* SceneDelegate.swift */,
+			);
+			path = App;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
