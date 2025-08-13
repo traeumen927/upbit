@@ -13,11 +13,18 @@ import RxCocoa
 class HistoryCell: UITableViewCell {
     static let cellId = "HistoryCell"
 
-    let coinLabel = UILabel()
-    let priceLabel = UILabel()
-    let executedLabel = UILabel()
-    let remainingLabel = UILabel()
+    private let nameLabel = UILabel()
+    private let sideLabel = UILabel()
+    private let timeLabel = UILabel()
     let cancelButton = UIButton(type: .system)
+
+    private let priceTitleLabel = UILabel()
+    private let quantityTitleLabel = UILabel()
+    private let remainingTitleLabel = UILabel()
+
+    private let priceValueLabel = UILabel()
+    private let quantityValueLabel = UILabel()
+    private let remainingValueLabel = UILabel()
 
     var disposeBag = DisposeBag()
 
@@ -36,41 +43,100 @@ class HistoryCell: UITableViewCell {
     }
 
     private func layout() {
-        [coinLabel, priceLabel, executedLabel, remainingLabel, cancelButton].forEach(contentView.addSubview)
+        selectionStyle = .none
 
-        coinLabel.snp.makeConstraints { make in
+        [nameLabel, sideLabel, timeLabel, cancelButton].forEach(contentView.addSubview)
+
+        let titleStack = UIStackView(arrangedSubviews: [priceTitleLabel, quantityTitleLabel, remainingTitleLabel])
+        let valueStack = UIStackView(arrangedSubviews: [priceValueLabel, quantityValueLabel, remainingValueLabel])
+        titleStack.axis = .vertical
+        titleStack.spacing = 4
+        valueStack.axis = .vertical
+        valueStack.spacing = 4
+
+        [titleStack, valueStack].forEach(contentView.addSubview)
+
+        nameLabel.font = .systemFont(ofSize: 14, weight: .bold)
+
+        sideLabel.font = .systemFont(ofSize: 14, weight: .bold)
+
+        timeLabel.font = .systemFont(ofSize: 12)
+        timeLabel.textColor = ThemeColor.label2
+
+        [priceTitleLabel, quantityTitleLabel, remainingTitleLabel].forEach {
+            $0.font = .systemFont(ofSize: 12)
+            $0.textColor = ThemeColor.label2
+        }
+
+        [priceValueLabel, quantityValueLabel, remainingValueLabel].forEach {
+            $0.font = .systemFont(ofSize: 12, weight: .bold)
+            $0.textColor = ThemeColor.label1
+            $0.textAlignment = .right
+        }
+
+        priceTitleLabel.text = "주문가격"
+        quantityTitleLabel.text = "주문수량"
+        remainingTitleLabel.text = "미체결량"
+
+        cancelButton.setTitle("취소", for: .normal)
+
+        nameLabel.snp.makeConstraints { make in
             make.top.leading.equalToSuperview().inset(8)
         }
 
-        priceLabel.snp.makeConstraints { make in
-            make.top.equalTo(coinLabel.snp.bottom).offset(4)
-            make.leading.equalTo(coinLabel)
+        sideLabel.snp.makeConstraints { make in
+            make.centerY.equalTo(nameLabel)
+            make.leading.equalTo(nameLabel.snp.trailing).offset(4)
         }
 
-        executedLabel.snp.makeConstraints { make in
-            make.centerY.equalTo(coinLabel)
-            make.trailing.equalToSuperview().inset(8)
-        }
-
-        remainingLabel.snp.makeConstraints { make in
-            make.centerY.equalTo(priceLabel)
-            make.trailing.equalTo(executedLabel)
-        }
-
-        cancelButton.setTitle("취소", for: .normal)
         cancelButton.snp.makeConstraints { make in
-            make.top.equalTo(remainingLabel.snp.bottom).offset(8)
-            make.trailing.equalToSuperview().inset(8)
+            make.top.trailing.equalToSuperview().inset(8)
+        }
+
+        timeLabel.snp.makeConstraints { make in
+            make.top.equalTo(nameLabel.snp.bottom).offset(4)
+            make.leading.equalTo(nameLabel)
+        }
+
+        titleStack.snp.makeConstraints { make in
+            make.top.equalTo(timeLabel.snp.bottom).offset(8)
+            make.leading.equalToSuperview().inset(8)
             make.bottom.equalToSuperview().inset(8)
+            make.trailing.lessThanOrEqualTo(valueStack.snp.leading).offset(-8)
+        }
+
+        valueStack.snp.makeConstraints { make in
+            make.top.equalTo(titleStack)
+            make.trailing.equalToSuperview().inset(8)
+            make.bottom.equalTo(titleStack)
         }
     }
 
-    func configure(order: MyOrder, showCancel: Bool) {
-        coinLabel.text = order.code
-        priceLabel.text = Decimal(order.price).formattedStringWithTruncation(places: 0)
-        executedLabel.text = "체결: \(Decimal(order.executed_volume).formattedStringWithTruncation(places: 8))"
-        remainingLabel.text = "미체결: \(Decimal(order.remaining_volume).formattedStringWithTruncation(places: 8))"
+    func bind(order: MyOrder, showCancel: Bool) {
+        nameLabel.text = order.code
+
+        if order.ask_bid == "ask" {
+            sideLabel.text = "매도"
+            sideLabel.textColor = ThemeColor.risePrimary
+        } else {
+            sideLabel.text = "매수"
+            sideLabel.textColor = ThemeColor.fallPrimary
+        }
+
+        let date = Date(timeIntervalSince1970: Double(order.order_timestamp) / 1000)
+        timeLabel.text = Self.dateFormatter.string(from: date)
+
+        priceValueLabel.text = Decimal(order.price).formattedStringWithTruncation(places: 0)
+        quantityValueLabel.text = Decimal(order.volume).formattedStringWithTruncation(places: 8)
+        remainingValueLabel.text = Decimal(order.remaining_volume).formattedStringWithTruncation(places: 8)
+
         cancelButton.isHidden = !showCancel
     }
+
+    private static let dateFormatter: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "MM/dd HH:mm:ss"
+        return formatter
+    }()
 }
 
