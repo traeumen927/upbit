@@ -20,6 +20,6 @@ class SettingCoordinator: Coordinator {
         viewController.tabBarItem = UITabBarItem(title: "설정", image: UIImage(systemName: "gear"), tag: 2)
         viewController.coordinator = self
         
-        navigationController.pushViewController(viewController, animated: true)
+        navigationController.setViewControllers([viewController], animated: false)
     }
 }

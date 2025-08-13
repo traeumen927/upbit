@@ -17,6 +17,7 @@ class SettingViewController: UIViewController {
     init(viewModel: SettingViewModel) {
         self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
+        self.title = "설정"
     }
     
     required init?(coder: NSCoder) {
