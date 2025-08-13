@@ -19,7 +19,7 @@ class HistoryViewController: UIViewController {
     private enum Section { case main }
 
     private lazy var segmentedControl: UISegmentedControl = {
-        let control = UISegmentedControl(items: ["체결", "미체결"])
+        let control = UISegmentedControl(items: ["미체결", "체결"])
         control.selectedSegmentIndex = 0
         return control
     }()
@@ -34,8 +34,8 @@ class HistoryViewController: UIViewController {
 
     private lazy var dataSource = UITableViewDiffableDataSource<Section, MyOrder>(tableView: tableView) { [weak self] tableView, indexPath, order in
         let cell = tableView.dequeueReusableCell(withIdentifier: HistoryCell.cellId, for: indexPath) as! HistoryCell
-        let showCancel = self?.segmentedControl.selectedSegmentIndex == 1
-        cell.configure(order: order, showCancel: showCancel ?? false)
+        let showCancel = self?.segmentedControl.selectedSegmentIndex == 0
+        cell.bind(order: order, showCancel: showCancel ?? false)
         if let self = self {
             cell.cancelButton.rx.tap
                 .map { order.uuid }
@@ -80,7 +80,7 @@ class HistoryViewController: UIViewController {
             .startWith(0)
             .flatMapLatest { [weak self] index -> Observable<[MyOrder]> in
                 guard let self = self else { return .empty() }
-                return index == 0 ? self.viewModel.filledOrdersRelay.asObservable() : self.viewModel.pendingOrdersRelay.asObservable()
+                return index == 0 ? self.viewModel.pendingOrdersRelay.asObservable() : self.viewModel.filledOrdersRelay.asObservable()
             }
 
         orders
