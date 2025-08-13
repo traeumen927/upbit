@@ -27,7 +27,8 @@ class DetailPageCoordinator: Coordinator {
         let orderViewController = OrderViewController(viewModel:
                                                         OrderViewModel(market: self.marketInfo.market,
                                                                        tickerObservable:  viewModel.tickerSubject.asObservable(),
-                                                                       orderbookObservable: viewModel.orderbookSubject.asObservable()))
+                                                                       orderbookObservable: viewModel.orderbookSubject.asObservable(),
+                                                                       myOrderObservable: viewModel.myOrderSubject.asObservable()))
         
         // MARK: 차트 페이지
         let chartViewController = ChartViewController(viewModel: ChartViewModel())

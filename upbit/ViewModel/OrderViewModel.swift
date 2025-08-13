@@ -8,32 +8,48 @@
 import RxSwift
 
 class OrderViewModel {
-    
+
     // MARK: disposeBag
     private let disposeBag = DisposeBag()
-    
+
     // MARK: 현재가 Observable
     private(set) var tickerObservable: Observable<SocketTicker>
-    
+
     // MARK: 호가 Observable
     private(set) var orderbookObservable: Observable<Orderbook>
-    
+
+    // MARK: 실시간 주문 Observable
+    private(set) var myOrderObservable: Observable<MyOrder>
+
     // MARK: - Place for Input
     // MARK: 선택된 마켓
     private let market: String
-    
+
     // MARK: - Place for Output
     // MARK: 주문가능정보 주제
     let chanceSubject: PublishSubject<Chance> = PublishSubject<Chance>()
-    
+
     // MARK: 메세지 주제
     let messageSubject: PublishSubject<String> = PublishSubject<String>()
-    
-    init(market: String, tickerObservable: Observable<SocketTicker>, orderbookObservable: Observable<Orderbook>) {
+
+    // MARK: 실시간 주문 주제
+    let myOrderSubject: PublishSubject<MyOrder> = PublishSubject<MyOrder>()
+
+    init(market: String,
+         tickerObservable: Observable<SocketTicker>,
+         orderbookObservable: Observable<Orderbook>,
+         myOrderObservable: Observable<MyOrder>) {
         self.market = market
         self.tickerObservable = tickerObservable
         self.orderbookObservable = orderbookObservable
-        
+        self.myOrderObservable = myOrderObservable
+
+        self.myOrderObservable
+            .subscribe(onNext: { [weak self] order in
+                self?.myOrderSubject.onNext(order)
+            })
+            .disposed(by: disposeBag)
+
         self.fetchChance(market: market)
     }
     
