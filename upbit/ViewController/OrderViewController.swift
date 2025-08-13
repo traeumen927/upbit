@@ -412,29 +412,25 @@ class OrderViewController: UIViewController {
                 
                 let coin = chance.market.ask.currency
                 let unit = chance.market.bid.currency
-                let feeRate = isBuy ? chance.bidFeeDecimal : chance.askFeeDecimal
-                let fee = (amount * price * feeRate).rounded(scale: 0, mode: .plain)
 
                 self.presentOrderConfirmation(
                     isBuy: isBuy,
                     coin: coin,
                     price: price,
                     amount: amount,
-                    fee: fee,
                     currency: unit
                 ) {
-                    //self.placeOrder(isBuy: isBuy, price: price, amount: amount)
+                    self.placeOrder(isBuy: isBuy, price: price, amount: amount)
                 }
             }).disposed(by: disposeBag)
     }
-    
+
     // MARK: 주문진행 여부 Alert
     private func presentOrderConfirmation(
         isBuy: Bool,
         coin: String,
         price: Decimal,
         amount: Decimal,
-        fee: Decimal,
         currency: String,
         onConfirm: @escaping () -> Void
     ) {
@@ -456,15 +452,7 @@ class OrderViewController: UIViewController {
         let alert = UIAlertController(title: title, message: message, preferredStyle: .actionSheet)
 
         let confirmAction = UIAlertAction(title: "\(amountString) \(coin) \(verb)", style: .default) { _ in
-            
-            guard let chance = self.chance else { return }
-            let market = chance.market.id
-            let side = isBuy ? "bid" : "ask"
-            let volume = amount.description
-            let price = price.description
-            let ordType = "limit"
-            
-            self.viewModel.postOrders(market: market, side: side, volume: volume, price: price, ordType: ordType)
+            onConfirm()
         }
 
         let cancelAction = UIAlertAction(title: "취소", style: .cancel, handler: nil)
@@ -474,7 +462,19 @@ class OrderViewController: UIViewController {
 
         self.present(alert, animated: true, completion: nil)
     }
-    
+
+    // MARK: 주문 실행
+    private func placeOrder(isBuy: Bool, price: Decimal, amount: Decimal) {
+        guard let chance = self.chance else { return }
+        let market = chance.market.id
+        let side = isBuy ? "bid" : "ask"
+        let volume = amount.description
+        let priceString = price.description
+        let ordType = "limit"
+
+        self.viewModel.postOrders(market: market, side: side, volume: volume, price: priceString, ordType: ordType)
+    }
+
     // MARK: 주문 유효성 검사
     private func validateOrder(isBuy: Bool, price: Decimal, amount: Decimal, chance: Chance) -> Bool {
         let feeRate = isBuy ? chance.bidFeeDecimal : chance.askFeeDecimal
