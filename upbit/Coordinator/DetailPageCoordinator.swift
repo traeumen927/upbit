@@ -37,7 +37,7 @@ class DetailPageCoordinator: Coordinator {
         let orderBookViewController = OrderBookViewController(viewModel: OrderBookViewModel())
         
         // MARK: 거래내역 페이지
-        let historyViewController = HistoryViewController(viewModel: HistoryViewModel())
+        let historyViewController = HistoryViewController(viewModel: HistoryViewModel(myOrderObservable: viewModel.myOrderSubject.asObservable()))
         
         // MARK: 종목토론방 페이지
         let chatViewController = ChatViewController(viewModel: ChatViewModel())

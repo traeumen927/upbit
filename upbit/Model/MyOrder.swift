@@ -8,7 +8,7 @@
 import Foundation
 
 /// 주문 및 체결 내역(*WebSocket 용)
-struct MyOrder: Decodable {
+struct MyOrder: Decodable, Hashable {
     /// 타입 (myOrder : 내 주문)
     let type: String
     
