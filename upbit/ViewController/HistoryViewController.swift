@@ -32,6 +32,16 @@ class HistoryViewController: UIViewController {
         return tableView
     }()
 
+    private let emptyLabel: UILabel = {
+        let label = UILabel()
+        label.text = "표시할 주문 내역이 없습니다."
+        label.textAlignment = .center
+        label.textColor = .lightGray
+        label.numberOfLines = 0
+        label.isHidden = true
+        return label
+    }()
+
     private lazy var dataSource = UITableViewDiffableDataSource<Section, MyOrder>(tableView: tableView) { [weak self] tableView, indexPath, order in
         let cell = tableView.dequeueReusableCell(withIdentifier: HistoryCell.cellId, for: indexPath) as! HistoryCell
         let showCancel = self?.segmentedControl.selectedSegmentIndex == 0
@@ -63,6 +73,7 @@ class HistoryViewController: UIViewController {
     private func layout() {
         view.addSubview(segmentedControl)
         view.addSubview(tableView)
+        view.addSubview(emptyLabel)
 
         segmentedControl.snp.makeConstraints { make in
             make.top.equalTo(view.safeAreaLayoutGuide.snp.top).offset(8)
@@ -73,6 +84,11 @@ class HistoryViewController: UIViewController {
             make.top.equalTo(segmentedControl.snp.bottom).offset(8)
             make.leading.trailing.bottom.equalToSuperview()
         }
+
+        emptyLabel.snp.makeConstraints { make in
+            make.centerY.equalTo(tableView.snp.centerY)
+            make.leading.trailing.equalToSuperview().inset(16)
+        }
     }
 
     private func bind() {
@@ -82,6 +98,7 @@ class HistoryViewController: UIViewController {
                 guard let self = self else { return .empty() }
                 return index == 0 ? self.viewModel.pendingOrdersRelay.asObservable() : self.viewModel.filledOrdersRelay.asObservable()
             }
+            .share(replay: 1)
 
         orders
             .observe(on: MainScheduler.instance)
@@ -91,6 +108,11 @@ class HistoryViewController: UIViewController {
                 snapshot.appendItems(items)
                 self?.dataSource.apply(snapshot, animatingDifferences: true)
             })
+            .disposed(by: disposeBag)
+
+        orders
+            .map { !$0.isEmpty }
+            .bind(to: emptyLabel.rx.isHidden)
             .disposed(by: disposeBag)
     }
 }
