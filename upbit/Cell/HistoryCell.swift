@@ -2,7 +2,7 @@
 //  HistoryCell.swift
 //  upbit
 //
-//  Created by OpenAI on 2024.
+//  Created by 홍정연 on 13/08/25.
 //
 
 import UIKit
@@ -117,10 +117,10 @@ class HistoryCell: UITableViewCell {
 
         if order.ask_bid == "ask" {
             sideLabel.text = "매도"
-            sideLabel.textColor = ThemeColor.risePrimary
+            sideLabel.textColor = ThemeColor.fallPrimary
         } else {
             sideLabel.text = "매수"
-            sideLabel.textColor = ThemeColor.fallPrimary
+            sideLabel.textColor = ThemeColor.risePrimary
         }
 
         let date = Date(timeIntervalSince1970: Double(order.order_timestamp) / 1000)
